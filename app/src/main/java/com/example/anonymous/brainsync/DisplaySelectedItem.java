@@ -2,12 +2,10 @@ package com.example.anonymous.brainsync;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 
@@ -17,17 +15,21 @@ public class DisplaySelectedItem extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Gets the intent from the activity that's calling this one (i.e either the ListEntriesActivity or the SearchActivity)
         Intent intent = getIntent();
+        //Queries the activity for the data it's passing and assigns it to local string variable message
         String message = intent.getStringExtra(ListEntriesActivity.EXTRA_MESSAGE);
 
-
+        //Creates a TextView component for this activity
         TextView textView = new TextView(this);
         textView.setTextSize(20);
+        //Sets the data received from previous activity into the EditText view
         textView.setText(message);
+        //Sets the EditText view to display in this activity
         setContentView(textView);
-
+        //Makes the view scrollable if there are too many items in the file
         textView.setMovementMethod(new ScrollingMovementMethod());
-
+        //Make the app icon at the top left corner clickable so user can go to previous activity instead of using the back button
         android.app.ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -48,7 +50,7 @@ public class DisplaySelectedItem extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //If the selected menu item is search launch the search bar at the top of the screen. See this section in MainActivity for more explanation
         if (id == R.id.search) {
             onSearchRequested();
             return true;

@@ -48,6 +48,7 @@
             android:label="@string/title_activity_display_selected_item"
             android:parentActivityName="com.example.anonymous.brainsync.ListEntriesActivity" >
         </activity>
+
         <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_search" >

@@ -4,12 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.content.SearchRecentSuggestionsProvider;
 import android.view.View;
 
 
@@ -23,6 +20,7 @@ public class MainActivity extends Activity {
 
     }
 
+    //Called when the 'Add An Entry' button is clicked as configured in the XML
     public void addEntry (View entry) {
 
         Intent intent = new Intent(this, AddEntryActivity.class);
@@ -30,6 +28,7 @@ public class MainActivity extends Activity {
 
     }
 
+    //Called when the 'List All Entries' button is clicked as configured in the XML
     public void listEntriesMethod(View view){
 
         Intent intent = new Intent(this, ListEntriesActivity.class);
@@ -38,6 +37,7 @@ public class MainActivity extends Activity {
 
     }
 
+    //Called when the 'Search My Brain' button is clicked as configured in the XML
     public void goSearch(View view) {
 
         onSearchRequested();
@@ -65,7 +65,9 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //If the selected menu item is search launch the search bar at the top of the screen
+        //Each time the user searches for something anywhere in the app, the android system automatically creates an intent and passes it to the
+        //SearchActivity. Coding for this is in the IntentFilter and MetaData tag contained in the Manifest File under the SearchActivity tag
         if (id == R.id.search) {
             onSearchRequested();
             return true;

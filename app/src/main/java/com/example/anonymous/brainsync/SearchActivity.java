@@ -1,13 +1,9 @@
 package com.example.anonymous.brainsync;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
-import android.provider.SearchRecentSuggestions;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,11 +23,15 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        // Log.d("Gency", "Search Active");
 
-       // Log.d("Gency", "Search Active");
+        //Gets the intent from the activity that's calling this one
         Intent intent = getIntent();
+        //Verify the action
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            //Get the search query and assign it to string query.
             String query = intent.getStringExtra(SearchManager.QUERY).trim();
+            //Pass query to search method
             carryOutSearch(query);
            // Toast.makeText(this, "You searched for "+query, Toast.LENGTH_LONG).show();
 
@@ -42,17 +41,26 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
     ListView result;
     public void carryOutSearch(String query) {
         int i;
+        //Create File object and pass to it the directory where all our files are stored
         File sQuery = new File("data/data/com.example.anonymous.brainsync/files");
+        //List all the files in that directory and passes it to availableFiles array
         File[] availableFiles = sQuery.listFiles();
+        //Gets the size of the array
         String[] a = new String[availableFiles.length];
+        //For loop based on the size of the array gets the name of all files in the directory
         for (i = 0; i < a.length; i++) {
             a[i] = availableFiles[i].getName();
         }
         try {
+            //Checks array a for query
             if (Arrays.asList(a).contains(query)) {
+                //if condition is matched, create a new array and pass it the value of value
                 String[] newArray = {query};
+                //create a new ArrayAdapter and pass our newly created array to it
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, newArray);
+                //Use the standard android list view and pass it's properties to our ListView 'result' created above
                 result = (ListView) findViewById(android.R.id.list);
+                //Put the contents of the adapter (which is content in the array 'newArray') into ListView
                 result.setAdapter(adapter);
 
                 result.setOnItemClickListener(this);
@@ -72,12 +80,12 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
         }
     }
 
+    //This method is called when the search result is successful and the user selects the listed item
+    //Same procedure used in the ListEntriesActivity to display content of a selected file is re-used here
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         String aa = result.getItemAtPosition(position).toString();
-
-
 
         try {
 
@@ -89,8 +97,6 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
                 temp = temp + Character.toString((char)c);
 
             }
-
-
             readingFromFile.close();
 
             Intent intent = new Intent(this, DisplaySelectedItem.class);
@@ -105,7 +111,7 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
 
     }
 
-
+    //Adds the search menu so user can search still carry out search without going back
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -120,7 +126,7 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //If the selected menu item is search launch the search bar at the top of the screen. See this section in MainActivity for more explanation
         if (id == R.id.search) {
             onSearchRequested();
             return true;
