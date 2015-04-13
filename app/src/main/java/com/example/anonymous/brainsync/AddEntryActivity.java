@@ -53,7 +53,7 @@ public class AddEntryActivity extends Activity {
             try {
 
                 //Create a file and write to it. Input in the Title EditText field is used as file name
-               FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
+               FileOutputStream createEntry = openFileOutput(title+".txt", Context.MODE_PRIVATE);
                PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
                 writer.println(title);
                 writer.println();

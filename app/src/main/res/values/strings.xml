@@ -21,4 +21,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_display_selected_item">DisplaySelectedItem</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="backupButtonText">Backup</string>
 </resources>

@@ -48,7 +48,6 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
         //Loop to get name of each file and pass them to the array at different positions
         for (int i = 0; i < theNamesOfFiles.length; i++) {
             theNamesOfFiles[i] = filelist[i].getName();
-
         }
 
         //ArrayAdapter that links each files in our array to the ListView used in the activity
