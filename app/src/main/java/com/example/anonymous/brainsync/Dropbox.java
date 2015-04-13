@@ -35,7 +35,11 @@ public class Dropbox extends Activity {
 
             try {
                 // Required to complete auth, sets the access token on the session
+<<<<<<< HEAD
                              mDBApi.getSession().finishAuthentication();
+=======
+                mDBApi.getSession().finishAuthentication();
+>>>>>>> origin/master
 
                 String accessToken = mDBApi.getSession().getOAuth2AccessToken();
                 upload();
@@ -60,6 +64,10 @@ public class Dropbox extends Activity {
                         FileInputStream inputStream = new FileInputStream(filelist[i]);
                         DropboxAPI.Entry response = mDBApi.putFile(filelist[i].getName(), inputStream ,filelist[i].length(), null, null);
                         Log.i("test", "test5");
+<<<<<<< HEAD
+=======
+                        Log.i("test", "test5");
+>>>>>>> origin/master
                         Log.i("DbExampleLog", "The uploaded file's rev is: " + response.rev);
                     }
                 } catch (DropboxException | IOException e) {
