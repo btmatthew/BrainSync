@@ -35,7 +35,7 @@ public class Dropbox extends Activity {
 
             try {
                 // Required to complete auth, sets the access token on the session
-                mDBApi.getSession().finishAuthentication();
+                             mDBApi.getSession().finishAuthentication();
 
                 String accessToken = mDBApi.getSession().getOAuth2AccessToken();
                 upload();
