@@ -12,40 +12,34 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 
-public class AddEntryActivity extends Activity {
-
-
-
+public class EditActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_entry);
+        setContentView(R.layout.activity_edit);
 
-        //Make the app icon at the top left corner clickable so user can go to previous activity instead of using the back button
-        android.app.ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        Intent intent = getIntent();
+        String title = intent.getStringExtra(DisplaySelectedItem.EXTRA_MESSAGE);
+        String body = intent.getStringExtra(DisplaySelectedItem.EXTRA_MESSAGE1);
+        ((EditText)findViewById(R.id.editTextTitle)).setText(title);
+        ((EditText)findViewById(R.id.editTextBody)).setText(body);
+
+
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_entry, menu);
-        return true;
-    }
-
-    public void saveEntryMethod(View view) {
+    public void updateEntryMethod(View view) {
 
         //Link local EditText variables to EditText views created in XML
-        EditText titlefield = (EditText) findViewById(R.id.titleBar);
-        EditText datafield = (EditText) findViewById(R.id.information);
+        EditText titlefield = (EditText) findViewById(R.id.editTextTitle);
+        EditText datafield = (EditText) findViewById(R.id.editTextBody);
 
         //Get user inputs from the EditText fields
         String title = titlefield.getText().toString().trim();
@@ -59,15 +53,15 @@ public class AddEntryActivity extends Activity {
             try {
 
                 //Create a file and write to it. Input in the Title EditText field is used as file name
-               FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
-               PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
+                FileOutputStream updateEntry = openFileOutput(title, Context.MODE_PRIVATE);
+                PrintWriter writer = new PrintWriter(new OutputStreamWriter(updateEntry));
                 writer.println();
                 writer.println(information);
                 writer.close();
 
                 //Start the success activity after file creation and writing has been done
-                Intent intent = new Intent(this, SuccessActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(this, ListEntriesActivity.class);
+                startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
             } catch (IOException e) {
 
@@ -75,13 +69,13 @@ public class AddEntryActivity extends Activity {
             }
 
         }
+
     }
 
-    //Cancels entry and returns user to the MainActivity
-    public void cancelEntryMethod(View view) {
+    public void cancelUpdateMethod (View view) {
 
-        EditText titlefield = (EditText) findViewById(R.id.titleBar);
-        EditText datafield = (EditText) findViewById(R.id.information);
+        EditText titlefield = (EditText) findViewById(R.id.editTextTitle);
+        EditText datafield = (EditText) findViewById(R.id.editTextBody);
 
         String title = titlefield.getText().toString().trim();
         String information = datafield.getText().toString().trim();
@@ -96,53 +90,26 @@ public class AddEntryActivity extends Activity {
 
             new AlertDialog.Builder(this)
                     .setTitle("Cancel Edit?")
-                    .setMessage("All information on this page will not be saved. Are you sure you want to cancel this entry?")
+                    .setMessage("New information will not be saved. Are you sure you want to cancel?")
                     .setNegativeButton(android.R.string.no, null)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
-                            AddEntryActivity.super.onBackPressed();
+                            EditActivity.super.onBackPressed();
                         }
                     }).create().show();
         }
-//       Intent intent = new Intent(this, MainActivity.class);
-//        setFlags method is used so as not to create a new MainActivity and add to the activity stack but rather clear all previous activities
-//        and launch the MainActivity as the only activity on the stack
-//        startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
+//        Intent intent = new Intent(this, ListEntriesActivity.class);
+//        startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
+
 
     @Override
-    public void onBackPressed() {
-
-        EditText titlefield = (EditText) findViewById(R.id.titleBar);
-        EditText datafield = (EditText) findViewById(R.id.information);
-
-        String title = titlefield.getText().toString().trim();
-        String information = datafield.getText().toString().trim();
-
-        if(title.equals("") && information.equals("")) {
-
-            Log.d("Gency", "Second");
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-
-        } else {
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Cancel Edit?")
-                    .setMessage("All information on this page will not be saved. Are you sure you want to discard this entry?")
-                    .setNegativeButton(android.R.string.no, null)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            AddEntryActivity.super.onBackPressed();
-                        }
-                    }).create().show();
-        }
-
-        }
-
-
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_edit, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -151,14 +118,41 @@ public class AddEntryActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //If the selected menu item is search launch the search bar at the top of the screen. See this section in MainActivity for more explanation
-        if (id == R.id.search) {
-            onSearchRequested();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        EditText titlefield = (EditText) findViewById(R.id.editTextTitle);
+        EditText datafield = (EditText) findViewById(R.id.editTextBody);
 
+        String title = titlefield.getText().toString().trim();
+        String information = datafield.getText().toString().trim();
+
+        if(title.equals("") && information.equals("")) {
+
+            Log.d("Gency", "Second");
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
+        } else {
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Cancel Edit?")
+                    .setMessage("New information will not be saved. Are you sure you want to cancel?")
+                    .setNegativeButton(android.R.string.no, null)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            EditActivity.super.onBackPressed();
+                        }
+                    }).create().show();
+        }
+
+
+    }
 }

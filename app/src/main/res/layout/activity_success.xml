@@ -16,15 +16,28 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="151dp" />
 
-    <Button
+       <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:text="@string/return_home"
+        android:text="@string/add_entry"
         android:layout_below="@+id/success"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="95dp"
+        android:id="@+id/addnewentry"
+        android:onClick="addNewEntryMethod"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/returnhome"
+        android:text="@string/return_home"
+        android:layout_below="@+id/addnewentry"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
         android:onClick="returnHomeMethod"
         />
+
+
 
 </RelativeLayout>

@@ -4,80 +4,165 @@ import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
 public class SearchActivity extends ListActivity implements AdapterView.OnItemClickListener {
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
+    String query;
+    ListView result;
+    ArrayList<String> selectedMenuItem = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        // Log.d("Gency", "Search Active");
+
 
         //Gets the intent from the activity that's calling this one
         Intent intent = getIntent();
         //Verify the action
+
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             //Get the search query and assign it to string query.
-            String query = intent.getStringExtra(SearchManager.QUERY).trim();
+            query = intent.getStringExtra(SearchManager.QUERY).trim();
             //Pass query to search method
             carryOutSearch(query);
+          //  Log.d("Gency", "Search Active");
            // Toast.makeText(this, "You searched for "+query, Toast.LENGTH_LONG).show();
 
         }
+
+
     }
 
-    ListView result;
-    public void carryOutSearch(String query) {
+
+    public void carryOutSearch(String requestedEntry) {
+
         int i;
         //Create File object and pass to it the directory where all our files are stored
         File sQuery = new File("data/data/com.example.anonymous.brainsync/files");
         //List all the files in that directory and passes it to availableFiles array
         File[] availableFiles = sQuery.listFiles();
-        //Gets the size of the array
-        String[] a = new String[availableFiles.length];
-        //For loop based on the size of the array gets the name of all files in the directory
-        for (i = 0; i < a.length; i++) {
-            a[i] = availableFiles[i].getName();
-        }
-        try {
+        //If statement prevents the app from crashing when there are no entries upon search
+        if (availableFiles == null) {
+            Toast.makeText(this, "No Entries Yet", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        } else {
+
+            //Gets the size of the array
+            String[] a = new String[availableFiles.length];
+            //For loop based on the size of the array gets the name of all files in the directory
+            for (i = 0; i < a.length; i++) {
+                a[i] = availableFiles[i].getName();
+            }
+            //    try {
             //Checks array a for query
-            if (Arrays.asList(a).contains(query)) {
+            if (Arrays.asList(a).contains(requestedEntry)) {
+
                 //if condition is matched, create a new array and pass it the value of value
-                String[] newArray = {query};
+                String[] newArray = {requestedEntry};
                 //create a new ArrayAdapter and pass our newly created array to it
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, newArray);
-                //Use the standard android list view and pass it's properties to our ListView 'result' created above
+                //Use the list view under search activity XML and pass it's properties to our ListView 'result' created above
                 result = (ListView) findViewById(android.R.id.list);
                 //Put the contents of the adapter (which is content in the array 'newArray') into ListView
                 result.setAdapter(adapter);
 
                 result.setOnItemClickListener(this);
 
+                result.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+                result.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
 
+                    @Override
+                    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                        selectedMenuItem.add(result.getItemAtPosition(position).toString());
+
+
+                    }
+
+                    @Override
+                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+
+                        MenuInflater inflater = mode.getMenuInflater();
+                        inflater.inflate(R.menu.context_menu, menu);
+
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
+                        int id = item.getItemId();
+                        switch (id) {
+                            case R.id.delete_menu_button:
+                                deleteMethod();
+
+                        }
+                        return true;
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(ActionMode mode) {
+
+                    }
+                });
+
+
+            } else {
+                Toast.makeText(this, requestedEntry + " does not exist", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
-                else{
-                    Toast.makeText(this, query + " does not exist", Toast.LENGTH_LONG).show();
-                }
 
-
-
-
-
-        }  catch(RuntimeException e) {
-            Toast.makeText(this, "oops!", Toast.LENGTH_LONG).show();
         }
+
+
+
+    //    } catch(NullPointerException e) {
+    //        Toast.makeText(this, "oops!", Toast.LENGTH_LONG).show();
+    //    } catch(RuntimeException e) {
+     //       Toast.makeText(this, "oops!", Toast.LENGTH_LONG).show();
+     //   }
+    }
+
+    public void deleteMethod() {
+        String itemName = "";
+        //Carries out the delete action based on the size of the arraylist held by the variable itemSelectedCount
+        for (int i = 0; i < 1; i++) {
+            itemName = selectedMenuItem.get(i);
+            //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
+            //Not sure why the concatenation works but it does... :P
+            File dir = new File("data/data/com.example.anonymous.brainsync/files/" + selectedMenuItem.get(i));
+            dir.delete();
+            selectedMenuItem.clear();
+            Intent intent = new Intent(this, ListEntriesActivity.class);
+            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        }
+
+        Toast.makeText(this, itemName+" Deleted", Toast.LENGTH_LONG).show();
+
+
     }
 
     //This method is called when the search result is successful and the user selects the listed item
@@ -100,7 +185,8 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
             readingFromFile.close();
 
             Intent intent = new Intent(this, DisplaySelectedItem.class);
-            intent.putExtra(EXTRA_MESSAGE, temp);
+            intent.putExtra(EXTRA_MESSAGE, query);
+            intent.putExtra("body", temp);
             startActivity(intent);
 
         } catch (IOException | IllegalArgumentException e) {
