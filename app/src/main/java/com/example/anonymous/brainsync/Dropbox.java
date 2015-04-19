@@ -18,8 +18,8 @@ import java.io.IOException;
  */
 public class Dropbox extends Activity {
 
-    final static private String APP_KEY = "ADD YOU KEY";
-    final static private String APP_SECRET = "ADD YOUR KEY";
+    final static private String APP_KEY = "";
+    final static private String APP_SECRET = "";
     private DropboxAPI<AndroidAuthSession> mDBApi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

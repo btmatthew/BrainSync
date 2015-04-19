@@ -26,6 +26,13 @@ public class SuccessActivity extends Activity {
 
     }
 
+    public void addNewEntryMethod (View view) {
+
+        Intent intent = new Intent(this, AddEntryActivity.class);
+        startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
+    }
+
     //Adds the search menu so user can search still carry out search without going back
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

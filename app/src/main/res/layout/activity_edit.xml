@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.anonymous.brainsync.EditActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/editTextTitle"
+
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:textSize="20sp"
+        android:gravity="top"
+        android:id="@+id/editTextBody"
+
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+
+        >
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/red"
+            android:layout_weight="1"
+            android:text="@string/save_entry"
+            android:onClick="updateEntryMethod"
+            />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/yellow"
+            android:layout_weight="1"
+            android:text="@string/cancel_entry"
+            android:onClick="cancelUpdateMethod"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
