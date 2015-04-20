@@ -16,7 +16,8 @@
             android:id="@+id/buttonSelectAll"
             android:layout_below="@+id/lableDropBoxActivity"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:onClick="selectAll"/>
 
         <Button
             android:layout_width="wrap_content"

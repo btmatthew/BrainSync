@@ -27,10 +27,11 @@ import java.util.ArrayList;
  */
 public class Dropbox extends Activity {
     private String fileDirectory;
-    final static private String APP_KEY = "ADD KEY";
-    final static private String APP_SECRET = "ADD KEY";
+    final static private String APP_KEY = "add key";
+    final static private String APP_SECRET = "add key";
     private DropboxAPI<AndroidAuthSession> mDBApi;
     CustomAdapter dataAdapter=null;
+    private ArrayList<Filenames> fileNamesList;
 
 
 
@@ -71,7 +72,7 @@ public class Dropbox extends Activity {
         File dir = new File(fileDirectory);
         File[] fileList = dir.listFiles();
         int fileListLength=fileList.length;
-        ArrayList<Filenames> fileNamesList = new ArrayList<Filenames>();
+        fileNamesList = new ArrayList<Filenames>();
 
         for (int i = 0; i < fileListLength; i++) {
             Filenames file = new Filenames(fileList[i].getName(),false);
@@ -145,6 +146,15 @@ public class Dropbox extends Activity {
             }
         }
         upload(fileListToPass);
+    }
+    public void selectAll(View v){
+        ArrayList<Filenames> fileList = dataAdapter.fileList;
+        for(int i=0; i<fileList.size();i++){
+            fileList.get(i).setSelected(true);
+        }
+        dataAdapter= new CustomAdapter(this,R.layout.row,fileNamesList);
+        ListView listView = (ListView) findViewById(R.id.dropboxSyncList);
+        listView.setAdapter(dataAdapter);
     }
 
 
