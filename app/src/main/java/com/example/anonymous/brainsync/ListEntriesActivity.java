@@ -20,6 +20,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class ListEntriesActivity extends Activity implements AdapterView.OnItemClickListener {
 
@@ -70,18 +73,27 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
         //List all files in the directory and pass them to the array 'filelist' of File type
         File[] filelist = dir.listFiles();
 
+        List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
+
         if (filelist == null) {
             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         } else {
 
-            //filelist.lenght returns a value of number of files in the directory and passed to array theNamesOfFiles
-            final String[] theNamesOfFiles = new String[filelist.length];
+
+            for (Iterator<String> it = list.iterator(); it.hasNext();) {
+                if (it.next().contains("rList"))
+                    it.remove();
+            }
+
+            final String[] theNamesOfFiles = new String[list.size()];
             //Loop to get name of each file and pass them to the array at different positions
             for (int i = 0; i < theNamesOfFiles.length; i++) {
-                theNamesOfFiles[i] = filelist[i].getName();
+                theNamesOfFiles[i] = list.get(i);
             }
+
+            Arrays.sort(theNamesOfFiles);
 
             //ArrayAdapter that links each files in our array to the ListView used in the activity
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, theNamesOfFiles);
