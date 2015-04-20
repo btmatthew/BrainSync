@@ -20,7 +20,7 @@ public class Settings extends Activity {
         final Button button = (Button) findViewById(R.id.dropboxBackupButton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                backup(v);
+                backup();
             }
         });
 
