@@ -24,21 +24,21 @@ public class Settings extends Activity {
             }
         });
 
-        final Button button1 = (Button) findViewById(R.id.driveBackupButton);
+        /*final Button button1 = (Button) findViewById(R.id.driveBackupButton);
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 backup1(v);
             }
-        });
+        });*/
     }
-    protected void backup(View view){
+    protected void backup(){
         Intent intent = new Intent(this, Dropbox.class);
         startActivity(intent);
     }
 
-    protected void backup1(View view){
+    /*protected void backup1(View view){
         Intent intent = new Intent(this, GoogleDrive.class);
         startActivity(intent);
-    }
+    }*/
 
 }

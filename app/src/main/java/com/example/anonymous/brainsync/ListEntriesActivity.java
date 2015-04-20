@@ -27,7 +27,7 @@ import java.util.List;
 public class ListEntriesActivity extends Activity implements AdapterView.OnItemClickListener {
 
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
-
+    private String fileDirectory;
     //These are all created here so I could use them in multiple methods in this activity
     ListView entriesView;
     int itemSelectedCount = 0;
@@ -43,7 +43,7 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
         //Make the app icon at the top left corner clickable so user can go to previous activity instead of using the back button
         android.app.ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
+        fileDirectory = getString(R.string.directoryLocation);
         FloatingActionButton fabButton = new FloatingActionButton.Builder(this)
                 .withDrawable(getResources().getDrawable(R.drawable.ic_action_add))
                 .withButtonColor(Color.GREEN)
@@ -69,7 +69,7 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
 
 
         //Create a new file object and pass it the directory we want to list files from
-        File dir = new File("data/data/com.example.anonymous.brainsync/files");
+        File dir = new File(fileDirectory);
         //List all files in the directory and pass them to the array 'filelist' of File type
         File[] filelist = dir.listFiles();
 
@@ -211,7 +211,7 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
 
             //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
             //Not sure why the concatenation works but it does... :P
-            File dir = new File("data/data/com.example.anonymous.brainsync/files/" + selectedMenuItems.get(i));
+            File dir = new File(fileDirectory + selectedMenuItems.get(i));
             dir.delete();
         }
 

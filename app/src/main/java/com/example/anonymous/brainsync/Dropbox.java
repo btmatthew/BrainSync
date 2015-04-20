@@ -1,8 +1,16 @@
 package com.example.anonymous.brainsync;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
@@ -12,18 +20,26 @@ import com.dropbox.client2.session.AppKeyPair;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Matthew Bulat on 13/04/2015.
  */
 public class Dropbox extends Activity {
-
-    final static private String APP_KEY = "";
-    final static private String APP_SECRET = "";
+    private String fileDirectory;
+    final static private String APP_KEY = "ADD KEY";
+    final static private String APP_SECRET = "ADD KEY";
     private DropboxAPI<AndroidAuthSession> mDBApi;
+    CustomAdapter dataAdapter=null;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dropbox);
+        fileDirectory = getString(R.string.directoryLocation);
         AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
         AndroidAuthSession session = new AndroidAuthSession(appKeys);
         mDBApi = new DropboxAPI<AndroidAuthSession>(session);
@@ -42,7 +58,8 @@ public class Dropbox extends Activity {
 
 
                 String accessToken = mDBApi.getSession().getOAuth2AccessToken();
-                upload();
+                display();
+                //upload();
             } catch (IllegalStateException e) {
                 Log.i("DbAuthLog", "Error authenticating", e);
             }
@@ -50,24 +67,99 @@ public class Dropbox extends Activity {
 
 
     }
-    protected void upload() {
+    protected void display(){
+        File dir = new File(fileDirectory);
+        File[] fileList = dir.listFiles();
+        int fileListLength=fileList.length;
+        ArrayList<Filenames> fileNamesList = new ArrayList<Filenames>();
+
+        for (int i = 0; i < fileListLength; i++) {
+            Filenames file = new Filenames(fileList[i].getName(),false);
+            if(!file.getFilename().contains("rList")){
+                file.setFile(fileList[i]);
+                fileNamesList.add(file);
+            }
+        }
+        dataAdapter= new CustomAdapter(this,R.layout.row,fileNamesList);
+        ListView listView = (ListView) findViewById(R.id.dropboxSyncList);
+        listView.setAdapter(dataAdapter);
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Filenames file = (Filenames) parent.getItemAtPosition(position);
+                Toast.makeText(getApplicationContext(),
+                        "Clicked on Row: " + file.getFilename(),
+                        Toast.LENGTH_LONG).show();
+            }
+        });*/
+
+
+    }
+    private class CustomAdapter extends ArrayAdapter<Filenames>{
+        private ArrayList<Filenames> fileList;
+        public CustomAdapter(Context context, int textViewResourceId, ArrayList<Filenames> fileList){
+            super(context, textViewResourceId,fileList);
+            this.fileList= new ArrayList<>();
+            this.fileList.addAll(fileList);
+        }
+        private class ViewHolder{
+            TextView code;
+            CheckBox name;
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent){
+            ViewHolder holder;
+            if (convertView == null) {
+                LayoutInflater vi = (LayoutInflater)getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE);
+                convertView = vi.inflate(R.layout.row, null);
+
+                holder = new ViewHolder();
+                holder.code = (TextView) convertView.findViewById(R.id.fileNameDropboxSync);
+                holder.name = (CheckBox) convertView.findViewById(R.id.syncDropboxCheckbox);
+                convertView.setTag(holder);
+                holder.name.setOnClickListener(new View.OnClickListener(){
+                    public void onClick(View v){
+                        CheckBox cb = (CheckBox) v ;
+                        Filenames filename = (Filenames) cb.getTag();
+                        filename.setSelected(cb.isChecked());
+                    }
+                });
+                }else{
+                holder=(ViewHolder)convertView.getTag();
+            }
+            Filenames files = fileList.get(position);
+            holder.name.setText(files.getFilename());
+            holder.name.setChecked(files.isSelected());
+            holder.name.setTag(files);
+           return convertView;
+        }
+    }
+
+    public void backup(View v){
+        ArrayList<File> fileListToPass= new ArrayList<File>();
+        ArrayList<Filenames> fileList = dataAdapter.fileList;
+        for(int i=0; i<fileList.size();i++){
+            Filenames file = fileList.get(i);
+            if(file.isSelected()){
+                fileListToPass.add(file.getFile());
+            }
+        }
+        upload(fileListToPass);
+    }
+
+
+
+    protected void upload(final ArrayList<File> fileList) {
         new Thread(new Runnable(){
             public void run() {
-                File dir = new File("data/data/com.example.anonymous.brainsync/files");
-                File[] filelist = dir.listFiles();
-                final String[] theNamesOfFiles = new String[filelist.length];
-                Log.i("test", "test1");
+                //File dir = new File(fileDirectory);
+
+                //File[] filelist = dir.listFiles();
+                //final String[] theNamesOfFiles = new String[filelist.length];
                 try {
-                    Log.i("test", "test2");
-                    for (int i = 0; i < filelist.length; i++) {
-                        Log.i("test", "test3");
-                        FileInputStream inputStream = new FileInputStream(filelist[i]);
-                        DropboxAPI.Entry response = mDBApi.putFile(filelist[i].getName(), inputStream ,filelist[i].length(), null, null);
-                        Log.i("test", "test5");
-
-
-                        Log.i("test", "test5");
-
+                    for (int i = 0; i < fileList.size(); i++) {
+                        FileInputStream inputStream = new FileInputStream(fileList.get(i));
+                        DropboxAPI.Entry response = mDBApi.putFileOverwrite(fileList.get(i).getName(), inputStream, fileList.get(i).length(), null);//.putFile(filelist[i].getName(), inputStream ,filelist[i].length(), null, null);
                         Log.i("DbExampleLog", "The uploaded file's rev is: " + response.rev);
                     }
                 } catch (DropboxException | IOException e) {
@@ -76,5 +168,4 @@ public class Dropbox extends Activity {
             }
     }).start();
     }
-
 }

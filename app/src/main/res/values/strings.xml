@@ -27,4 +27,10 @@
     <string name="backupButtonText">Backup</string>
     <string name="drive_backup_button">Drive Backup</string>
     <string name="title_activity_google_drive">GoogleDrive</string>
+    <string name="directoryLocation">data/data/com.example.anonymous.brainsync/files</string>
+    <string name="selectAllButtonLableDropboxActivity">Select All</string>
+    <string name="backupButtonLableDropboxActivity">Back Up</string>
+    <string name="textLable">Select Items to Back Up</string>
+
+
 </resources>
