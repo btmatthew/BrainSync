@@ -46,7 +46,7 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
         fileDirectory = getString(R.string.directoryLocation);
         FloatingActionButton fabButton = new FloatingActionButton.Builder(this)
                 .withDrawable(getResources().getDrawable(R.drawable.ic_action_add))
-                .withButtonColor(Color.GREEN)
+                .withButtonColor(Color.GRAY)
                 .withGravity(Gravity.BOTTOM | Gravity.RIGHT)
                 .withMargins(0, 0, 16, 16)
                 .create();

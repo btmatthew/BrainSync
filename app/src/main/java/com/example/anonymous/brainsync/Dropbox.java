@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
@@ -84,16 +87,6 @@ public class Dropbox extends Activity {
         dataAdapter= new CustomAdapter(this,R.layout.row,fileNamesList);
         ListView listView = (ListView) findViewById(R.id.dropboxSyncList);
         listView.setAdapter(dataAdapter);
-        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Filenames file = (Filenames) parent.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(),
-                        "Clicked on Row: " + file.getFilename(),
-                        Toast.LENGTH_LONG).show();
-            }
-        });*/
-
-
     }
     private class CustomAdapter extends ArrayAdapter<Filenames>{
         private ArrayList<Filenames> fileList;
@@ -155,27 +148,78 @@ public class Dropbox extends Activity {
         dataAdapter= new CustomAdapter(this,R.layout.row,fileNamesList);
         ListView listView = (ListView) findViewById(R.id.dropboxSyncList);
         listView.setAdapter(dataAdapter);
+        Button selectAllButton = (Button) findViewById(R.id.buttonSelectAll);
+        selectAllButton.setText("Deselect All");
+        selectAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deselectAll(v);
+            }
+        });
+
+    }
+    public void deselectAll(View v){
+        ArrayList<Filenames> fileList = dataAdapter.fileList;
+        for(int i=0; i<fileList.size();i++){
+            fileList.get(i).setSelected(false);
+        }
+        dataAdapter= new CustomAdapter(this,R.layout.row,fileNamesList);
+        ListView listView = (ListView) findViewById(R.id.dropboxSyncList);
+        listView.setAdapter(dataAdapter);
+        Button selectAllButton = (Button) findViewById(R.id.buttonSelectAll);
+        selectAllButton.setText("Select All");
+        selectAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectAll(v);
+            }
+        });
     }
 
 
-
     protected void upload(final ArrayList<File> fileList) {
+        findViewById(R.id.spinningCircle).setVisibility(View.VISIBLE);
         new Thread(new Runnable(){
             public void run() {
-                //File dir = new File(fileDirectory);
 
-                //File[] filelist = dir.listFiles();
-                //final String[] theNamesOfFiles = new String[filelist.length];
                 try {
                     for (int i = 0; i < fileList.size(); i++) {
                         FileInputStream inputStream = new FileInputStream(fileList.get(i));
-                        DropboxAPI.Entry response = mDBApi.putFileOverwrite(fileList.get(i).getName(), inputStream, fileList.get(i).length(), null);//.putFile(filelist[i].getName(), inputStream ,filelist[i].length(), null, null);
-                        Log.i("DbExampleLog", "The uploaded file's rev is: " + response.rev);
+                        DropboxAPI.Entry response = mDBApi.putFileOverwrite(fileList.get(i).getName(), inputStream, fileList.get(i).length(), null);
                     }
+                    runOnUiThread(new Toasting("All done! Your Brain is uploaded to Dropbox!"));
+                    finish();
                 } catch (DropboxException | IOException e) {
                     Log.i("test", ""+e);
                 }
             }
     }).start();
+
+    }
+    class Toasting implements Runnable{
+
+        private String data;
+
+        public Toasting(String x){
+            this.data =x;
+        }
+
+        public void run() {
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    Context context = getApplicationContext();
+                    CharSequence text = data;
+                    int duration = Toast.LENGTH_LONG;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.setGravity(Gravity.CENTER| Gravity.CENTER, 0, 0);
+                    toast.show();
+
+                }
+
+            });
+        }
     }
 }

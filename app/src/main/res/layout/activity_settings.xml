@@ -9,7 +9,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/backupButtonText"
+        android:text="@string/backupButtonTextDropbox"
         android:id="@+id/dropboxBackupButton"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"

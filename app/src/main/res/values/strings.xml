@@ -18,13 +18,12 @@
     <string name="title_activity_success">SuccessActivity</string>
     <string name="title_activity_list_entries">ListEntriesActivity</string>
     <string name="delete_button">Delete</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_display_selected_item">DisplaySelectedItem</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="edit_activity">EditActivity</string>
     <string name="edit_button">Edit Entry</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="backupButtonText">Backup</string>
+    <string name="backupButtonTextDropbox">Backup to Dropbox</string>
     <string name="drive_backup_button">Drive Backup</string>
     <string name="title_activity_google_drive">GoogleDrive</string>
     <string name="directoryLocation">data/data/com.example.anonymous.brainsync/files</string>
