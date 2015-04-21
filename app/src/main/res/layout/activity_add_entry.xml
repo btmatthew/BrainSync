@@ -38,22 +38,26 @@
         android:layout_weight="1"
 
         >
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/ic_action_save"
+            android:drawableStart="@drawable/ic_action_save"
+            android:text="@string/save_entry"
+            android:layout_weight="1"
+            android:onClick="saveEntryMethod"
+            android:background="@color/green"
+            />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/red"
-            android:layout_weight="1"
-            android:text="@string/save_entry"
-            android:onClick="saveEntryMethod"
-            />
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@color/yellow"
+            android:drawableLeft="@drawable/ic_action_cancel"
+            android:drawableStart="@drawable/ic_action_cancel"
             android:layout_weight="1"
             android:text="@string/cancel_entry"
             android:onClick="cancelEntryMethod"
+            android:background="@color/red"
             />
         </LinearLayout>
 

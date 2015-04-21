@@ -30,13 +30,11 @@ import java.util.ArrayList;
  */
 public class Dropbox extends Activity {
     private String fileDirectory;
-    final static private String APP_KEY = "add key";
-    final static private String APP_SECRET = "add key";
+    final static private String APP_KEY = "";
+    final static private String APP_SECRET = "";
     private DropboxAPI<AndroidAuthSession> mDBApi;
     CustomAdapter dataAdapter=null;
     private ArrayList<Filenames> fileNamesList;
-
-
 
 
     @Override

@@ -49,6 +49,7 @@ public class DisplaySelectedItem extends Activity {
         //Make the app icon at the top left corner clickable so user can go to previous activity instead of using the back button
         android.app.ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(title);
 
     }
 
@@ -69,18 +70,22 @@ public class DisplaySelectedItem extends Activity {
         int id = item.getItemId();
 
         //If the selected menu item is search launch the search bar at the top of the screen. See this section in MainActivity for more explanation
-        if (id == R.id.search) {
-            onSearchRequested();
-            return true;
-        } else if (id == R.id.edit_menu_button) {
-
-            Intent intent = new Intent(this, EditActivity.class);
-            intent.putExtra(EXTRA_MESSAGE, title);
-            intent.putExtra(EXTRA_MESSAGE1, body);
-            startActivity(intent);
-            return true;
-
+        switch (id) {
+            case R.id.search:
+                onSearchRequested();
+                break;
+            case R.id.edit_menu_button:
+                Intent intent = new Intent(this, EditActivity.class);
+                intent.putExtra(EXTRA_MESSAGE, title);
+                intent.putExtra(EXTRA_MESSAGE1, body);
+                startActivity(intent);
+                break;
+            case R.id.action_settings:
+                Intent intent1 = new Intent(this, Settings.class);
+                startActivity(intent1);
+                return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }

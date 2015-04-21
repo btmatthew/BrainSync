@@ -6,16 +6,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 
 public class AddEntryActivity extends Activity {
@@ -31,6 +33,10 @@ public class AddEntryActivity extends Activity {
         //Make the app icon at the top left corner clickable so user can go to previous activity instead of using the back button
         android.app.ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Add New Entry");
+
+
+
     }
 
 
@@ -41,6 +47,7 @@ public class AddEntryActivity extends Activity {
         return true;
     }
 
+
     public void saveEntryMethod(View view) {
 
         //Link local EditText variables to EditText views created in XML
@@ -48,31 +55,76 @@ public class AddEntryActivity extends Activity {
         EditText datafield = (EditText) findViewById(R.id.information);
 
         //Get user inputs from the EditText fields
-        String title = titlefield.getText().toString().trim();
-        String information = datafield.getText().toString().trim();
+        final String title = titlefield.getText().toString().trim();
+        final String information = datafield.getText().toString().trim();
 
         if(title.equals("") || information.equals("")) {
             Toast.makeText(this, "Fields Cannot Be Empty :)", Toast.LENGTH_LONG).show();
 
         } else {
 
-            try {
+      //      String fileDirectory = getString(R.string.directoryLocation);
+            File dir = new File("data/data/com.example.anonymous.brainsync/files");
 
-                //Create a file and write to it. Input in the Title EditText field is used as file name
-               FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
-               PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
-                writer.println();
-                writer.println(information);
-                writer.close();
-
-                //Start the success activity after file creation and writing has been done
-                Intent intent = new Intent(this, SuccessActivity.class);
-                startActivity(intent);
-
-            } catch (IOException e) {
-
-                e.printStackTrace();
+            File[] filelist = dir.listFiles();
+            String[] a = new String[filelist.length];
+            for(int i=0;i<a.length;i++){
+                a[i] = filelist[i].getName();
             }
+
+                if(Arrays.asList(a).contains(title)){
+
+                    new AlertDialog.Builder(this)
+                            .setTitle("Hold Up...")
+                            .setMessage("An entry for '"+title+"' already exists. Saving this with the same name will overwrite the previous one. Do you wish to continue?")
+                            .setNegativeButton("No, Go Back!", null)
+                            .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                   overwriteMethod();
+                                }
+
+                                private void overwriteMethod() {
+                                    try {
+
+                                        //Create a file and write to it. Input in the Title EditText field is used as file name
+                                        FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
+                                        PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
+                                        writer.println();
+                                        writer.println(information);
+                                        writer.close();
+
+                                        //Start the success activity after file creation and writing has been done
+                                        Intent intent = new Intent(AddEntryActivity.this, SuccessActivity.class);
+                                        startActivity(intent);
+
+                                    } catch (IOException e) {
+
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).create().show();
+
+                } else {
+
+                    try {
+
+                        //Create a file and write to it. Input in the Title EditText field is used as file name
+                        FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
+                        PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
+                        writer.println();
+                        writer.println(information);
+                        writer.close();
+
+                        //Start the success activity after file creation and writing has been done
+                        Intent intent = new Intent(this, SuccessActivity.class);
+                        startActivity(intent);
+
+                    } catch (IOException e) {
+
+                        e.printStackTrace();
+                    }
+
+                }
 
         }
     }
@@ -88,26 +140,20 @@ public class AddEntryActivity extends Activity {
 
         if(title.equals("") && information.equals("")) {
 
-            Log.d("Gency", "Second");
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            AddEntryActivity.super.onBackPressed();
 
         } else {
 
             new AlertDialog.Builder(this)
                     .setTitle("Cancel Edit?")
                     .setMessage("All information on this page will not be saved. Are you sure you want to cancel this entry?")
-                    .setNegativeButton(android.R.string.no, null)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    .setNegativeButton("No, Go Back!", null)
+                    .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
                             AddEntryActivity.super.onBackPressed();
                         }
                     }).create().show();
         }
-//       Intent intent = new Intent(this, MainActivity.class);
-//        setFlags method is used so as not to create a new MainActivity and add to the activity stack but rather clear all previous activities
-//        and launch the MainActivity as the only activity on the stack
-//        startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
     }
 
@@ -122,17 +168,15 @@ public class AddEntryActivity extends Activity {
 
         if(title.equals("") && information.equals("")) {
 
-            Log.d("Gency", "Second");
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            AddEntryActivity.super.onBackPressed();
 
         } else {
 
             new AlertDialog.Builder(this)
                     .setTitle("Cancel Edit?")
                     .setMessage("All information on this page will not be saved. Are you sure you want to discard this entry?")
-                    .setNegativeButton(android.R.string.no, null)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    .setNegativeButton("No, Go Back!", null)
+                    .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
                             AddEntryActivity.super.onBackPressed();
                         }
@@ -148,15 +192,23 @@ public class AddEntryActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify a parent activity in AndroidManifest.xml
         int id = item.getItemId();
 
         //If the selected menu item is search launch the search bar at the top of the screen. See this section in MainActivity for more explanation
-        if (id == R.id.search) {
-            onSearchRequested();
-            return true;
-        }
+        switch(id){
+            case R.id.search:
+                onSearchRequested();
+                break;
+            case R.id.action_settings:
+                Intent intent = new Intent(this, Settings.class);
+                startActivity(intent);
+                break;
+            case R.id.about:
+                Intent intent1 = new Intent(this, About.class);
+                startActivity(intent1);
 
+        }
         return super.onOptionsItemSelected(item);
     }
 

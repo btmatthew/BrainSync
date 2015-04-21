@@ -12,23 +12,19 @@
         android:layout_width="fill_parent"
         android:layout_height="200dp"
         android:weightSum="1"
-        android:background="#1c649b"
+        android:background="@color/blue"
         android:id="@+id/topbanner"
         android:src="@drawable/mainimage"
 
        />
 
-
-
-
-
     <Button
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/topbanner"
         android:text="@string/add_entry"
-        android:textSize="20sp"
-        android:background="#1c9b51"
+        android:textSize="25sp"
+        android:background="@color/green"
         android:id="@+id/entry_button"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
@@ -39,7 +35,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-
         android:layout_below="@+id/entry_button"
         android:id="@+id/middlebuttons"
         android:orientation="horizontal"
@@ -69,13 +64,30 @@
 
         </LinearLayout>
 
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/middlebuttons"
-        android:text="@string/list_all_entry"
-        android:onClick="listEntriesMethod"
-        />
+        android:layout_below="@id/middlebuttons"
+        android:orientation="horizontal"
+        >
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_settings"
+            android:onClick="goSettings"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/middlebuttons"
+            android:text="@string/list_all_entry"
+            android:onClick="listEntriesMethod"
+            />
+
+        </LinearLayout>
+
+
 
 
 </RelativeLayout>

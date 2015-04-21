@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
 
     }
     //Calls settings activity
-    public void goSettings(){
+    public void goSettings(View view){
 
         //onSearchRequested();
         Intent intent = new Intent(this, Settings.class);
@@ -71,7 +71,6 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //If the selected menu item is search launch the search bar at the top of the screen
         //Each time the user searches for something anywhere in the app, the android system automatically creates an intent and passes it to the
         //SearchActivity. Coding for this is in the IntentFilter and MetaData tag contained in the Manifest File under the SearchActivity tag
         switch(id){
@@ -80,14 +79,16 @@ public class MainActivity extends Activity {
                 //return true;
                 break;
             case R.id.action_settings:
-                goSettings();
+                Intent intent = new Intent(this, Settings.class);
+                startActivity(intent);
                 break;
-
+            case R.id.about:
+                Intent intent1 = new Intent(this, About.class);
+                startActivity(intent1);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        /*if (id == R.id.search) {
-            onSearchRequested();
-            return true;
-        }*/
 
         return super.onOptionsItemSelected(item);
     }

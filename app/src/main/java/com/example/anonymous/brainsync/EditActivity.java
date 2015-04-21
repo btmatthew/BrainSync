@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -82,17 +81,15 @@ public class EditActivity extends Activity {
 
         if(title.equals("") && information.equals("")) {
 
-            Log.d("Gency", "Second");
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            EditActivity.super.onBackPressed();
 
         } else {
 
             new AlertDialog.Builder(this)
                     .setTitle("Cancel Edit?")
                     .setMessage("New information will not be saved. Are you sure you want to cancel?")
-                    .setNegativeButton(android.R.string.no, null)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    .setNegativeButton("No, Go Back!", null)
+                    .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
                             EditActivity.super.onBackPressed();
                         }
@@ -136,17 +133,15 @@ public class EditActivity extends Activity {
 
         if(title.equals("") && information.equals("")) {
 
-            Log.d("Gency", "Second");
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            EditActivity.super.onBackPressed();
 
         } else {
 
             new AlertDialog.Builder(this)
                     .setTitle("Cancel Edit?")
                     .setMessage("New information will not be saved. Are you sure you want to cancel?")
-                    .setNegativeButton(android.R.string.no, null)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    .setNegativeButton("No, Go Back!", null)
+                    .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
                             EditActivity.super.onBackPressed();
                         }

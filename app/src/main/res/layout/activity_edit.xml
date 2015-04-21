@@ -35,17 +35,21 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/red"
+            android:background="@color/green"
+            android:drawableLeft="@drawable/ic_action_save"
+            android:drawableStart="@drawable/ic_action_save"
             android:layout_weight="1"
-            android:text="@string/save_entry"
+            android:text="@string/save_update"
             android:onClick="updateEntryMethod"
             />
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/yellow"
+            android:drawableLeft="@drawable/ic_action_cancel"
+            android:drawableStart="@drawable/ic_action_cancel"
+            android:background="@color/red"
             android:layout_weight="1"
-            android:text="@string/cancel_entry"
+            android:text="@string/cancel_update"
             android:onClick="cancelUpdateMethod"
             />
 
