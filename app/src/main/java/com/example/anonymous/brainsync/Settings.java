@@ -17,10 +17,16 @@ public class Settings extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        final Button button = (Button) findViewById(R.id.dropboxBackupButton);
-        button.setOnClickListener(new View.OnClickListener() {
+        final Button backupDropboxButton = (Button) findViewById(R.id.dropboxBackupButton);
+        backupDropboxButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 backup();
+            }
+        });
+        final Button importDropboxButton = (Button) findViewById(R.id.dropboxImport);
+        importDropboxButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                importDropbox();
             }
         });
 
@@ -32,7 +38,11 @@ public class Settings extends Activity {
         });*/
     }
     protected void backup(){
-        Intent intent = new Intent(this, Dropbox.class);
+        Intent intent = new Intent(this, DropboxBackup.class);
+        startActivity(intent);
+    }
+    protected void importDropbox(){
+        Intent intent = new Intent(this, DropboxImport.class);
         startActivity(intent);
     }
 

@@ -21,8 +21,18 @@
         android:text="@string/drive_backup_button"
         android:id="@+id/driveBackupButton"
 
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/dropboxBackupButton"
+        android:layout_below="@+id/dropboxImport"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/importButtonTextDropbox"
+        android:id="@+id/dropboxImport"
+        android:layout_below="@+id/dropboxBackupButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
 </RelativeLayout>

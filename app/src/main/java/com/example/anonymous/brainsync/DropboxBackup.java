@@ -28,10 +28,10 @@ import java.util.ArrayList;
 /**
  * Created by Matthew Bulat on 13/04/2015.
  */
-public class Dropbox extends Activity {
+public class DropboxBackup extends Activity {
     private String fileDirectory;
-    final static private String APP_KEY = "";
-    final static private String APP_SECRET = "";
+    final static private String APP_KEY = "shz2ba3aei84dxd";
+    final static private String APP_SECRET = "vz5ksv0lk7xxylp";
     private DropboxAPI<AndroidAuthSession> mDBApi;
     CustomAdapter dataAdapter=null;
     private ArrayList<Filenames> fileNamesList;
@@ -40,12 +40,12 @@ public class Dropbox extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dropbox);
+        setContentView(R.layout.activity_dropbox_backup);
         fileDirectory = getString(R.string.directoryLocation);
         AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
         AndroidAuthSession session = new AndroidAuthSession(appKeys);
         mDBApi = new DropboxAPI<AndroidAuthSession>(session);
-        mDBApi.getSession().startOAuth2Authentication(Dropbox.this);
+        mDBApi.getSession().startOAuth2Authentication(DropboxBackup.this);
     }
     protected void onResume() {
         super.onResume();
@@ -56,12 +56,8 @@ public class Dropbox extends Activity {
 
                              mDBApi.getSession().finishAuthentication();
 
-                mDBApi.getSession().finishAuthentication();
-
-
                 String accessToken = mDBApi.getSession().getOAuth2AccessToken();
                 display();
-                //upload();
             } catch (IllegalStateException e) {
                 Log.i("DbAuthLog", "Error authenticating", e);
             }
@@ -188,12 +184,13 @@ public class Dropbox extends Activity {
                     runOnUiThread(new Toasting("All done! Your Brain is uploaded to Dropbox!"));
                     finish();
                 } catch (DropboxException | IOException e) {
-                    Log.i("test", ""+e);
+                    Log.i("DropboxException", ""+e);
                 }
             }
     }).start();
 
     }
+
     class Toasting implements Runnable{
 
         private String data;
