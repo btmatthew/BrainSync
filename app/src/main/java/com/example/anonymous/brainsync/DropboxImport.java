@@ -2,8 +2,6 @@ package com.example.anonymous.brainsync;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.DropBoxManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -65,12 +63,16 @@ public class DropboxImport extends Activity {
                     findViewById(R.id.progressBarDropboxImport).setVisibility(View.VISIBLE);
                 }
                 findViewById(R.id.progressBarDropboxImport).setVisibility(View.INVISIBLE);
-                display();
+                if(files.isEmpty()){
+                    runOnUiThread(new Toasting("Your Dropbox is empty! We cannot upload anything to your Brain."));
+                    finish();
+                }else{
+                    display();
+                }
             } catch (IllegalStateException e) {
                 Log.i("DbAuthLog", "Error authenticating", e);
             }
         }
-
     }
     class getFileList implements Runnable{
         @Override
@@ -83,21 +85,6 @@ public class DropboxImport extends Activity {
                 Log.i("DropboxException", ""+e);
             }
         }
-    }
-
-    protected void getFilesList(){
-        new Thread(new Runnable(){
-            public void run() {
-                try {
-                    DropboxAPI.Entry dirent = mDBApi.metadata("/", 1000, null, true, null);
-                    files = dirent.contents;
-
-                }catch(DropboxException e){
-                    Log.i("DropboxException", ""+e);
-                }
-            }
-        }).start();
-        display();
     }
 
     protected void display(){
@@ -203,7 +190,6 @@ public class DropboxImport extends Activity {
 
     protected void download(final ArrayList<Filenames> fileList){
         findViewById(R.id.progressBarDropboxImport).setVisibility(View.VISIBLE);
-        final String fileDirectory = getString(R.string.directoryLocation);
         new Thread(new Runnable(){
             public void run() {
 

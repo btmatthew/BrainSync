@@ -42,10 +42,17 @@ public class DropboxBackup extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dropbox_backup);
         fileDirectory = getString(R.string.directoryLocation);
-        AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
-        AndroidAuthSession session = new AndroidAuthSession(appKeys);
-        mDBApi = new DropboxAPI<AndroidAuthSession>(session);
-        mDBApi.getSession().startOAuth2Authentication(DropboxBackup.this);
+        File file = new File(fileDirectory);
+        if(file.list().length<0){
+            runOnUiThread(new Toasting("Your Brain is empty! :O , please add some notes to your Brain."));
+            finish();
+        }else{
+            AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
+            AndroidAuthSession session = new AndroidAuthSession(appKeys);
+            mDBApi = new DropboxAPI<AndroidAuthSession>(session);
+            mDBApi.getSession().startOAuth2Authentication(DropboxBackup.this);
+        }
+
     }
     protected void onResume() {
         super.onResume();
@@ -179,7 +186,7 @@ public class DropboxBackup extends Activity {
                 try {
                     for (int i = 0; i < fileList.size(); i++) {
                         FileInputStream inputStream = new FileInputStream(fileList.get(i));
-                        DropboxAPI.Entry response = mDBApi.putFileOverwrite(fileList.get(i).getName(), inputStream, fileList.get(i).length(), null);
+                        mDBApi.putFileOverwrite(fileList.get(i).getName(), inputStream, fileList.get(i).length(), null);
                     }
                     runOnUiThread(new Toasting("All done! Your Brain is uploaded to Dropbox!"));
                     finish();

@@ -47,10 +47,11 @@
         android:text="2015"
         android:textSize="20dp"
         android:textColor="#ffffff"
-        android:gravity="center"/>
-        <!--
-        android:drawableTop="@drawable/ic_action_copyright"
-        -->
+        android:gravity="center"
+        android:drawableTop="@drawable/ic_action_copyright"/>
+
+
+
 
 
 
