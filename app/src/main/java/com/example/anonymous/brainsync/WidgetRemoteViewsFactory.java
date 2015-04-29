@@ -1,12 +1,19 @@
 package com.example.anonymous.brainsync;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -19,6 +26,7 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
     private Context context=null;
     private int appWidgetId;
     private List<String> widgetList;
+
 
 
     public WidgetRemoteViewsFactory(Context context, Intent intent){
@@ -59,12 +67,16 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
     public int getCount() {
         return widgetList.size();
     }
-
     @Override
     public RemoteViews getViewAt(int position) {
+        String title=widgetList.get(position);
+        Intent viewEntry = new Intent(context, DisplaySelectedItem.class);
+        viewEntry.putExtra(ViewNotes.EXTRA_MESSAGE,title);
+
+
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.row_for_widget);
-        Log.i("DbAuthLog", widgetList.get(position));
-        remoteViews.setTextViewText(R.id.heading,widgetList.get(position));
+        remoteViews.setTextViewText(R.id.heading, title);
+        remoteViews.setOnClickFillInIntent(R.id.heading,viewEntry);
         return remoteViews;
     }
 

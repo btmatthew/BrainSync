@@ -8,6 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+
 
 public class DisplaySelectedItem extends Activity {
 
@@ -15,8 +18,7 @@ public class DisplaySelectedItem extends Activity {
     public final static String EXTRA_MESSAGE1 = "com.example.anonymous.brainsync.MESSAGE3";
   //  public final static String SEARCH_ITEM = "com.example.anonymous.brainsync.ITEM";
     String title;
-    String body;
-    String body1;
+    String body="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,11 +26,22 @@ public class DisplaySelectedItem extends Activity {
         //Gets the intent from the activity that's calling this one (i.e either the ListEntriesActivity or the SearchActivity)
         Intent intent = getIntent();
 
-//        Log.d("Gency", "This is it: "+intent.toString());
-
         //Queries the activity for the data it's passing and assigns it to local string variable message
         title = intent.getStringExtra(ListEntriesActivity.EXTRA_MESSAGE);
-        body = intent.getStringExtra("body");
+
+        try {
+            FileInputStream readingFromFile = openFileInput(title);
+            int c;
+            //Condition is true as long as we haven't gotten to the end of the file
+            while( (c = readingFromFile.read()) != -1){
+                body = body + Character.toString((char)c);
+
+            }
+            readingFromFile.close();
+        }catch(IOException e){
+
+        }
+
 
 
         //Creates a TextView component for this activity

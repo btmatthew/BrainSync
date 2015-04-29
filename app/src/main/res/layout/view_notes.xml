@@ -5,8 +5,18 @@
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/listEntriesViewWidget">
+        android:id="@+id/listEntriesViewWidget"
+        android:layout_below="@+id/addNewNote">
     </ListView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/addnewnote"
+        android:id="@+id/addNewNote"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>

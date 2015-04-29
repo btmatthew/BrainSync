@@ -234,29 +234,29 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
         //position of the selected item in the ListView is gotten, converted to string and passed to aa
         String title = entriesView.getItemAtPosition(position).toString();
 
-        try {
+        //try {
 
-            FileInputStream readingFromFile = openFileInput(title);
-            int c;
-            String body="";
+         //   FileInputStream readingFromFile = openFileInput(title);
+          //  int c;
+         //   String body="";
             //Condition is true as long as we haven't gotten to the end of the file
-            while( (c = readingFromFile.read()) != -1){
-                body = body + Character.toString((char)c);
+          //  while( (c = readingFromFile.read()) != -1){
+          //      body = body + Character.toString((char)c);
 
-                }
-            readingFromFile.close();
+           //     }
+            //readingFromFile.close();
 
             //This intent starts the DisplaySelectedItem activity and passes the data we got from the file stored in temp
             Intent intent = new Intent(this, DisplaySelectedItem.class);
             intent.putExtra(EXTRA_MESSAGE, title);
-            intent.putExtra("body", body);
+            //intent.putExtra("body", body);
             startActivity(intent);
 
 
-        } catch (IOException | IllegalArgumentException e) {
-            Toast.makeText(this, "Something Is Not Right!" + " / " + title , Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
+        //} catch (IOException | IllegalArgumentException e) {
+         //   Toast.makeText(this, "Something Is Not Right!" + " / " + title , Toast.LENGTH_SHORT).show();
+        //    e.printStackTrace();
+        //}
 
     }
 
