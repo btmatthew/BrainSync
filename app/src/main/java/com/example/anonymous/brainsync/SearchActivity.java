@@ -170,27 +170,27 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        String aa = result.getItemAtPosition(position).toString();
+        //String aa = result.getItemAtPosition(position).toString();
 
         try {
 
-            FileInputStream readingFromFile = openFileInput(aa);
+            //FileInputStream readingFromFile = openFileInput(aa);
 
-            int c;
-            String temp="";
-            while( (c = readingFromFile.read()) != -1){
-                temp = temp + Character.toString((char)c);
+            //int c;
+            //String temp="";
+            //while( (c = readingFromFile.read()) != -1){
+            //    temp = temp + Character.toString((char)c);
 
-            }
-            readingFromFile.close();
+           // }
+           // readingFromFile.close();
 
             Intent intent = new Intent(this, DisplaySelectedItem.class);
             intent.putExtra(EXTRA_MESSAGE, query);
-            intent.putExtra("body", temp);
+            //intent.putExtra("body", temp);
             startActivity(intent);
 
-        } catch (IOException | IllegalArgumentException e) {
-            Toast.makeText(this, "Something Is Not Right!" + " / " + aa , Toast.LENGTH_SHORT).show();
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(this, "Something Is Not Right!" + " / " + e , Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
