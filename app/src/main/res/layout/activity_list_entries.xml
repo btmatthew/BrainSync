@@ -13,9 +13,6 @@
         android:layout_height="fill_parent"
         android:id="@+id/listEntriesView"
 
-
-
-
         >
 
         </ListView>

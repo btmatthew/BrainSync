@@ -17,7 +17,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class AddEntryActivity extends Activity {
@@ -34,9 +37,6 @@ public class AddEntryActivity extends Activity {
         android.app.ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Add New Entry");
-
-
-
     }
 
 
@@ -46,7 +46,6 @@ public class AddEntryActivity extends Activity {
         getMenuInflater().inflate(R.menu.menu_add_entry, menu);
         return true;
     }
-
 
     public void saveEntryMethod(View view) {
 
@@ -62,69 +61,73 @@ public class AddEntryActivity extends Activity {
             Toast.makeText(this, "Fields Cannot Be Empty :)", Toast.LENGTH_LONG).show();
 
         } else {
-
-      //      String fileDirectory = getString(R.string.directoryLocation);
+            try {
+            //      String fileDirectory = getString(R.string.directoryLocation);
             File dir = new File("data/data/com.example.anonymous.brainsync/files");
-
             File[] filelist = dir.listFiles();
+
             String[] a = new String[filelist.length];
-            for(int i=0;i<a.length;i++){
+            for (int i = 0; i < a.length; i++) {
                 a[i] = filelist[i].getName();
             }
 
-                if(Arrays.asList(a).contains(title)){
+            if (Arrays.asList(a).contains(title)) {
 
-                    new AlertDialog.Builder(this)
-                            .setTitle("Hold Up...")
-                            .setMessage("An entry for '"+title+"' already exists. Saving this with the same name will overwrite the previous one. Do you wish to continue?")
-                            .setNegativeButton("No, Go Back!", null)
-                            .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface arg0, int arg1) {
-                                   overwriteMethod();
+                new AlertDialog.Builder(this)
+                        .setTitle("Hold Up...")
+                        .setMessage("An entry for '" + title + "' already exists. Saving this with the same name will overwrite the previous one. Do you wish to continue?")
+                        .setNegativeButton("No, Go Back!", null)
+                        .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                overwriteMethod();
+                            }
+
+                            private void overwriteMethod() {
+                                try {
+
+                                    FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
+                                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
+                                    writer.println();
+                                    writer.println(information);
+                                    writer.close();
+
+
+                                    //Start the success activity after file creation and writing has been done
+                                    Intent intent = new Intent(AddEntryActivity.this, SuccessActivity.class);
+                                    startActivity(intent);
+
+                                } catch (IOException e) {
+
+                                    e.printStackTrace();
                                 }
+                            }
+                        }).create().show();
 
-                                private void overwriteMethod() {
-                                    try {
+            } else {
 
-                                        //Create a file and write to it. Input in the Title EditText field is used as file name
-                                        FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
-                                        PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
-                                        writer.println();
-                                        writer.println(information);
-                                        writer.close();
+                try {
 
-                                        //Start the success activity after file creation and writing has been done
-                                        Intent intent = new Intent(AddEntryActivity.this, SuccessActivity.class);
-                                        startActivity(intent);
+                    //Create a file and write to it. Input in the Title EditText field is used as file name
+                    FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
+                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
+                    writer.println();
+                    writer.println(information);
+                    writer.close();
 
-                                    } catch (IOException e) {
+                    //Start the success activity after file creation and writing has been done
+                    Intent intent = new Intent(this, SuccessActivity.class);
+                    startActivity(intent);
 
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }).create().show();
+                } catch (IOException e) {
 
-                } else {
-
-                    try {
-
-                        //Create a file and write to it. Input in the Title EditText field is used as file name
-                        FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
-                        PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
-                        writer.println();
-                        writer.println(information);
-                        writer.close();
-
-                        //Start the success activity after file creation and writing has been done
-                        Intent intent = new Intent(this, SuccessActivity.class);
-                        startActivity(intent);
-
-                    } catch (IOException e) {
-
-                        e.printStackTrace();
-                    }
-
+                    e.printStackTrace();
                 }
+
+            }
+        } catch (NullPointerException a) {
+
+                Toast.makeText(this, "Exception Caught", Toast.LENGTH_LONG).show();
+            }
 
         }
     }
@@ -198,7 +201,21 @@ public class AddEntryActivity extends Activity {
         //If the selected menu item is search launch the search bar at the top of the screen. See this section in MainActivity for more explanation
         switch(id){
             case R.id.search:
-                onSearchRequested();
+                List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
+
+                for (Iterator<String> it = list.iterator(); it.hasNext();) {
+                    if (it.next().contains("rList"))
+                        it.remove();
+                }
+
+                final String[] defaultFiles = new String[list.size()];
+                int a = defaultFiles.length;
+
+                if (a == 0) {
+                    Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
+                } else {
+                    onSearchRequested();
+                }
                 break;
             case R.id.action_settings:
                 Intent intent = new Intent(this, Settings.class);

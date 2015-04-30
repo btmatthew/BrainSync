@@ -17,8 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -52,13 +51,6 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
                 .withMargins(0, 0, 16, 16)
                 .create();
 
-//        fabButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(ListEntriesActivity.this, "Button Clicked!", Toast.LENGTH_LONG).show();
-//            }
-//        });
-
           fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,25 +59,12 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
             }
         });
 
-
-
-        //Create a new file object and pass it the directory we want to list files from
-        File dir = new File(fileDirectory);
-        //List all files in the directory and pass them to the array 'filelist' of File type
-        File[] filelist = dir.listFiles();
-
         List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
-
-        if (filelist == null) {
-            Toast.makeText(this, "No Entries Yet", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-        } else {
-
 
             for (Iterator<String> it = list.iterator(); it.hasNext();) {
                 if (it.next().contains("rList"))
                     it.remove();
+               // Log.d("G", "Hello");
             }
 
             final String[] theNamesOfFiles = new String[list.size()];
@@ -94,7 +73,7 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
                 theNamesOfFiles[i] = list.get(i);
             }
 
-            Arrays.sort(theNamesOfFiles);
+            Arrays.sort(theNamesOfFiles, Collator.getInstance());
 
             //ArrayAdapter that links each files in our array to the ListView used in the activity
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, theNamesOfFiles);
@@ -129,9 +108,7 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
                 //multiple item selection
                 public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
 
-                    double id1 = entriesView.getSelectedItemPosition();
-                  //  entriesView.setBackgroundColor(102);
-                    //The position of the selected item in the ListView is gotten and converted to string (which is the file name)
+                     //The position of the selected item in the ListView is gotten and converted to string (which is the file name)
                     String a = entriesView.getItemAtPosition(position).toString();
                     //This if statement is necessary because should the user de-selects an item, the system should remove it from the arraylist so
                     //they don't get passed to the delete method
@@ -196,13 +173,7 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
 
                 }
             });
-
-
         }
-
-
-    }
-
 
 
     public void deleteMethod() {

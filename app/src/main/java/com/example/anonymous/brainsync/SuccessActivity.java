@@ -64,5 +64,6 @@ public class SuccessActivity extends Activity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
+
     }
 }

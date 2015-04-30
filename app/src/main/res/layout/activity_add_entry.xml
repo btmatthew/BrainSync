@@ -12,9 +12,8 @@
         android:layout_height="wrap_content"
         android:hint="Enter Title"
         android:id="@+id/titleBar"
-
-
-        android:layout_weight="0.5" />
+        android:layout_weight="0.5"
+        android:inputType="textShortMessage" />
 
     <EditText
         android:layout_width="match_parent"
@@ -24,8 +23,6 @@
         android:gravity="top"
         android:layout_weight="8"
         android:id="@+id/information"
-
-
         />
 
     <LinearLayout
@@ -55,6 +52,7 @@
             android:text="@string/cancel_entry"
             android:onClick="cancelEntryMethod"
             android:background="@color/red"
+
             />
         </LinearLayout>
 

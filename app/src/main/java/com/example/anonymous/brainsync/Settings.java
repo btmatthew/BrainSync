@@ -30,6 +30,13 @@ public class Settings extends Activity {
             }
         });
 
+//        final Button report = (Button) findViewById(R.id.reportProblemButton);
+//        report.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                reportProblem();
+//            }
+//        });
+
         /*final Button button1 = (Button) findViewById(R.id.driveBackupButton);
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -43,6 +50,11 @@ public class Settings extends Activity {
     }
     protected void importDropbox(){
         Intent intent = new Intent(this, DropboxImport.class);
+        startActivity(intent);
+    }
+
+    public void reportProblem(View view) {
+        Intent intent = new Intent(this, Feedback.class);
         startActivity(intent);
     }
 

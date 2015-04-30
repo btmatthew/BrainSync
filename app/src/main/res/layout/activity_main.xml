@@ -48,7 +48,8 @@
             android:text="@string/what_do_i_know"
             android:textSize="20dp"
 
-/>
+
+            />
 
         <Button
             android:layout_width="0dp"

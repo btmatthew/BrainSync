@@ -16,10 +16,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class SearchActivity extends ListActivity implements AdapterView.OnItemClickListener {
@@ -27,6 +27,7 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
     String query;
     ListView result;
     ArrayList<String> selectedMenuItem = new ArrayList<String>();
+    int itemSelectedCount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,14 +72,22 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
             for (i = 0; i < a.length; i++) {
                 a[i] = availableFiles[i].getName();
             }
+
+            List<String> list = new ArrayList<String>(Arrays.asList(a));
+            for (Iterator<String> it=list.iterator(); it.hasNext();) {
+                if (!it.next().contains(requestedEntry))
+                    it.remove();
+            }
+
+            if(list.size() != 0) {
+
             //    try {
             //Checks array a for query
-            if (Arrays.asList(a).contains(requestedEntry)) {
-
-                //if condition is matched, create a new array and pass it the value of value
-                String[] newArray = {requestedEntry};
+            //if (Arrays.asList(a).contains(requestedEntry)) {
+               //if condition is matched, create a new array and pass it the value of value
+               // String[] newArray = {requestedEntry};
                 //create a new ArrayAdapter and pass our newly created array to it
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, newArray);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
                 //Use the list view under search activity XML and pass it's properties to our ListView 'result' created above
                 result = (ListView) findViewById(android.R.id.list);
                 //Put the contents of the adapter (which is content in the array 'newArray') into ListView
@@ -91,8 +100,32 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
 
                     @Override
                     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                        selectedMenuItem.add(result.getItemAtPosition(position).toString());
 
+                        String a = result.getItemAtPosition(position).toString();
+
+                        if (selectedMenuItem.contains(a)) {
+
+                            //gets the position of the de-selected item and passes it to int b
+                            int b = selectedMenuItem.indexOf(a);
+                            //system removes element at position b in the array
+                            selectedMenuItem.remove(b);
+                            //size of array is gotten and passed to integer variable itemSelectedCount created earlier
+                            itemSelectedCount = selectedMenuItem.size();
+                            //The CAB(Contextual Action Bar) is updated to show how many items have been selected
+                            mode.setTitle(itemSelectedCount + " Item(s) Selected");
+
+                        }
+                        //Else statement comes into play if the user hasn't selected the item before i.e not contained in the arraylist
+                        else {
+                            //The position of the selected item in the ListView is gotten and converted to string (which is the file name)
+                            //and then added to the arrayList 'selectedMenuItems' created earlier using the .add method
+                            //   entriesView.setBackgroundColor(Color.LTGRAY);
+                            selectedMenuItem.add(result.getItemAtPosition(position).toString());
+
+                            itemSelectedCount = selectedMenuItem.size();
+                            mode.setTitle(itemSelectedCount + " Item(s) Selected");
+
+                        }
 
                     }
 
@@ -149,19 +182,18 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
     public void deleteMethod() {
         String itemName = "";
         //Carries out the delete action based on the size of the arraylist held by the variable itemSelectedCount
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < itemSelectedCount; i++) {
             itemName = selectedMenuItem.get(i);
             //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
             //Not sure why the concatenation works but it does... :P
             File dir = new File("data/data/com.example.anonymous.brainsync/files/" + selectedMenuItem.get(i));
             dir.delete();
-            selectedMenuItem.clear();
-            Intent intent = new Intent(this, ListEntriesActivity.class);
-            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
 
-        Toast.makeText(this, itemName+" Deleted", Toast.LENGTH_LONG).show();
-
+        selectedMenuItem.clear();
+        Toast.makeText(this, itemSelectedCount+" Entries Deleted", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, ListEntriesActivity.class);
+        startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
     }
 
@@ -170,27 +202,27 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        //String aa = result.getItemAtPosition(position).toString();
+        String aa = result.getItemAtPosition(position).toString();
 
         try {
-
-            //FileInputStream readingFromFile = openFileInput(aa);
-
-            //int c;
-            //String temp="";
-            //while( (c = readingFromFile.read()) != -1){
-            //    temp = temp + Character.toString((char)c);
-
-           // }
-           // readingFromFile.close();
+//
+//            FileInputStream readingFromFile = openFileInput(aa);
+//
+//            int c;
+//            String temp="";
+//            while( (c = readingFromFile.read()) != -1){
+//                temp = temp + Character.toString((char)c);
+//
+//            }
+//            readingFromFile.close();
 
             Intent intent = new Intent(this, DisplaySelectedItem.class);
-            intent.putExtra(EXTRA_MESSAGE, query);
-            //intent.putExtra("body", temp);
+            intent.putExtra(EXTRA_MESSAGE, aa);
+ //           intent.putExtra("body", temp);
             startActivity(intent);
 
         } catch (IllegalArgumentException e) {
-            Toast.makeText(this, "Something Is Not Right!" + " / " + e , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Something Is Not Right!" + " / " + aa , Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 

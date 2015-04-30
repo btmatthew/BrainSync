@@ -35,4 +35,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/feedback"
+        android:layout_below="@id/driveBackupButton"
+        android:id="@+id/reportProblemButton"
+        android:onClick="reportProblem"
+        />
+
 </RelativeLayout>

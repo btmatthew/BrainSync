@@ -43,7 +43,6 @@ public class DisplaySelectedItem extends Activity {
         }
 
 
-
         //Creates a TextView component for this activity
         TextView textView = new TextView(this);
         textView.setTextSize(20);
@@ -51,11 +50,8 @@ public class DisplaySelectedItem extends Activity {
         //Sets the data received from previous activity into the TextView
         textView.setText(body);
 
-
         //Sets the EditText view to display in this activity
         setContentView(textView);
-
-
 
         //Makes the view scrollable if there are too many items in the file
         textView.setMovementMethod(new ScrollingMovementMethod());

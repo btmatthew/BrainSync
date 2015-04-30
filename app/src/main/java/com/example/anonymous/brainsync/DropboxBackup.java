@@ -61,7 +61,7 @@ public class DropboxBackup extends Activity {
             try {
                 // Required to complete auth, sets the access token on the session
 
-                             mDBApi.getSession().finishAuthentication();
+                mDBApi.getSession().finishAuthentication();
 
                 String accessToken = mDBApi.getSession().getOAuth2AccessToken();
                 display();
@@ -119,14 +119,14 @@ public class DropboxBackup extends Activity {
                         filename.setSelected(cb.isChecked());
                     }
                 });
-                }else{
+            }else{
                 holder=(ViewHolder)convertView.getTag();
             }
             Filenames files = fileList.get(position);
             holder.name.setText(files.getFilename());
             holder.name.setChecked(files.isSelected());
             holder.name.setTag(files);
-           return convertView;
+            return convertView;
         }
     }
 
@@ -194,7 +194,7 @@ public class DropboxBackup extends Activity {
                     Log.i("DropboxException", ""+e);
                 }
             }
-    }).start();
+        }).start();
 
     }
 

@@ -6,6 +6,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class MainActivity extends Activity {
@@ -14,47 +20,69 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
     }
 
     //Called when the 'Add An Entry' button is clicked as configured in the XML
     public void addEntry (View entry) {
-
         Intent intent = new Intent(this, AddEntryActivity.class);
         startActivity(intent);
-
     }
 
     //Called when the 'List All Entries' button is clicked as configured in the XML
     public void listEntriesMethod(View view){
 
-        Intent intent = new Intent(this, ListEntriesActivity.class);
-        startActivity(intent);
+  //   try {
+         List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
 
+         for (Iterator<String> it = list.iterator(); it.hasNext();) {
+             if (it.next().contains("rList"))
+                 it.remove();
+             }
 
+         final String[] defaultFiles = new String[list.size()];
+         int a = defaultFiles.length;
+//        String b = String.valueOf(a);
+//        Log.d("Gency", b);
+         if (a == 0) {
+             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
+         } else {
+             Intent intent = new Intent(this, ListEntriesActivity.class);
+             startActivity(intent);
+         }
+//     } catch (NullPointerException a) {
+//         Toast.makeText(this, "Exception", Toast.LENGTH_SHORT).show();
+//     }
     }
 
     //Called when the 'Search My Brain' button is clicked as configured in the XML
     public void goSearch(View view) {
 
-        onSearchRequested();
-        //Intent intent = new Intent(this, SearchActivity.class);
-       // startActivity(intent);
+        List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
+
+        for (Iterator<String> it = list.iterator(); it.hasNext();) {
+            if (it.next().contains("rList"))
+                it.remove();
+        }
+
+        final String[] defaultFiles = new String[list.size()];
+        int a = defaultFiles.length;
+
+        if (a == 0) {
+            Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
+        } else {
+            onSearchRequested();
+        }
 
     }
+
+
     //Calls settings activity
     public void goSettings(View view){
 
-        //onSearchRequested();
-        Intent intent = new Intent(this, Settings.class);
-         startActivity(intent);
+          Intent intent = new Intent(this, Settings.class);
+          startActivity(intent);
 
     }
-
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,8 +103,21 @@ public class MainActivity extends Activity {
         //SearchActivity. Coding for this is in the IntentFilter and MetaData tag contained in the Manifest File under the SearchActivity tag
         switch(id){
             case R.id.search:
-                onSearchRequested();
-                //return true;
+                List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
+
+                for (Iterator<String> it = list.iterator(); it.hasNext();) {
+                    if (it.next().contains("rList"))
+                        it.remove();
+                }
+
+                final String[] defaultFiles = new String[list.size()];
+                int a = defaultFiles.length;
+
+                if (a == 0) {
+                    Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
+                } else {
+                    onSearchRequested();
+                }
                 break;
             case R.id.action_settings:
                 Intent intent = new Intent(this, Settings.class);
