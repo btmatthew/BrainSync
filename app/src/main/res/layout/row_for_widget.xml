@@ -11,11 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:singleLine="true"
+        android:singleLine="false"
         android:textSize="20sp"
         android:textStyle="bold"
         android:text="Heading"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:shadowColor="#ffce7c02"
+        android:textColor="#93000000" />
 
 
 </RelativeLayout>

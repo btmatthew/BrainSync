@@ -6,17 +6,38 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/listEntriesViewWidget"
-        android:layout_below="@+id/addNewNote">
+        android:layout_below="@+id/liniearViewWidget"
+        android:drawSelectorOnTop="false">
     </ListView>
 
-    <Button
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/liniearViewWidget"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/addnewnote"
-        android:id="@+id/addNewNote"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:background="#a32f0e02">
+        <!--android:layout_alignBottom="@+id/addNewNote">-->
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/addnewnote"
+            android:id="@+id/addNewNote"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/widgetTitle"
+            android:id="@+id/textView2"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

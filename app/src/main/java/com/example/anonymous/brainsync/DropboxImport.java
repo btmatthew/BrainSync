@@ -29,8 +29,8 @@ import java.util.List;
 
 public class DropboxImport extends Activity {
     private String fileDirectory;
-    final static private String APP_KEY = "";
-    final static private String APP_SECRET = "";
+    final static private String APP_KEY = "shz2ba3aei84dxd";
+    final static private String APP_SECRET = "vz5ksv0lk7xxylp";
     private DropboxAPI<AndroidAuthSession> mDBApi;
     private List<DropboxAPI.Entry> files;
     private ArrayList<Filenames> fileNamesList;

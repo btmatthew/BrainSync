@@ -50,6 +50,7 @@
     <string name="title_activity_feedback">Feedback</string>
     <string name="feedback">Contact Us/Report a Problem</string>
     <string name="addnewnote">Add New Note</string>
+    <string name="widgetTitle">Brain Sync</string>
 
 
 </resources>

@@ -114,6 +114,7 @@ public class AddEntryActivity extends Activity {
                     writer.println(information);
                     writer.close();
 
+
                     //Start the success activity after file creation and writing has been done
                     Intent intent = new Intent(this, SuccessActivity.class);
                     startActivity(intent);

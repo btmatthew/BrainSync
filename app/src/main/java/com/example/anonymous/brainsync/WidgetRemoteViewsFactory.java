@@ -1,19 +1,15 @@
 package com.example.anonymous.brainsync;
 
-import android.app.PendingIntent;
+
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -42,11 +38,13 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
         String fileDirectory = "data/data/com.example.anonymous.brainsync/files/";
         File dir = new File(fileDirectory);
         String[] fileList = dir.list();
+        Arrays.sort(fileList, Collator.getInstance());
         widgetList = new ArrayList<String>(Arrays.asList(fileList));
         for (Iterator<String> it = widgetList.iterator(); it.hasNext();) {
             if (it.next().contains("rList"))
                 it.remove();
         }
+
     }
     @Override
     public void onCreate() {
@@ -70,6 +68,7 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
     @Override
     public RemoteViews getViewAt(int position) {
         String title=widgetList.get(position);
+        Log.i("title", title);
         Intent viewEntry = new Intent(context, DisplaySelectedItem.class);
         viewEntry.putExtra(ViewNotes.EXTRA_MESSAGE,title);
 
