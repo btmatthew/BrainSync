@@ -51,6 +51,9 @@
     <string name="feedback">Contact Us/Report a Problem</string>
     <string name="addnewnote">Add New Note</string>
     <string name="widgetTitle">Brain Sync</string>
+    <string name="subTitleSettingsDropbox">Dropbox Backup and Import</string>
+    <string name="subTitleSettingsGoogle">Google Backup and Import</string>
+    <string name="subTitleSettingsFeedback">Feedback</string>
 
 
 </resources>

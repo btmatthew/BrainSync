@@ -1,7 +1,10 @@
 package com.example.anonymous.brainsync;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -198,9 +201,9 @@ public class DropboxImport extends Activity {
                         File file = new File(fileDirectory+"/"+fileList.get(i).getFilename());
                         FileOutputStream outputStream = new FileOutputStream(file);
                         DropboxAPI.DropboxFileInfo info = mDBApi.getFile("/"+fileList.get(i).getFilename(), null, outputStream, null);
-                        Log.i("DbExampleLog", "The file's rev is: " + info.getMetadata().rev);
                     }
                     runOnUiThread(new Toasting("All done! Your Brain is downloaded from Dropbox!"));
+                    updateWidget();
                     finish();
                 } catch (DropboxException | IOException e) {
                     Log.i("DropboxException", ""+e);
@@ -208,7 +211,13 @@ public class DropboxImport extends Activity {
             }
         }).start();
     }
-
+    protected void updateWidget(){
+        Intent intentWidget= new Intent(this, ViewNotes.class);
+        intentWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids=AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ViewNotes.class));
+        intentWidget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        sendBroadcast(intentWidget);
+    }
     class Toasting implements Runnable{
 
         private String data;
