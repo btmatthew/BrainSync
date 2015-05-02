@@ -68,7 +68,6 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
     @Override
     public RemoteViews getViewAt(int position) {
         String title=widgetList.get(position);
-        Log.i("title", title);
         Intent viewEntry = new Intent(context, DisplaySelectedItem.class);
         viewEntry.putExtra(ViewNotes.EXTRA_MESSAGE,title);
 

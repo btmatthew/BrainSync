@@ -48,17 +48,14 @@ public class ViewNotes extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-        Log.i("update", "update2");
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.view_notes);
 
         Intent intent = new Intent(context, WidgetService.class);
         Intent newEntry = new Intent(context, AddEntryActivity.class);
         Intent viewEntry = new Intent(context, DisplaySelectedItem.class);
-        Log.i("update", "update3");
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0,newEntry,0);
         PendingIntent startActivity = PendingIntent.getActivity(context,0,viewEntry,PendingIntent.FLAG_UPDATE_CURRENT);
-        Log.i("update", "update4");
 
 
         views.setPendingIntentTemplate(R.id.listEntriesViewWidget,startActivity);
@@ -66,7 +63,6 @@ public class ViewNotes extends AppWidgetProvider {
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         views.setRemoteAdapter(R.id.listEntriesViewWidget,intent);
         views.setOnClickPendingIntent(R.id.addNewNote,pendingIntent);
-        Log.i("update", "update5");
         // Instruct the widget manager to update the widget
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId,R.id.listEntriesViewWidget);
         appWidgetManager.updateAppWidget(appWidgetId, views);
