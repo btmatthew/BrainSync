@@ -62,7 +62,7 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
         List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
 
             for (Iterator<String> it = list.iterator(); it.hasNext();) {
-                if (it.next().contains("rList"))
+                if (it.next().contains("rList")||it.next().contains("share_history"))
                     it.remove();
                // Log.d("G", "Hello");
             }

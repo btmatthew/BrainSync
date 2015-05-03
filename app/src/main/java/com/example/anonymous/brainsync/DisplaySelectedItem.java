@@ -37,7 +37,10 @@ public class DisplaySelectedItem extends Activity {
             int c;
             //Condition is true as long as we haven't gotten to the end of the file
             while( (c = readingFromFile.read()) != -1){
-                body = body + Character.toString((char)c);
+
+                    body = body + Character.toString((char)c);
+
+
 
             }
             readingFromFile.close();
@@ -79,7 +82,7 @@ public class DisplaySelectedItem extends Activity {
         Intent shareItem = new Intent(Intent.ACTION_SEND);
         shareItem.setAction(Intent.ACTION_SEND);
         shareItem.setType("text/plain");
-        shareItem.putExtra(Intent.EXTRA_TEXT,body);
+        shareItem.putExtra(Intent.EXTRA_TEXT, body);
         mShareActionProvider.setShareIntent(shareItem);
         return true;
     }

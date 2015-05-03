@@ -99,7 +99,7 @@ public class DropboxBackup extends Activity {
 
         for (int i = 0; i < fileListLength; i++) {
             Filenames file = new Filenames(fileList[i].getName(),false);
-            if(!file.getFilename().contains("rList")){
+            if(!(file.getFilename().contains("rList")||file.getFilename().contains("share_history"))){
                 file.setFile(fileList[i]);
                 fileNamesList.add(file);
             }
