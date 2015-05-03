@@ -1,10 +1,8 @@
 package com.example.anonymous.brainsync;
 
 import android.app.Activity;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -32,6 +30,7 @@ import java.util.List;
 
 public class DropboxImport extends Activity {
     private String fileDirectory;
+    final static private String PREFS_NAME="dropboxToken";
     final static private String APP_KEY = "shz2ba3aei84dxd";
     final static private String APP_SECRET = "vz5ksv0lk7xxylp";
     private DropboxAPI<AndroidAuthSession> mDBApi;
@@ -48,7 +47,15 @@ public class DropboxImport extends Activity {
         AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
         AndroidAuthSession session = new AndroidAuthSession(appKeys);
         mDBApi = new DropboxAPI<AndroidAuthSession>(session);
-        mDBApi.getSession().startOAuth2Authentication(DropboxImport.this);
+        SharedPreferences setToken = getSharedPreferences(PREFS_NAME,0);
+        String key = setToken.getString(APP_KEY, null);
+        String token = setToken.getString(APP_SECRET,null);
+        if(key!=null&&token!=null){
+            mDBApi.getSession().setOAuth2AccessToken(token);
+            startCollection();
+        }else{
+            mDBApi.getSession().startOAuth2Authentication(DropboxImport.this);
+        }
     }
 
 
@@ -60,18 +67,13 @@ public class DropboxImport extends Activity {
                 // Required to complete auth, sets the access token on the session
                 mDBApi.getSession().finishAuthentication();
                 String accessToken = mDBApi.getSession().getOAuth2AccessToken();
-                collectFileName = new Thread(new getFileList());
-                collectFileName.start();
-                while(collectFileName.isAlive()){
-                    findViewById(R.id.progressBarDropboxImport).setVisibility(View.VISIBLE);
-                }
-                findViewById(R.id.progressBarDropboxImport).setVisibility(View.INVISIBLE);
-                if(files.isEmpty()){
-                    runOnUiThread(new Toasting("Your Dropbox is empty! We cannot upload anything to your Brain."));
-                    finish();
-                }else{
-                    display();
-                }
+                SharedPreferences setToken = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor= setToken.edit();
+                editor.putString(APP_KEY,"oauth2:");
+                editor.putString(APP_SECRET, accessToken);
+                editor.apply();
+                startCollection();
+
             } catch (IllegalStateException e) {
                 Log.i("DbAuthLog", "Error authenticating", e);
             }
@@ -87,6 +89,20 @@ public class DropboxImport extends Activity {
             }catch(DropboxException e){
                 Log.i("DropboxException", ""+e);
             }
+        }
+    }
+    protected void startCollection(){
+        collectFileName = new Thread(new getFileList());
+        collectFileName.start();
+        while(collectFileName.isAlive()){
+            findViewById(R.id.progressBarDropboxImport).setVisibility(View.VISIBLE);
+        }
+        findViewById(R.id.progressBarDropboxImport).setVisibility(View.INVISIBLE);
+        if(files.isEmpty()){
+            runOnUiThread(new Toasting("Your Dropbox is empty! We cannot upload anything to your Brain."));
+            finish();
+        }else{
+            display();
         }
     }
 
@@ -201,9 +217,9 @@ public class DropboxImport extends Activity {
                         File file = new File(fileDirectory+"/"+fileList.get(i).getFilename());
                         FileOutputStream outputStream = new FileOutputStream(file);
                         DropboxAPI.DropboxFileInfo info = mDBApi.getFile("/"+fileList.get(i).getFilename(), null, outputStream, null);
+                        Log.i("DbExampleLog", "The file's rev is: " + info.getMetadata().rev);
                     }
                     runOnUiThread(new Toasting("All done! Your Brain is downloaded from Dropbox!"));
-                    updateWidget();
                     finish();
                 } catch (DropboxException | IOException e) {
                     Log.i("DropboxException", ""+e);
@@ -211,13 +227,7 @@ public class DropboxImport extends Activity {
             }
         }).start();
     }
-    protected void updateWidget(){
-        Intent intentWidget= new Intent(this, ViewNotes.class);
-        intentWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int[] ids=AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ViewNotes.class));
-        intentWidget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
-        sendBroadcast(intentWidget);
-    }
+
     class Toasting implements Runnable{
 
         private String data;

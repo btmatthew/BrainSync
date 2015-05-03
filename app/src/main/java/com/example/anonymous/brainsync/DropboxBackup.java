@@ -2,6 +2,7 @@ package com.example.anonymous.brainsync;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.exception.DropboxException;
+import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 
 import java.io.File;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
  */
 public class DropboxBackup extends Activity {
     private String fileDirectory;
+    final static private String PREFS_NAME="dropboxToken";
     final static private String APP_KEY = "shz2ba3aei84dxd";
     final static private String APP_SECRET = "vz5ksv0lk7xxylp";
     private DropboxAPI<AndroidAuthSession> mDBApi;
@@ -50,7 +53,19 @@ public class DropboxBackup extends Activity {
             AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
             AndroidAuthSession session = new AndroidAuthSession(appKeys);
             mDBApi = new DropboxAPI<AndroidAuthSession>(session);
-            mDBApi.getSession().startOAuth2Authentication(DropboxBackup.this);
+            SharedPreferences setToken = getSharedPreferences(PREFS_NAME,0);
+            String key = setToken.getString(APP_KEY, null);
+            String token = setToken.getString(APP_SECRET,null);
+            if(key!=null&&token!=null){
+                mDBApi.getSession().setOAuth2AccessToken(token);
+                display();
+            }else{
+                mDBApi.getSession().startOAuth2Authentication(DropboxBackup.this);
+            }
+
+
+
+
         }
 
     }
@@ -62,8 +77,12 @@ public class DropboxBackup extends Activity {
                 // Required to complete auth, sets the access token on the session
 
                 mDBApi.getSession().finishAuthentication();
-
                 String accessToken = mDBApi.getSession().getOAuth2AccessToken();
+                SharedPreferences setToken = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor= setToken.edit();
+                editor.putString(APP_KEY,"oauth2:");
+                editor.putString(APP_SECRET,accessToken);
+                editor.apply();
                 display();
             } catch (IllegalStateException e) {
                 Log.i("DbAuthLog", "Error authenticating", e);
@@ -216,7 +235,7 @@ public class DropboxBackup extends Activity {
                     int duration = Toast.LENGTH_LONG;
 
                     Toast toast = Toast.makeText(context, text, duration);
-                    toast.setGravity(Gravity.CENTER| Gravity.CENTER, 0, 0);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
 
                 }
