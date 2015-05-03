@@ -2,6 +2,8 @@ package com.example.anonymous.brainsync;
 
 import android.app.ListActivity;
 import android.app.SearchManager;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ActionMode;
@@ -189,6 +191,11 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
             File dir = new File("data/data/com.example.anonymous.brainsync/files/" + selectedMenuItem.get(i));
             dir.delete();
         }
+        Intent intentWidget= new Intent(this, ViewNotes.class);
+        intentWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids=AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ViewNotes.class));
+        intentWidget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        sendBroadcast(intentWidget);
 
         selectedMenuItem.clear();
         Toast.makeText(this, itemSelectedCount+" Entries Deleted", Toast.LENGTH_LONG).show();
