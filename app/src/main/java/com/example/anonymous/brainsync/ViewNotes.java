@@ -53,9 +53,11 @@ public class ViewNotes extends AppWidgetProvider {
 
         Intent intent = new Intent(context, WidgetService.class);
         Intent newEntry = new Intent(context, AddEntryActivity.class);
+        Intent openApp = new Intent(context,MainActivity.class);
         Intent viewEntry = new Intent(context, DisplaySelectedItem.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0,newEntry,0);
         PendingIntent startActivity = PendingIntent.getActivity(context,0,viewEntry,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent startApp = PendingIntent.getActivity(context,0,openApp,0);
 
 
         views.setPendingIntentTemplate(R.id.listEntriesViewWidget,startActivity);
@@ -63,6 +65,7 @@ public class ViewNotes extends AppWidgetProvider {
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         views.setRemoteAdapter(R.id.listEntriesViewWidget,intent);
         views.setOnClickPendingIntent(R.id.addNewNote,pendingIntent);
+        views.setOnClickPendingIntent(R.id.title,startApp);
         // Instruct the widget manager to update the widget
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId,R.id.listEntriesViewWidget);
         appWidgetManager.updateAppWidget(appWidgetId, views);
