@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import java.io.FileInputStream;
@@ -20,6 +21,7 @@ public class DisplaySelectedItem extends Activity {
   //  public final static String SEARCH_ITEM = "com.example.anonymous.brainsync.ITEM";
     String title;
     String body="";
+    private ShareActionProvider mShareActionProvider;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,12 +65,22 @@ public class DisplaySelectedItem extends Activity {
 
     }
 
-
+    private void setShareIntent(Intent shareIntent) {
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_display_selected_item, menu);
-
+        MenuItem item = menu.findItem(R.id.menu_item_share);
+        mShareActionProvider=(ShareActionProvider) item.getActionProvider();
+        Intent shareItem = new Intent(Intent.ACTION_SEND);
+        shareItem.setAction(Intent.ACTION_SEND);
+        shareItem.setType("text/plain");
+        shareItem.putExtra(Intent.EXTRA_TEXT,body);
+        mShareActionProvider.setShareIntent(shareItem);
         return true;
     }
 
