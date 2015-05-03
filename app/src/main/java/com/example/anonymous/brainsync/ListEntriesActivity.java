@@ -1,6 +1,8 @@
 package com.example.anonymous.brainsync;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -190,6 +192,11 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
 
         Toast.makeText(this, itemSelectedCount+" Item(s) Deleted", Toast.LENGTH_LONG).show();
         recreate();
+        Intent intentWidget= new Intent(this, ViewNotes.class);
+        intentWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids=AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ViewNotes.class));
+        intentWidget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intentWidget);
     }
 
     @Override
