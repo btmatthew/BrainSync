@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.Menu;
@@ -63,16 +64,25 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
 
         List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
 
+        //String[] items={"rList-","share_history"};
+
+
             for (Iterator<String> it = list.iterator(); it.hasNext();) {
-                if (it.next().contains("rList")||it.next().contains("share_history"))
-                    it.remove();
-               // Log.d("G", "Hello");
-            }
+                    String item = it.next();
+                    Log.i("item",item);
+                    if(item.contains("rList")){
+                        it.remove();
+                    }else if(item.contains("share_history")){
+                        it.remove();
+                    }
+                }
+
 
             final String[] theNamesOfFiles = new String[list.size()];
             //Loop to get name of each file and pass them to the array at different positions
             for (int i = 0; i < theNamesOfFiles.length; i++) {
                 theNamesOfFiles[i] = list.get(i);
+                Log.i("filter",""+theNamesOfFiles[i]);
             }
 
             Arrays.sort(theNamesOfFiles, Collator.getInstance());
