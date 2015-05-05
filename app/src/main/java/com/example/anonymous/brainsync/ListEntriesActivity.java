@@ -69,7 +69,6 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
 
             for (Iterator<String> it = list.iterator(); it.hasNext();) {
                     String item = it.next();
-                    Log.i("item",item);
                     if(item.contains("rList")){
                         it.remove();
                     }else if(item.contains("share_history")){
@@ -82,7 +81,6 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
             //Loop to get name of each file and pass them to the array at different positions
             for (int i = 0; i < theNamesOfFiles.length; i++) {
                 theNamesOfFiles[i] = list.get(i);
-                Log.i("filter",""+theNamesOfFiles[i]);
             }
 
             Arrays.sort(theNamesOfFiles, Collator.getInstance());

@@ -42,7 +42,6 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
         widgetList = new ArrayList<String>(Arrays.asList(fileList));
         for (Iterator<String> it = widgetList.iterator(); it.hasNext();) {
             String item = it.next();
-            Log.i("item",item);
             if(item.contains("rList")){
                 it.remove();
             }else if(item.contains("share_history")){

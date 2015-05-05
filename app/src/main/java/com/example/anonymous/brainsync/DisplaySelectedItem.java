@@ -2,10 +2,12 @@ package com.example.anonymous.brainsync;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ public class DisplaySelectedItem extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_display_selected_item);
 
         //Gets the intent from the activity that's calling this one (i.e either the ListEntriesActivity or the SearchActivity)
         Intent intent = getIntent();
@@ -47,20 +50,16 @@ public class DisplaySelectedItem extends Activity {
         }catch(IOException e){
 
         }
-
-
+        TextView textView = (TextView)findViewById(R.id.noteText);
         //Creates a TextView component for this activity
-        TextView textView = new TextView(this);
         textView.setTextSize(20);
 
         //Sets the data received from previous activity into the TextView
         textView.setText(body);
 
-        //Sets the EditText view to display in this activity
-        setContentView(textView);
 
-        //Makes the view scrollable if there are too many items in the file
-        textView.setMovementMethod(new ScrollingMovementMethod());
+
+
         //Make the app icon at the top left corner clickable so user can go to previous activity instead of using the back button
         android.app.ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
