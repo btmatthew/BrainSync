@@ -57,8 +57,8 @@ public class AddEntryActivity extends Activity {
         final String title = titlefield.getText().toString().trim();
         final String information = datafield.getText().toString().trim();
 
-        if(title.equals("") || information.equals("")) {
-            Toast.makeText(this, "Fields Cannot Be Empty :)", Toast.LENGTH_LONG).show();
+        if(title.equals("")) {
+            Toast.makeText(this, "Title cannot be empty :)", Toast.LENGTH_LONG).show();
 
         } else {
             try {
