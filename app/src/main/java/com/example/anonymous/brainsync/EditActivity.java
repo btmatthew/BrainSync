@@ -19,7 +19,8 @@ import java.io.PrintWriter;
 
 
 public class EditActivity extends Activity {
-
+    private EditText titlefield;
+    private EditText datafield;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,17 +29,15 @@ public class EditActivity extends Activity {
         Intent intent = getIntent();
         String title = intent.getStringExtra(DisplaySelectedItem.EXTRA_MESSAGE);
         String body = intent.getStringExtra(DisplaySelectedItem.EXTRA_MESSAGE1);
-        ((EditText)findViewById(R.id.editTextTitle)).setText(title);
-        ((EditText)findViewById(R.id.editTextBody)).setText(body);
+        titlefield = ((EditText)findViewById(R.id.editTextTitle));
+        datafield = ((EditText)findViewById(R.id.editTextBody));
+        titlefield.setText(title);
+        datafield.setText(body);
 
 
     }
 
     public void updateEntryMethod(View view) {
-
-        //Link local EditText variables to EditText views created in XML
-        EditText titlefield = (EditText) findViewById(R.id.editTextTitle);
-        EditText datafield = (EditText) findViewById(R.id.editTextBody);
 
         //Get user inputs from the EditText fields
         String title = titlefield.getText().toString().trim();
@@ -72,9 +71,6 @@ public class EditActivity extends Activity {
     }
 
     public void cancelUpdateMethod (View view) {
-
-        EditText titlefield = (EditText) findViewById(R.id.editTextTitle);
-        EditText datafield = (EditText) findViewById(R.id.editTextBody);
 
         String title = titlefield.getText().toString().trim();
         String information = datafield.getText().toString().trim();
@@ -125,8 +121,6 @@ public class EditActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        EditText titlefield = (EditText) findViewById(R.id.editTextTitle);
-        EditText datafield = (EditText) findViewById(R.id.editTextBody);
 
         String title = titlefield.getText().toString().trim();
         String information = datafield.getText().toString().trim();
