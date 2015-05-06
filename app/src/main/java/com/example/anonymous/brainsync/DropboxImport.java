@@ -84,6 +84,7 @@ public class DropboxImport extends Activity {
         public void run() {
             try {
                 DropboxAPI.Entry dirent = mDBApi.metadata("/", 1000, null, true, null);
+
                 files = dirent.contents;
 
             }catch(DropboxException e){
@@ -217,7 +218,6 @@ public class DropboxImport extends Activity {
                         File file = new File(fileDirectory+"/"+fileList.get(i).getFilename());
                         FileOutputStream outputStream = new FileOutputStream(file);
                         DropboxAPI.DropboxFileInfo info = mDBApi.getFile("/"+fileList.get(i).getFilename(), null, outputStream, null);
-                        Log.i("DbExampleLog", "The file's rev is: " + info.getMetadata().rev);
                     }
                     runOnUiThread(new Toasting("All done! Your Brain is downloaded from Dropbox!"));
                     finish();

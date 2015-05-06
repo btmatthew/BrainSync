@@ -50,7 +50,9 @@ public class Settings extends Activity {
     }
     protected void importDropbox(){
         Intent intent = new Intent(this, DropboxImport.class);
+        findViewById(R.id.progressBarDropboxImport).setVisibility(View.VISIBLE);
         startActivity(intent);
+        findViewById(R.id.progressBarDropboxImport).setVisibility(View.INVISIBLE);
     }
 
     public void reportProblem(View view) {

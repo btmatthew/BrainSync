@@ -54,6 +54,7 @@
     <string name="subTitleSettingsDropbox">Dropbox Backup and Import</string>
     <string name="subTitleSettingsGoogle">Google Backup and Import</string>
     <string name="subTitleSettingsFeedback">Feedback</string>
+    <string name="processBarTextSettings">Importing Stand by</string>
 
 
 </resources>
