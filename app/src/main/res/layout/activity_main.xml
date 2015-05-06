@@ -1,27 +1,27 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true"
-
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
 
     <ImageView
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:weightSum="1"
         android:background="@color/blue"
         android:id="@+id/topbanner"
         android:src="@drawable/mainimage"
 
-       />
+        android:layout_weight="2"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/topbanner"
         android:text="@string/add_entry"
         android:textSize="25sp"
         android:background="@color/green"
@@ -30,30 +30,29 @@
         android:layout_marginBottom="20dp"
         android:onClick="addEntry"
 
-        />
+        android:layout_weight="1" />
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_below="@+id/entry_button"
         android:id="@+id/middlebuttons"
         android:orientation="horizontal"
         android:layout_marginBottom="10dp"
-        >
+        android:layout_weight="2">
         
         <Button
             android:layout_width="0dp"
-            android:layout_height="200dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/what_do_i_know"
-            android:textSize="20dp"
+            android:textSize="20sp"
 
 
             />
 
         <Button
             android:layout_width="0dp"
-            android:layout_height="200dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/search_my_brain"
             android:textSize="20sp"
@@ -68,9 +67,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/middlebuttons"
         android:orientation="horizontal"
-        >
+        android:layout_weight="1">
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -81,7 +79,6 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/middlebuttons"
             android:text="@string/list_all_entry"
             android:onClick="listEntriesMethod"
             />
@@ -91,4 +88,4 @@
 
 
 
-</RelativeLayout>
+</LinearLayout>
