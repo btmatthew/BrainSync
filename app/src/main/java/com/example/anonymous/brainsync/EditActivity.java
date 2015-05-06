@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -21,53 +22,74 @@ import java.io.PrintWriter;
 public class EditActivity extends Activity {
     private EditText titlefield;
     private EditText datafield;
+    private String originalTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
         Intent intent = getIntent();
-        String title = intent.getStringExtra(DisplaySelectedItem.EXTRA_MESSAGE);
+        originalTitle = intent.getStringExtra(DisplaySelectedItem.EXTRA_MESSAGE);
         String body = intent.getStringExtra(DisplaySelectedItem.EXTRA_MESSAGE1);
         titlefield = ((EditText)findViewById(R.id.editTextTitle));
         datafield = ((EditText)findViewById(R.id.editTextBody));
-        titlefield.setText(title);
+        titlefield.setText(originalTitle);
         datafield.setText(body);
-
-
     }
 
     public void updateEntryMethod(View view) {
 
         //Get user inputs from the EditText fields
-        String title = titlefield.getText().toString().trim();
-        String information = datafield.getText().toString().trim();
+        final String editedTitle = titlefield.getText().toString().trim();
+        final String information = datafield.getText().toString().trim();
 
-        if(title.equals("") || information.equals("")) {
-            Toast.makeText(this, "Fields Cannot Be Empty :)", Toast.LENGTH_LONG).show();
+        if(editedTitle.equals("")) {
+            Toast.makeText(this, "Title cannot be empty :)", Toast.LENGTH_LONG).show();
 
         } else {
+            if(!(originalTitle).equals(editedTitle)){
+                new AlertDialog.Builder(this)
+                        .setTitle("Title updated")
+                        .setMessage("What would you like to do?")
+                        .setNegativeButton("Create new note\n and keep existing.", new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface arg0, int arg1){
+                                writeFile(editedTitle, information);
+                            }
+                        })
+                        .setPositiveButton("Overwrite the existing note.", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface arg0, int arg1) {
+                            File from = new File(getString(R.string.directoryLocation)+originalTitle);
+                            File to = new File(getString(R.string.directoryLocation)+editedTitle);
+                                from.renameTo(to);
+                                writeFile(editedTitle, information);
 
-            try {
-
-                //Create a file and write to it. Input in the Title EditText field is used as file name
-                FileOutputStream updateEntry = openFileOutput(title, Context.MODE_PRIVATE);
-                PrintWriter writer = new PrintWriter(new OutputStreamWriter(updateEntry));
-                writer.println();
-                writer.println(information);
-                writer.close();
-
-                //Start the success activity after file creation and writing has been done
-                Intent intent = new Intent(this, ListEntriesActivity.class);
-                startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-
-            } catch (IOException e) {
-
-                e.printStackTrace();
+                            }
+                        }).create().show();
+            }else{
+                writeFile(editedTitle,information);
             }
-
         }
+    }
+    private void writeFile(String title,String information){
 
+        try {
+            //Create a file and write to it. Input in the Title EditText field is used as file name
+            FileOutputStream updateEntry = openFileOutput(title, Context.MODE_PRIVATE);
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(updateEntry));
+            writer.println();
+            writer.println(information);
+            writer.close();
+
+            //Start the success activity after file creation and writing has been done
+            callListEntriesActivity();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
+    private void callListEntriesActivity(){
+        Intent intent = new Intent(this, ListEntriesActivity.class);
+        startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
     public void cancelUpdateMethod (View view) {
@@ -91,9 +113,6 @@ public class EditActivity extends Activity {
                         }
                     }).create().show();
         }
-
-//        Intent intent = new Intent(this, ListEntriesActivity.class);
-//        startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
 

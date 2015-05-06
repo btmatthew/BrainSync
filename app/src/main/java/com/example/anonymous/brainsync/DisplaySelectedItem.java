@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
@@ -20,7 +22,6 @@ public class DisplaySelectedItem extends Activity {
 
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE2";
     public final static String EXTRA_MESSAGE1 = "com.example.anonymous.brainsync.MESSAGE3";
-  //  public final static String SEARCH_ITEM = "com.example.anonymous.brainsync.ITEM";
     String title;
     String body="";
     private ShareActionProvider mShareActionProvider;
@@ -42,20 +43,33 @@ public class DisplaySelectedItem extends Activity {
             while( (c = readingFromFile.read()) != -1){
 
                     body = body + Character.toString((char)c);
-
-
-
             }
             readingFromFile.close();
         }catch(IOException e){
 
         }
+        RelativeLayout view = (RelativeLayout)findViewById(R.id.mainLayoutDisplayItem);
+
         TextView textView = (TextView)findViewById(R.id.noteText);
         //Creates a TextView component for this activity
         textView.setTextSize(20);
 
         //Sets the data received from previous activity into the TextView
         textView.setText(body);
+        textView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                callEditActiity();
+                return true;
+            }
+        });
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                callEditActiity();
+                return true;
+            }
+        });
 
 
 
@@ -99,10 +113,7 @@ public class DisplaySelectedItem extends Activity {
                 onSearchRequested();
                 break;
             case R.id.edit_menu_button:
-                Intent intent = new Intent(this, EditActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, title);
-                intent.putExtra(EXTRA_MESSAGE1, body);
-                startActivity(intent);
+                callEditActiity();
                 break;
             case R.id.action_settings:
                 Intent intent1 = new Intent(this, Settings.class);
@@ -113,7 +124,12 @@ public class DisplaySelectedItem extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
-
+    protected void callEditActiity(){
+        Intent intent = new Intent(this, EditActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, title);
+        intent.putExtra(EXTRA_MESSAGE1, body);
+        startActivity(intent);
+    }
 
 }
 
