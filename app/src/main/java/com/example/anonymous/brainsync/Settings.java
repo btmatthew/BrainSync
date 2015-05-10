@@ -58,6 +58,7 @@ public class Settings extends Activity {
     public void reportProblem(View view) {
         Intent intent = new Intent(this, Feedback.class);
         startActivity(intent);
+
     }
 
     /*protected void backup1(View view){

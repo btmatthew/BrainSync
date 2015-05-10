@@ -58,24 +58,47 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
 
         int i;
         //Create File object and pass to it the directory where all our files are stored
-        File sQuery = new File("data/data/com.example.anonymous.brainsync/files");
-        //List all the files in that directory and passes it to availableFiles array
-        File[] availableFiles = sQuery.listFiles();
+        //File sQuery = new File("data/data/com.example.anonymous.brainsync/files");
+
+       //List all the files in that directory and passes it to availableFiles array
+        //File[] availableFiles = sQuery.listFiles();
+
+        List<String> list1 = new ArrayList<String>(Arrays.asList(fileList()));
+
+        //String[] items={"rList-","share_history"};
+
+
+        for (Iterator<String> it = list1.iterator(); it.hasNext();) {
+            String item = it.next();
+            if(item.contains("rList")){
+                it.remove();
+            }else if(item.contains("share_history")){
+                it.remove();
+            }
+        }
+
+
+
         //If statement prevents the app from crashing when there are no entries upon search
-        if (availableFiles == null) {
+        if (list1.size() == 0) {
             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         } else {
 
             //Gets the size of the array
-            String[] a = new String[availableFiles.length];
+            //String[] a = new String[availableFiles.length];
             //For loop based on the size of the array gets the name of all files in the directory
-            for (i = 0; i < a.length; i++) {
-                a[i] = availableFiles[i].getName();
+//            for (i = 0; i < a.length; i++) {
+//                a[i] = availableFiles[i].getName();
+//            }
+            final String[] theNamesOfFiles = new String[list1.size()];
+            //Loop to get name of each file and pass them to the array at different positions
+            for (int j = 0; j < theNamesOfFiles.length; j++) {
+                theNamesOfFiles[j] = list1.get(j);
             }
 
-            List<String> list = new ArrayList<String>(Arrays.asList(a));
+            List<String> list = new ArrayList<String>(Arrays.asList(theNamesOfFiles));
             for (Iterator<String> it=list.iterator(); it.hasNext();) {
                 if (!it.next().contains(requestedEntry))
                     it.remove();
@@ -188,7 +211,7 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
             itemName = selectedMenuItem.get(i);
             //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
             //Not sure why the concatenation works but it does... :P
-            File dir = new File("data/data/com.example.anonymous.brainsync/files/" + selectedMenuItem.get(i));
+            File dir = new File("data/data/com.example.anonymous.brainsync/files/" + itemName);
             dir.delete();
         }
         Intent intentWidget= new Intent(this, ViewNotes.class);

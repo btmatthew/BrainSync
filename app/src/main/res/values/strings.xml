@@ -20,7 +20,7 @@
     <string name="app_label">BrainSync</string>
     <string name="search_hint">Search Your Brain</string>
     <string name="search_title">Search</string>
-    <string name="success">Entry Added Successfully :)</string>
+    <string name="success">Entry Added Successfully</string>
     <string name="title_activity_success">SuccessActivity</string>
     <string name="title_activity_list_entries">Entries</string>
     <string name="delete_button">Delete</string>
@@ -28,9 +28,9 @@
     <string name="title_activity_search">Search Result</string>
     <string name="edit_button">Edit Entry</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="backupButtonTextDropbox">Backup to Dropbox</string>
-    <string name="importButtonTextDropbox">Import from Dropbox</string>
-    <string name="drive_backup_button">Drive Backup</string>
+    <string name="backupButtonTextDropbox">Backup Entries to Dropbox</string>
+    <string name="importButtonTextDropbox">Import Entries from Dropbox</string>
+    <string name="drive_backup_button">Backup Entries to Drive</string>
     <string name="title_activity_google_drive">GoogleDrive</string>
     <string name="directoryLocation">data/data/com.example.anonymous.brainsync/files/</string>
     <string name="selectAllButtonLableDropboxActivity">Select All</string>
@@ -49,10 +49,10 @@
     <string name="sendreport">Next</string>
     <string name="title_activity_feedback">Feedback</string>
     <string name="feedback">Contact Us/Report a Problem</string>
-    <string name="addnewnote">Add New Note</string>
+    <string name="addnewnote">Add New Entry</string>
     <string name="widgetTitle">Brain Sync</string>
-    <string name="subTitleSettingsDropbox">Dropbox Backup and Import</string>
-    <string name="subTitleSettingsGoogle">Google Backup and Import</string>
+    <string name="subTitleSettingsDropbox">Dropbox</string>
+    <string name="subTitleSettingsGoogle">Google Drive</string>
     <string name="subTitleSettingsFeedback">Feedback</string>
     <string name="processBarTextSettings">Importing Stand by</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>

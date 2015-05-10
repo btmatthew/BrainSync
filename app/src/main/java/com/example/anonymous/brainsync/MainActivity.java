@@ -41,12 +41,9 @@ public class MainActivity extends Activity {
              if (it.next().contains("rList"))
                  it.remove();
              }
-
-         final String[] defaultFiles = new String[list.size()];
-         int a = defaultFiles.length;
 //        String b = String.valueOf(a);
 //        Log.d("Gency", b);
-         if (a == 0) {
+         if (list.size() == 0) {
              Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
          } else {
              Intent intent = new Intent(this, ListEntriesActivity1.class);
@@ -67,10 +64,8 @@ public class MainActivity extends Activity {
                 it.remove();
         }
 
-        final String[] defaultFiles = new String[list.size()];
-        int a = defaultFiles.length;
 
-        if (a == 0) {
+        if (list.size() == 0) {
             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
         } else {
             onSearchRequested();
@@ -113,11 +108,8 @@ public class MainActivity extends Activity {
                         it.remove();
                 }
 
-                final String[] defaultFiles = new String[list.size()];
-                int a = defaultFiles.length;
-
-                if (a == 0) {
-                    Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
+                if (list.size() == 0) {
+                Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
                 } else {
                     onSearchRequested();
                 }

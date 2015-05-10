@@ -5,9 +5,11 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -15,6 +17,7 @@ import com.google.android.gms.ads.AdView;
 //This activity is called after user adds and saves an entry
 public class SuccessActivity extends Activity {
 
+    CountDownTimer countDownTimer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,13 +31,31 @@ public class SuccessActivity extends Activity {
         intentWidget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
         sendBroadcast(intentWidget);
 
+        TextView timerText = (TextView) findViewById(R.id.timertext);
+        timerText.setText("Returning Home In:");
+        timerText.setTextSize(30);
 
+        final TextView timer = (TextView) findViewById(R.id.timerfield);
+
+        countDownTimer = new CountDownTimer(7000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timer.setText(""+millisUntilFinished/1000);
+                timer.setTextSize(40);
+            }
+
+            @Override
+            public void onFinish() {
+                Intent intent = new Intent(SuccessActivity.this, MainActivity.class);
+                startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            }
+        }.start();
 
     }
 
 
     public void returnHomeMethod (View view) {
-
+        countDownTimer.cancel();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
@@ -42,10 +63,16 @@ public class SuccessActivity extends Activity {
     }
 
     public void addNewEntryMethod (View view) {
-
+        countDownTimer.cancel();
         Intent intent = new Intent(this, AddEntryActivity.class);
         startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
+    }
+
+    public void listAllEntries(View view) {
+        countDownTimer.cancel();
+        Intent intent = new Intent(this, ListEntriesActivity.class);
+        startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
     //Adds the search menu so user can search still carry out search without going back
@@ -76,6 +103,7 @@ public class SuccessActivity extends Activity {
     @Override
     public void onBackPressed() {
 
+        countDownTimer.cancel();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 

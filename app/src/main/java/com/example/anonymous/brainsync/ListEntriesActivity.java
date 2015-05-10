@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.Menu;
@@ -107,7 +106,6 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
                     //Note that this menu only pops up when the user longclicks an item in the list and covers the action bar temporarily
                     MenuInflater inflater = mode.getMenuInflater();
                     inflater.inflate(R.menu.context_menu, menu);
-
                     return true;
                 }
 
@@ -141,6 +139,8 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
 
                     }
 
+                    mode.invalidate();
+
                 }
 
                 @Override
@@ -166,7 +166,17 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
 
                 @Override
                 public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                    return false;
+
+                    if (itemSelectedCount == 1){
+                        MenuItem item = menu.findItem(R.id.edit_menu_button1);
+                        item.setVisible(true);
+                        return true;
+                    } else {
+                        MenuItem item = menu.findItem(R.id.edit_menu_button1);
+                        item.setVisible(false);
+                        return true;
+                    }
+
                 }
 
 
@@ -182,13 +192,14 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
 
 
     public void deleteMethod() {
-
+        String itemName = "";
         //Carries out the delete action based on the size of the arraylist held by the variable itemSelectedCount
         for (int i = 0; i < itemSelectedCount; i++) {
 
             //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
             //Not sure why the concatenation works but it does... :P
-            File dir = new File(fileDirectory + selectedMenuItems.get(i));
+            itemName = selectedMenuItems.get(i);
+            File dir = new File(fileDirectory + itemName);
             dir.delete();
         }
 
