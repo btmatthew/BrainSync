@@ -38,7 +38,6 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
         String fileDirectory = "data/data/com.example.anonymous.brainsync/files/";
         File dir = new File(fileDirectory);
         String[] fileList = dir.list();
-        Arrays.sort(fileList, Collator.getInstance());
         widgetList = new ArrayList<String>(Arrays.asList(fileList));
         for (Iterator<String> it = widgetList.iterator(); it.hasNext();) {
             String item = it.next();

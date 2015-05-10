@@ -64,7 +64,6 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
 
         List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
 
-        //String[] items={"rList-","share_history"};
 
 
             for (Iterator<String> it = list.iterator(); it.hasNext();) {
@@ -96,7 +95,6 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
             entriesView.setAdapter(adapter);
 
             entriesView.setOnItemClickListener(this);
-
             //Enabling multiple items selection on the ListView so user perform batch deletion of files
             //http://developer.android.com/guide/topics/ui/menus.html#CAB
             entriesView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -123,7 +121,6 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
                     //This if statement is necessary because should the user de-selects an item, the system should remove it from the arraylist so
                     //they don't get passed to the delete method
                     if (selectedMenuItems.contains(a)) {
-
                         //gets the position of the de-selected item and passes it to int b
                         int b = selectedMenuItems.indexOf(a);
                         //system removes element at position b in the array
@@ -138,9 +135,7 @@ public class ListEntriesActivity extends Activity implements AdapterView.OnItemC
                     else {
                         //The position of the selected item in the ListView is gotten and converted to string (which is the file name)
                         //and then added to the arrayList 'selectedMenuItems' created earlier using the .add method
-                        //   entriesView.setBackgroundColor(Color.LTGRAY);
                         selectedMenuItems.add(entriesView.getItemAtPosition(position).toString());
-
                         itemSelectedCount = selectedMenuItems.size();
                         mode.setTitle(itemSelectedCount + " Item(s) Selected");
 

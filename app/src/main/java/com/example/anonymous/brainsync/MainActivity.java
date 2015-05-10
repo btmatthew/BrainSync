@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
          if (a == 0) {
              Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
          } else {
-             Intent intent = new Intent(this, ListEntriesActivity.class);
+             Intent intent = new Intent(this, ListEntriesActivity1.class);
              startActivity(intent);
          }
 //     } catch (NullPointerException a) {

@@ -7,10 +7,13 @@
         android:id="@+id/syncDropboxCheckbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:text=""
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp" />
     <TextView
         android:id="@+id/fileNameDropboxSync"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp" />
 </LinearLayout>

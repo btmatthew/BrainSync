@@ -19,13 +19,15 @@ import android.widget.Toast;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.exception.DropboxException;
-import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Created by Matthew Bulat on 13/04/2015.
@@ -92,12 +94,10 @@ public class DropboxBackup extends Activity {
 
     }
     protected void display(){
-        File dir = new File(fileDirectory);
-        File[] fileList = dir.listFiles();
-        int fileListLength=fileList.length;
+        File[] fileList = new File(fileDirectory).listFiles();
         fileNamesList = new ArrayList<Filenames>();
 
-        for (int i = 0; i < fileListLength; i++) {
+        for (int i = 0; i < fileList.length; i++) {
             Filenames file = new Filenames(fileList[i].getName(),false);
             if(!(file.getFilename().contains("rList")||file.getFilename().contains("share_history"))){
                 file.setFile(fileList[i]);
