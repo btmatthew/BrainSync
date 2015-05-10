@@ -93,11 +93,16 @@ public class DisplaySelectedItem extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_display_selected_item, menu);
         MenuItem item = menu.findItem(R.id.menu_item_share);
+        MenuItem editButton = menu.findItem(R.id.edit_menu_button);
+        editButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+
         shareItem = new Intent(Intent.ACTION_SEND);
         shareItem.setAction(Intent.ACTION_SEND);
         shareItem.setType("text/plain");
         shareItem.putExtra(Intent.EXTRA_TEXT, body);
-        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+
         mShareActionProvider.setShareIntent(shareItem);
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(shareItem);
