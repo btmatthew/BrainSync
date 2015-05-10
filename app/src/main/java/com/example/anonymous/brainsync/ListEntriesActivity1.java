@@ -117,6 +117,10 @@ public class ListEntriesActivity1 extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_list_entries, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        searchItem.setVisible(true);
+        searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
         this.menu=menu;
         return true;
     }
@@ -210,7 +214,7 @@ public class ListEntriesActivity1 extends Activity {
                             }else if(itemSelectedCount==1){
                                 actionBar.setTitle("Item Selected "+itemSelectedCount);
                                 item.setVisible(true);
-                                //item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                                item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                             }else{
                                 actionBar.setTitle("Items Selected "+itemSelectedCount);
                             }
@@ -223,7 +227,7 @@ public class ListEntriesActivity1 extends Activity {
                             if(itemSelectedCount==0){
                                 actionBar.setTitle("Entries");
                                 item.setVisible(false);
-                                //item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                                item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                             }else if(itemSelectedCount==1){
                                 actionBar.setTitle("Item Selected "+itemSelectedCount);
                             }else{

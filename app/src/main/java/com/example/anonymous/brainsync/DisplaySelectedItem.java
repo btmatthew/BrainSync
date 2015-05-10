@@ -36,10 +36,7 @@ public class DisplaySelectedItem extends Activity {
         setContentView(R.layout.activity_display_selected_item);
 
 
-        shareItem = new Intent(Intent.ACTION_SEND);
-        shareItem.setAction(Intent.ACTION_SEND);
-        shareItem.setType("text/plain");
-        shareItem.putExtra(Intent.EXTRA_TEXT, body);
+
 
 
         //Gets the intent from the activity that's calling this one (i.e either the ListEntriesActivity or the SearchActivity)
@@ -96,7 +93,10 @@ public class DisplaySelectedItem extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_display_selected_item, menu);
         MenuItem item = menu.findItem(R.id.menu_item_share);
-
+        shareItem = new Intent(Intent.ACTION_SEND);
+        shareItem.setAction(Intent.ACTION_SEND);
+        shareItem.setType("text/plain");
+        shareItem.putExtra(Intent.EXTRA_TEXT, body);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         mShareActionProvider.setShareIntent(shareItem);
         if (mShareActionProvider != null) {
