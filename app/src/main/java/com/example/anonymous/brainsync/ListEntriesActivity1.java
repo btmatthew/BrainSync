@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class ListEntriesActivity1 extends ActionBarActivity {
+public class ListEntriesActivity1 extends Activity {
 
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
     private String fileDirectory;
@@ -195,7 +195,8 @@ public class ListEntriesActivity1 extends ActionBarActivity {
                     @Override
                     public boolean onLongClick(View v) {
                         MenuItem item = menu.findItem(R.id.deleteMenuButton);
-                        ActionBar actionBar = getSupportActionBar();
+                        android.app.ActionBar actionBar = getActionBar();
+
                         TextView tx = (TextView) v;
                         Filenames filename = (Filenames) tx.getTag();
                         if(!filename.isSelected()){

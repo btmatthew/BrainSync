@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,13 +25,22 @@ public class DisplaySelectedItem extends Activity {
 
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE2";
     public final static String EXTRA_MESSAGE1 = "com.example.anonymous.brainsync.MESSAGE3";
-    String title;
-    String body="";
+    private String title;
+    private String body="";
     private ShareActionProvider mShareActionProvider;
+    private ActionBar actionBar;
+    private Intent shareItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_selected_item);
+
+
+        shareItem = new Intent(Intent.ACTION_SEND);
+        shareItem.setAction(Intent.ACTION_SEND);
+        shareItem.setType("text/plain");
+        shareItem.putExtra(Intent.EXTRA_TEXT, body);
+
 
         //Gets the intent from the activity that's calling this one (i.e either the ListEntriesActivity or the SearchActivity)
         Intent intent = getIntent();
@@ -73,30 +85,25 @@ public class DisplaySelectedItem extends Activity {
 
 
 
-
         //Make the app icon at the top left corner clickable so user can go to previous activity instead of using the back button
         android.app.ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(title);
 
     }
 
-    private void setShareIntent(Intent shareIntent) {
-        if (mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(shareIntent);
-        }
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_display_selected_item, menu);
         MenuItem item = menu.findItem(R.id.menu_item_share);
-        mShareActionProvider=(ShareActionProvider) item.getActionProvider();
-        Intent shareItem = new Intent(Intent.ACTION_SEND);
-        shareItem.setAction(Intent.ACTION_SEND);
-        shareItem.setType("text/plain");
-        shareItem.putExtra(Intent.EXTRA_TEXT, body);
+
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         mShareActionProvider.setShareIntent(shareItem);
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareItem);
+        }
+
+
         return true;
     }
 
@@ -119,6 +126,10 @@ public class DisplaySelectedItem extends Activity {
                 Intent intent1 = new Intent(this, Settings.class);
                 startActivity(intent1);
                 return true;
+            case R.id.menu_item_share:
+
+
+                break;
         }
 
 
