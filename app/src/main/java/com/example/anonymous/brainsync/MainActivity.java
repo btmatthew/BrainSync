@@ -2,6 +2,7 @@ package com.example.anonymous.brainsync;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -21,8 +23,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ActionBar actionBar = getActionBar();
-        actionBar.hide();
+
     }
 
     //Called when the 'Add An Entry' button is clicked as configured in the XML
@@ -33,57 +34,35 @@ public class MainActivity extends Activity {
 
     //Called when the 'List All Entries' button is clicked as configured in the XML
     public void listEntriesMethod(View view){
-
-  //   try {
-         List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
-
-         for (Iterator<String> it = list.iterator(); it.hasNext();) {
-             if (it.next().contains("rList"))
-                 it.remove();
-             }
-
-         final String[] defaultFiles = new String[list.size()];
-         int a = defaultFiles.length;
-//        String b = String.valueOf(a);
-//        Log.d("Gency", b);
-         if (a == 0) {
-             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
-         } else {
+         if (checkFiles()) {
              Intent intent = new Intent(this, ListEntriesActivity1.class);
              startActivity(intent);
          }
-//     } catch (NullPointerException a) {
-//         Toast.makeText(this, "Exception", Toast.LENGTH_SHORT).show();
-//     }
+
     }
 
     //Called when the 'Search My Brain' button is clicked as configured in the XML
     public void goSearch(View view) {
-
-        List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
-
-        for (Iterator<String> it = list.iterator(); it.hasNext();) {
-            if (it.next().contains("rList"))
-                it.remove();
-        }
-
-        final String[] defaultFiles = new String[list.size()];
-        int a = defaultFiles.length;
-
-        if (a == 0) {
-            Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
-        } else {
+        if (checkFiles()) {
             onSearchRequested();
         }
+    }
+    public boolean checkFiles(){
+        if(new File(getString(R.string.directoryLocation)).length()>0){
+            return true;
+        }else{
+            Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
 
     }
 
 
     //Calls settings activity
     public void goSettings(View view){
-
-          Intent intent = new Intent(this, Settings.class);
-          startActivity(intent);
+        Intent intent = new Intent(this, Settings.class);
+        startActivity(intent);
 
     }
 
@@ -106,21 +85,7 @@ public class MainActivity extends Activity {
         //SearchActivity. Coding for this is in the IntentFilter and MetaData tag contained in the Manifest File under the SearchActivity tag
         switch(id){
             case R.id.search:
-                List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
-
-                for (Iterator<String> it = list.iterator(); it.hasNext();) {
-                    if (it.next().contains("rList"))
-                        it.remove();
-                }
-
-                final String[] defaultFiles = new String[list.size()];
-                int a = defaultFiles.length;
-
-                if (a == 0) {
-                    Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
-                } else {
-                    onSearchRequested();
-                }
+                goSearch(null);
                 break;
             case R.id.action_settings:
                 Intent intent = new Intent(this, Settings.class);
