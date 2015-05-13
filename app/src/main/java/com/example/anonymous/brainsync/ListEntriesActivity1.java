@@ -179,62 +179,25 @@ public class ListEntriesActivity1 extends Activity {
 
                 holder.name.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        openItem(holder.name.getText().toString());
+                        if(itemSelectedCount==0){
+                            openItem(holder.name.getText().toString());
+                        }else{
+                            selectItem(v);
+                            }
+
                     }
                 });
 
                 holder.name.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        MenuItem item = menu.findItem(R.id.deleteMenuButton);
-                        MenuItem item1 = menu.findItem(R.id.search);
-                        android.app.ActionBar actionBar = getActionBar();
-
-                        TextView tx = (TextView) v;
-                        Filenames filename = (Filenames) tx.getTag();
-                        if(!filename.isSelected()){
-
-                            tx.setBackgroundColor(Color.GRAY);
-                            filename.setSelected(true);
-                            selectedMenuItems.add(filename.getFilename());
-                            itemSelectedCount = selectedMenuItems.size();
-                            if(itemSelectedCount==0){
-                                actionBar.setTitle("Entries");
-                                item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                            }else if(itemSelectedCount==1){
-                                actionBar.setTitle("Item Selected "+itemSelectedCount);
-                                item.setVisible(true);
-                                item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                                item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-                            }else{
-                                actionBar.setTitle("Items Selected "+itemSelectedCount);
-                                item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-                            }
-                        }else{
-                            tx.setBackgroundColor(Color.TRANSPARENT);
-                            filename.setSelected(false);
-                            int b = selectedMenuItems.indexOf(filename.getFilename());
-                            selectedMenuItems.remove(b);
-                            itemSelectedCount = selectedMenuItems.size();
-                            if(itemSelectedCount==0){
-                                actionBar.setTitle("Entries");
-                                item.setVisible(false);
-                                item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-                                item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                            }else if(itemSelectedCount==1){
-                                actionBar.setTitle("Item Selected "+itemSelectedCount);
-
-                            }else{
-                                actionBar.setTitle("Items Selected "+itemSelectedCount);
-                            }
-                        }
+                        selectItem(v);
                         return true;
                     }
                 });
             }else{
                 holder = (ViewHolder) convertView.getTag();
             }
-
             Filenames files = fileList.get(position);
             if(files.isSelected()){
                 holder.name.setBackgroundColor(Color.GRAY);
@@ -244,6 +207,50 @@ public class ListEntriesActivity1 extends Activity {
             holder.name.setText(files.getFilename());
             holder.name.setTag(files);
             return convertView;
+        }
+        private void selectItem(View v){
+            MenuItem item = menu.findItem(R.id.deleteMenuButton);
+            MenuItem item1 = menu.findItem(R.id.search);
+            android.app.ActionBar actionBar = getActionBar();
+
+            TextView tx = (TextView) v;
+            Filenames filename = (Filenames) tx.getTag();
+            if(!filename.isSelected()){
+
+                tx.setBackgroundColor(Color.GRAY);
+                filename.setSelected(true);
+                selectedMenuItems.add(filename.getFilename());
+                itemSelectedCount = selectedMenuItems.size();
+                if(itemSelectedCount==0){
+                    actionBar.setTitle("Entries");
+                    item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                }else if(itemSelectedCount==1){
+                    actionBar.setTitle("Item Selected "+itemSelectedCount);
+                    item.setVisible(true);
+                    item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                }else{
+                    actionBar.setTitle("Items Selected "+itemSelectedCount);
+                    item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                }
+            }else{
+                tx.setBackgroundColor(Color.TRANSPARENT);
+                filename.setSelected(false);
+                int b = selectedMenuItems.indexOf(filename.getFilename());
+                selectedMenuItems.remove(b);
+                itemSelectedCount = selectedMenuItems.size();
+                if(itemSelectedCount==0){
+                    actionBar.setTitle("Entries");
+                    item.setVisible(false);
+                    item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                    item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                }else if(itemSelectedCount==1){
+                    actionBar.setTitle("Item Selected "+itemSelectedCount);
+
+                }else{
+                    actionBar.setTitle("Items Selected "+itemSelectedCount);
+                }
+            }
         }
     }
     private void openItem(String title){

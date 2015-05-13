@@ -32,8 +32,8 @@ import java.util.ArrayList;
 public class DropboxBackup extends Activity {
     private String fileDirectory;
     final static private String PREFS_NAME="dropboxToken";
-    final static private String APP_KEY = "";
-    final static private String APP_SECRET = "";
+    final static private String APP_KEY = "shz2ba3aei84dxd";
+    final static private String APP_SECRET = "vz5ksv0lk7xxylp";
     private DropboxAPI<AndroidAuthSession> mDBApi;
     CustomAdapter dataAdapter=null;
     private ArrayList<Filenames> fileNamesList;

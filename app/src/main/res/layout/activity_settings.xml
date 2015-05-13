@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
 
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -7,114 +8,101 @@
     tools:context="com.example.anonymous.brainsync.Settings"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/subTitleSettingsDropbox"
-        android:id="@+id/textView3"
-        android:layout_gravity="left"
-        android:textStyle="bold"/>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-
-    <Button
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/backupButtonTextDropbox"
-        android:id="@+id/dropboxBackupButton"
-        android:background="@android:color/transparent"
-        android:gravity="left|center_vertical" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <View
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/subTitleSettingsDropbox"
+            android:id="@+id/textView3"
+            android:layout_gravity="left"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_weight="0" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/backupButtonTextDropbox"
+            android:id="@+id/dropboxBackupButton"
+            android:background="@android:color/transparent"
+            android:gravity="left|center_vertical" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/green" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/importButtonTextDropbox"
+            android:id="@+id/dropboxImport"
+            android:background="@android:color/transparent"
+            android:gravity="left|center_vertical" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/green"
+            android:layout_weight="0" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/subTitleSettingsFeedback"
+            android:id="@+id/textView5"
+            android:layout_gravity="left"
+            android:paddingTop="10dp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_weight="0" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/feedback"
+            android:id="@+id/reportProblemButton"
+            android:onClick="reportProblem"
+            android:background="@android:color/transparent"
+            android:gravity="left|center_vertical" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/green"
+            android:layout_weight="0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/green"
-        />
-
-    <Button
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/importButtonTextDropbox"
-        android:id="@+id/dropboxImport"
-        android:background="@android:color/transparent"
-        android:gravity="left|center_vertical"/>
+        android:gravity="bottom">
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/green"
-        />
-
-    <TextView
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/subTitleSettingsGoogle"
-        android:id="@+id/textView4"
-        android:layout_gravity="left"
-        android:paddingTop="10dp"
-        android:textStyle="bold"/>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/drive_backup_button"
-        android:id="@+id/driveBackupButton"
-        android:background="@android:color/transparent"
-        android:gravity="left|center_vertical"
-        />
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/green"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/subTitleSettingsFeedback"
-        android:id="@+id/textView5"
-        android:layout_gravity="left"
-        android:paddingTop="10dp"
-        android:textStyle="bold"/>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/feedback"
-        android:id="@+id/reportProblemButton"
-        android:onClick="reportProblem"
-        android:background="@android:color/transparent"
-        android:gravity="left|center_vertical"/>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/green"
-        />
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBarDropboxImport"
-        android:layout_gravity="center_horizontal"
-        android:visibility="invisible"
-        android:text="@string/processBarTextSettings"/>
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id"
+            android:layout_gravity="bottom">
+        </com.google.android.gms.ads.AdView>
+    </LinearLayout>
 
 </LinearLayout>

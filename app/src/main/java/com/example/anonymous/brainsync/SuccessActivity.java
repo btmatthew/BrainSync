@@ -37,7 +37,7 @@ public class SuccessActivity extends Activity {
 
         final TextView timer = (TextView) findViewById(R.id.timerfield);
 
-        countDownTimer = new CountDownTimer(7000, 1000) {
+        countDownTimer = new CountDownTimer(15000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timer.setText(""+millisUntilFinished/1000);

@@ -121,21 +121,20 @@
                 android:value="com.example.anonymous.brainsync.Settings" />
         </activity>
         <activity
-            android:name=".GoogleDrive"
-            android:label="@string/title_activity_google_drive"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".About"
             android:label="@string/title_activity_about"
             android:parentActivityName=".MainActivity" >
+
         </activity>
         <activity
             android:name=".Feedback"
             android:label="@string/title_activity_feedback"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
-             >
+            android:parentActivityName=".Settings">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.anonymous.brainsync.Settings" />
         </activity>
         <activity android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"

@@ -1,5 +1,6 @@
 package com.example.anonymous.brainsync;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -41,7 +42,6 @@ public class Feedback extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 
         final ImageView image1 = (ImageView) findViewById(R.id.firstimage);
@@ -105,7 +105,7 @@ public class Feedback extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_feedback, menu);
+        getMenuInflater().inflate(R.menu.menu_feedback, menu);
         return true;
     }
 
@@ -170,7 +170,6 @@ public class Feedback extends Activity {
 
     public void pickImage() {
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-       // intent.setType("image/*");
         startActivityForResult(intent, PICK_IMAGE);
     }
 
@@ -270,21 +269,6 @@ public class Feedback extends Activity {
 
 
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onBackPressed() {
