@@ -50,7 +50,6 @@ public class DisplaySelectedItem extends Activity {
 
 
 
-
         //Gets the intent from the activity that's calling this one (i.e either the ListEntriesActivity or the SearchActivity)
         Intent intent = getIntent();
 

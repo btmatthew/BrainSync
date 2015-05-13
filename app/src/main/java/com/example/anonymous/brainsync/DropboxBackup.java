@@ -24,10 +24,7 @@ import com.dropbox.client2.session.AppKeyPair;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * Created by Matthew Bulat on 13/04/2015.
@@ -35,8 +32,8 @@ import java.util.Collection;
 public class DropboxBackup extends Activity {
     private String fileDirectory;
     final static private String PREFS_NAME="dropboxToken";
-    final static private String APP_KEY = "shz2ba3aei84dxd";
-    final static private String APP_SECRET = "vz5ksv0lk7xxylp";
+    final static private String APP_KEY = "";
+    final static private String APP_SECRET = "";
     private DropboxAPI<AndroidAuthSession> mDBApi;
     CustomAdapter dataAdapter=null;
     private ArrayList<Filenames> fileNamesList;
@@ -49,7 +46,7 @@ public class DropboxBackup extends Activity {
         fileDirectory = getString(R.string.directoryLocation);
         File file = new File(fileDirectory);
         if(file.list().length<0){
-            runOnUiThread(new Toasting("Your Brain is empty! :O , please add some notes to your Brain."));
+            runOnUiThread(new Toasting("Your digital brain is empty! :O , please add some entries to stay in sync."));
             finish();
         }else{
             AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);

@@ -209,10 +209,7 @@ public class AddEntryActivity extends Activity {
                         it.remove();
                 }
 
-                final String[] defaultFiles = new String[list.size()];
-                int a = defaultFiles.length;
-
-                if (a == 0) {
+                if (list.size() == 0) {
                     Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
                 } else {
                     onSearchRequested();
