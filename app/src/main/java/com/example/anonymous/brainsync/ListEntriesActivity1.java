@@ -7,38 +7,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 public class ListEntriesActivity1 extends Activity {
 
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
     private String fileDirectory;
     //These are all created here so I could use them in multiple methods in this activity
-    ListView entriesView;
     int itemSelectedCount = 0;
     ArrayList<String> selectedMenuItems = new ArrayList<String>();
     CustomAdapter dataAdapter=null;
@@ -199,6 +187,7 @@ public class ListEntriesActivity1 extends Activity {
                     @Override
                     public boolean onLongClick(View v) {
                         MenuItem item = menu.findItem(R.id.deleteMenuButton);
+                        MenuItem item1 = menu.findItem(R.id.search);
                         android.app.ActionBar actionBar = getActionBar();
 
                         TextView tx = (TextView) v;
@@ -211,12 +200,15 @@ public class ListEntriesActivity1 extends Activity {
                             itemSelectedCount = selectedMenuItems.size();
                             if(itemSelectedCount==0){
                                 actionBar.setTitle("Entries");
+                                item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                             }else if(itemSelectedCount==1){
                                 actionBar.setTitle("Item Selected "+itemSelectedCount);
                                 item.setVisible(true);
                                 item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                                item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                             }else{
                                 actionBar.setTitle("Items Selected "+itemSelectedCount);
+                                item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                             }
                         }else{
                             tx.setBackgroundColor(Color.TRANSPARENT);
@@ -228,8 +220,10 @@ public class ListEntriesActivity1 extends Activity {
                                 actionBar.setTitle("Entries");
                                 item.setVisible(false);
                                 item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                                item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                             }else if(itemSelectedCount==1){
                                 actionBar.setTitle("Item Selected "+itemSelectedCount);
+
                             }else{
                                 actionBar.setTitle("Items Selected "+itemSelectedCount);
                             }
