@@ -1,8 +1,7 @@
 package com.example.anonymous.brainsync;
 
-import android.app.ActionBar;
+
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,10 +13,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 
 public class MainActivity extends Activity {
