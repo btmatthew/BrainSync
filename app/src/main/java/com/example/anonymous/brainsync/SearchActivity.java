@@ -75,7 +75,8 @@ public class SearchActivity extends ListActivity{
 
     public void carryOutSearch(String requestedEntry) {
 
-
+        android.app.ActionBar actionBar = getActionBar();
+        actionBar.setTitle("Search Result");
         //Create File object and pass to it the directory where all our files are stored
         File sQuery = new File(directory);
         //List all the files in that directory and passes it to availableFiles array
@@ -103,13 +104,10 @@ public class SearchActivity extends ListActivity{
                     }
                 }
             }
-
             if(fileNamesList.size() != 0) {
-
                 dataAdapter= new CustomAdapter(this,R.layout.list_entries_row,fileNamesList);
                 ListView listView = (ListView) findViewById(android.R.id.list);
                 listView.setAdapter(dataAdapter);
-
             } else {
                 Toast.makeText(this, requestedEntry + " does not exist", Toast.LENGTH_LONG).show();
                 onSearchRequested();
@@ -228,14 +226,14 @@ public class SearchActivity extends ListActivity{
             File dir = new File(directory + selectedMenuItems.get(i));
             dir.delete();
         }
-        Intent intentWidget= new Intent(this, ViewNotes.class);
+        Intent intentWidget = new Intent(this, ViewNotes.class);
         intentWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         int[] ids=AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ViewNotes.class));
         intentWidget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
         sendBroadcast(intentWidget);
-
         selectedMenuItems.clear();
         Toast.makeText(this, itemSelectedCount+" Entries Deleted", Toast.LENGTH_LONG).show();
+        itemSelectedCount=0;
         onRestart();
 
     }

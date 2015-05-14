@@ -65,6 +65,8 @@ public class ListEntriesActivity1 extends Activity {
     }
 
     private void createList(){
+        android.app.ActionBar actionBar = getActionBar();
+        actionBar.setTitle("Entries");
         File[] fileList = new File(fileDirectory).listFiles();
         Arrays.sort(fileList);
         fileNamesList = new ArrayList<Filenames>();
@@ -92,6 +94,8 @@ public class ListEntriesActivity1 extends Activity {
 
 
         Toast.makeText(this, itemSelectedCount+" Item(s) Deleted", Toast.LENGTH_LONG).show();
+        itemSelectedCount=0;
+        selectedMenuItems.clear();
         Intent intentWidget= new Intent(this, ViewNotes.class);
         intentWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         int[] ids=AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ViewNotes.class));
