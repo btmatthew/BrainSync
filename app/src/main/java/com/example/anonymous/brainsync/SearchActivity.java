@@ -117,6 +117,10 @@ public class SearchActivity extends ListActivity{
 
         }
     }
+    protected void onRestart(){
+        super.onRestart();
+        carryOutSearch(query);
+    }
     private class CustomAdapter extends ArrayAdapter<Filenames>{
 
         private ArrayList<Filenames> fileList;
@@ -232,7 +236,7 @@ public class SearchActivity extends ListActivity{
 
         selectedMenuItems.clear();
         Toast.makeText(this, itemSelectedCount+" Entries Deleted", Toast.LENGTH_LONG).show();
-        recreate();
+        onRestart();
 
     }
 

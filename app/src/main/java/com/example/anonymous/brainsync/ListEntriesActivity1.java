@@ -56,7 +56,15 @@ public class ListEntriesActivity1 extends Activity {
               }
           });
 
+        createList();
 
+         }
+    protected void onRestart(){
+        super.onRestart();
+        createList();
+    }
+
+    private void createList(){
         File[] fileList = new File(fileDirectory).listFiles();
         Arrays.sort(fileList);
         fileNamesList = new ArrayList<Filenames>();
@@ -70,9 +78,7 @@ public class ListEntriesActivity1 extends Activity {
         dataAdapter= new CustomAdapter(this,R.layout.list_entries_row,fileNamesList);
         ListView listView = (ListView) findViewById(R.id.listEntriesView);
         listView.setAdapter(dataAdapter);
-
-         }
-
+    }
 
     public void deleteMethod() {
         //Carries out the delete action based on the size of the arraylist held by the variable itemSelectedCount
@@ -86,12 +92,12 @@ public class ListEntriesActivity1 extends Activity {
 
 
         Toast.makeText(this, itemSelectedCount+" Item(s) Deleted", Toast.LENGTH_LONG).show();
-        recreate();
         Intent intentWidget= new Intent(this, ViewNotes.class);
         intentWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         int[] ids=AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ViewNotes.class));
         intentWidget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intentWidget);
+        onRestart();
     }
 
     @Override

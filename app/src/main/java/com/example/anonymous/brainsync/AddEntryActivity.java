@@ -93,6 +93,7 @@ public class AddEntryActivity extends Activity {
 
 
                                     //Start the success activity after file creation and writing has been done
+                                    finish();
                                     Intent intent = new Intent(AddEntryActivity.this, SuccessActivity.class);
                                     startActivity(intent);
 
@@ -116,6 +117,7 @@ public class AddEntryActivity extends Activity {
 
 
                     //Start the success activity after file creation and writing has been done
+                    finish();
                     Intent intent = new Intent(this, SuccessActivity.class);
                     startActivity(intent);
 

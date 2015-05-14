@@ -25,4 +25,7 @@
         android:actionProviderClass=
             "android.widget.ShareActionProvider" />
 
+    <item android:id="@+id/delete_menu_buttonSelectedItem"
+        android:title="@string/menuDeleteButton"/>
+
 </menu>
