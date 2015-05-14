@@ -88,7 +88,7 @@ public class EditActivity extends Activity {
         }
     }
     private void callListEntriesActivity(){
-        Intent intent = new Intent(this, ListEntriesActivity.class);
+        Intent intent = new Intent(this, ListEntriesActivity1.class);
         startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 

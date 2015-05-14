@@ -45,12 +45,6 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".ListEntriesActivity"
-            android:label="@string/title_activity_list_entries"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".ListEntriesActivity1"
             android:label="@string/title_activity_list_entries"
             android:parentActivityName=".MainActivity"
@@ -59,13 +53,13 @@
         <activity
             android:name=".DisplaySelectedItem"
             android:label="@string/title_activity_display_selected_item"
-            android:parentActivityName=".ListEntriesActivity"
+            android:parentActivityName=".ListEntriesActivity1"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".EditActivity"
             android:label="@string/edit_button"
-            android:parentActivityName=".ListEntriesActivity"
+            android:parentActivityName=".ListEntriesActivity1"
             android:screenOrientation="portrait" >
         </activity>
         <activity
