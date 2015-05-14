@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ListEntriesActivity1 extends Activity {
+public class ListEntriesActivity extends Activity {
 
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
     private String fileDirectory;
@@ -51,7 +51,7 @@ public class ListEntriesActivity1 extends Activity {
           fabButton.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                  Intent intent = new Intent(ListEntriesActivity1.this, AddEntryActivity.class);
+                  Intent intent = new Intent(ListEntriesActivity.this, AddEntryActivity.class);
                   startActivity(intent);
               }
           });

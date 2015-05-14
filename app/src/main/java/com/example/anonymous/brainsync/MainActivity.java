@@ -4,7 +4,6 @@ package com.example.anonymous.brainsync;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +35,7 @@ public class MainActivity extends Activity {
     //Called when the 'List All Entries' button is clicked as configured in the XML
     public void listEntriesMethod(View view){
          if (checkFiles()) {
-             Intent intent = new Intent(this, ListEntriesActivity1.class);
+             Intent intent = new Intent(this, ListEntriesActivity.class);
              startActivity(intent);
          }
 
