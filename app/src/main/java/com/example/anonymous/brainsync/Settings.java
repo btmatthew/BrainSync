@@ -33,19 +33,6 @@ public class Settings extends Activity {
             }
         });
 
-//        final Button report = (Button) findViewById(R.id.reportProblemButton);
-//        report.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                reportProblem();
-//            }
-//        });
-
-        /*final Button button1 = (Button) findViewById(R.id.driveBackupButton);
-        button1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                backup1(v);
-            }
-        });*/
     }
     protected void backup(){
         Intent intent = new Intent(this, DropboxBackup.class);
@@ -53,9 +40,7 @@ public class Settings extends Activity {
     }
     protected void importDropbox(){
         Intent intent = new Intent(this, DropboxImport.class);
-        findViewById(R.id.progressBarDropboxImport).setVisibility(View.VISIBLE);
         startActivity(intent);
-        findViewById(R.id.progressBarDropboxImport).setVisibility(View.INVISIBLE);
     }
 
     public void reportProblem(View view) {
@@ -63,10 +48,4 @@ public class Settings extends Activity {
         startActivity(intent);
 
     }
-
-    /*protected void backup1(View view){
-        Intent intent = new Intent(this, GoogleDrive.class);
-        startActivity(intent);
-    }*/
-
 }

@@ -4,6 +4,7 @@ package com.example.anonymous.brainsync;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,7 +49,15 @@ public class MainActivity extends Activity {
         }
     }
     public boolean checkFiles(){
-        if(new File(getString(R.string.directoryLocation)).length()>0){
+        File[]fileList = new File(getString(R.string.directoryLocation)).listFiles();
+        int size=0;
+        for(int i =0;i<fileList.length;i++){
+            if(!(fileList[i].getName().contains("rList")||fileList[i].getName().contains("share_history"))){
+                size++;
+            }
+        }
+
+        if(size>0){
             return true;
         }else{
             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
