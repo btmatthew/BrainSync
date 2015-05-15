@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,16 +15,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 
 public class AddEntryActivity extends Activity {
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +29,6 @@ public class AddEntryActivity extends Activity {
         android.app.ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Add New Entry");
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_entry, menu);
-        return true;
     }
 
     public void saveEntryMethod(View view) {
@@ -190,44 +174,5 @@ public class AddEntryActivity extends Activity {
         }
 
         }
-
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml
-        int id = item.getItemId();
-
-        //If the selected menu item is search launch the search bar at the top of the screen. See this section in MainActivity for more explanation
-        switch(id){
-            case R.id.search:
-                List<String> list = new ArrayList<String>(Arrays.asList(fileList()));
-
-                for (Iterator<String> it = list.iterator(); it.hasNext();) {
-                    if (it.next().contains("rList"))
-                        it.remove();
-                }
-
-                if (list.size() == 0) {
-                    Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
-                } else {
-                    onSearchRequested();
-                }
-                break;
-            case R.id.action_settings:
-                Intent intent = new Intent(this, Settings.class);
-                startActivity(intent);
-                break;
-            case R.id.about:
-                Intent intent1 = new Intent(this, About.class);
-                startActivity(intent1);
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
 }

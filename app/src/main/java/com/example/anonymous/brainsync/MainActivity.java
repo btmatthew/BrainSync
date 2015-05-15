@@ -13,10 +13,11 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.io.File;
+import java.util.Random;
 
 
 public class MainActivity extends Activity {
-
+    public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +39,6 @@ public class MainActivity extends Activity {
              Intent intent = new Intent(this, ListEntriesActivity.class);
              startActivity(intent);
          }
-
     }
 
     //Called when the 'Search My Brain' button is clicked as configured in the XML
@@ -62,6 +62,16 @@ public class MainActivity extends Activity {
             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
             return false;
         }
+
+
+    }
+    public void openRandomNote(View view){
+        File[]fileList = new File(getString(R.string.directoryLocation)).listFiles();
+        Random r = new Random();
+        String selectedFile = fileList[r.nextInt(fileList.length)].getName();
+        Intent intent = new Intent(this, DisplaySelectedItem.class);
+        intent.putExtra(EXTRA_MESSAGE, selectedFile);
+        startActivity(intent);
 
 
     }

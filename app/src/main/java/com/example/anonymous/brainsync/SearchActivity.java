@@ -9,16 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,15 +22,12 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 
 public class SearchActivity extends ListActivity{
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
     private String query;
-    private ArrayList<String> selectedMenuItems = new ArrayList<String>();
+    private ArrayList<String> selectedMenuItems = new ArrayList<>();
     private int itemSelectedCount;
     private String directory;
     private Menu menu;
@@ -87,13 +80,11 @@ public class SearchActivity extends ListActivity{
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         } else {
-
             //Gets the size of the array
-            String[] a = new String[availableFiles.length];
             //For loop based on the size of the array gets the name of all files in the directory
-            fileNamesList = new ArrayList<Filenames>();
+            fileNamesList = new ArrayList<>();
 
-            for (int i = 0; i < a.length; i++) {
+            for (int i = 0; i < availableFiles.length; i++) {
                 String fileTitle=availableFiles[i].getName();
 
                 if(fileTitle.contains(requestedEntry)){
@@ -142,9 +133,6 @@ public class SearchActivity extends ListActivity{
                 holder = new ViewHolder();
                 holder.name = (TextView) convertView.findViewById(R.id.listEntriesViewRow);
                 convertView.setTag(holder);
-
-
-
                 holder.name.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         if(itemSelectedCount==0){
@@ -217,10 +205,8 @@ public class SearchActivity extends ListActivity{
         }
     }
     public void deleteMethod() {
-        String itemName = "";
         //Carries out the delete action based on the size of the arraylist held by the variable itemSelectedCount
         for (int i = 0; i < itemSelectedCount; i++) {
-            itemName = selectedMenuItems.get(i);
             //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
             //Not sure why the concatenation works but it does... :P
             File dir = new File(directory + selectedMenuItems.get(i));

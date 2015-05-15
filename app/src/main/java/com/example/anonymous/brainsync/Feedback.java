@@ -1,6 +1,6 @@
 package com.example.anonymous.brainsync;
 
-import android.app.ActionBar;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,9 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -31,7 +29,7 @@ public class Feedback extends Activity {
     static final int SEND_EMAIL= 1;
     private static final int PICK_IMAGE = 2;
     private static final int REQUEST_CAMERA = 3;
-    ArrayList<Uri> uris = new ArrayList<Uri>();
+    ArrayList<Uri> uris = new ArrayList<>();
     int imageSelectionCounter = 0;
     int detectSelectionCounter1 = 0;
     int detectSelectionCounter2 = 0;
@@ -225,7 +223,6 @@ public class Feedback extends Activity {
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
             if (data == null) {
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                return;
             } else {
 
                 Uri selectedImage = data.getData();

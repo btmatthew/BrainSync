@@ -4,12 +4,10 @@ package com.example.anonymous.brainsync;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import java.io.File;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -38,7 +36,7 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
         String fileDirectory = "data/data/com.example.anonymous.brainsync/files/";
         File dir = new File(fileDirectory);
         String[] fileList = dir.list();
-        widgetList = new ArrayList<String>(Arrays.asList(fileList));
+        widgetList = new ArrayList<>(Arrays.asList(fileList));
         for (Iterator<String> it = widgetList.iterator(); it.hasNext();) {
             String item = it.next();
             if(item.contains("rList")){

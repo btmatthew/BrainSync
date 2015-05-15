@@ -3,29 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.anonymous.brainsync.DisplaySelectedItem">
 
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" brainsync:showAsAction="never" />
-
+    <item android:id="@+id/delete_menu_buttonSelectedItem"
+        android:title="@string/menuDeleteButton"/>
 
     <item android:id="@+id/edit_menu_button"
         android:title="@string/edit_button"
         android:icon="@drawable/ic_action_edit"
         brainsync:showAsAction="always"/>
 
+    <item android:id="@+id/action_settings"
+        android:title="@string/title_activity_settings"/>
 
-    <item android:id="@+id/search"
-        android:title="@string/search_title"
-        android:icon="@drawable/ic_action_search"
-        brainsync:showAsAction="never"
-        android:actionViewClass="android.widget.SearchView"/>
     <item
         android:id="@+id/menu_item_share"
         brainsync:showAsAction="ifRoom"
         android:title="Share"
         android:actionProviderClass=
-            "android.widget.ShareActionProvider" />
+            "android.widget.ShareActionProvider"/>
 
-    <item android:id="@+id/delete_menu_buttonSelectedItem"
-        android:title="@string/menuDeleteButton"/>
+
 
 </menu>
