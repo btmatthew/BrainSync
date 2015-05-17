@@ -1,25 +1,22 @@
-package com.example.anonymous.brainsync;
+package com.note.anonymous.brainsync;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class DisplaySelectedItem extends Activity {
@@ -30,10 +27,12 @@ public class DisplaySelectedItem extends Activity {
     private String body="";
     private ShareActionProvider mShareActionProvider;
     private Intent shareItem;
+    private String fileDirectory;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_selected_item);
+        fileDirectory = getString(R.string.directoryLocation);
         FloatingActionButton fabButton = new FloatingActionButton.Builder(this)
                 .withDrawable(getResources().getDrawable(R.drawable.ic_action_edit))
                 .withButtonColor(Color.GRAY)
@@ -55,15 +54,15 @@ public class DisplaySelectedItem extends Activity {
 
         //Queries the activity for the data it's passing and assigns it to local string variable message
         title = intent.getStringExtra(ListEntriesActivity.EXTRA_MESSAGE);
-
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             FileInputStream readingFromFile = openFileInput(title);
             int c;
             //Condition is true as long as we haven't gotten to the end of the file
             while( (c = readingFromFile.read()) != -1){
-
-                    body = body + Character.toString((char)c);
+                    stringBuilder.append(Character.toString((char)c));
             }
+            body=stringBuilder.toString();
             readingFromFile.close();
         }catch(IOException e){
 
@@ -111,13 +110,7 @@ public class DisplaySelectedItem extends Activity {
         shareItem.setAction(Intent.ACTION_SEND);
         shareItem.setType("text/plain");
         shareItem.putExtra(Intent.EXTRA_TEXT, body);
-
         mShareActionProvider.setShareIntent(shareItem);
-        if (mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(shareItem);
-        }
-
-
         return true;
     }
 
@@ -130,21 +123,17 @@ public class DisplaySelectedItem extends Activity {
 
         //If the selected menu item is search launch the search bar at the top of the screen. See this section in MainActivity for more explanation
         switch (id) {
-            case R.id.search:
-                onSearchRequested();
-                break;
             case R.id.edit_menu_button:
                 callEditActiity();
                 break;
             case R.id.action_settings:
                 Intent intent1 = new Intent(this, Settings.class);
                 startActivity(intent1);
-                return true;
-            case R.id.menu_item_share:
-
-
                 break;
-        }
+            case R.id.delete_menu_buttonSelectedItem:
+                deleteNote();
+                break;
+            }
 
 
         return super.onOptionsItemSelected(item);
@@ -155,6 +144,15 @@ public class DisplaySelectedItem extends Activity {
         intent.putExtra(EXTRA_MESSAGE1, body);
         startActivity(intent);
     }
-
+    private void deleteNote(){
+        File dir = new File(fileDirectory + title);
+        dir.delete();
+        Intent intentWidget= new Intent(this, ViewNotes.class);
+        intentWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids=AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ViewNotes.class));
+        intentWidget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intentWidget);
+        finish();
+    }
 }
 

@@ -1,4 +1,4 @@
-package com.example.anonymous.brainsync;
+package com.note.anonymous.brainsync;
 
 import android.app.Activity;
 import android.content.pm.PackageInfo;

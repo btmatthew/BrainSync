@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:brainsync="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.anonymous.brainsync.DisplaySelectedItem">
+    tools:context="com.note.anonymous.brainsync.DisplaySelectedItem">
 
     <item android:id="@+id/delete_menu_buttonSelectedItem"
         android:title="@string/menuDeleteButton"/>

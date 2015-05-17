@@ -1,4 +1,4 @@
-package com.example.anonymous.brainsync;
+package com.note.anonymous.brainsync;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -1,4 +1,4 @@
-package com.example.anonymous.brainsync;
+package com.note.anonymous.brainsync;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
@@ -28,7 +28,7 @@ public class ListEntriesActivity extends Activity {
     private String fileDirectory;
     //These are all created here so I could use them in multiple methods in this activity
     int itemSelectedCount = 0;
-    ArrayList<String> selectedMenuItems = new ArrayList<String>();
+    ArrayList<String> selectedMenuItems = new ArrayList<>();
     CustomAdapter dataAdapter=null;
     private ArrayList<Filenames> fileNamesList;
     Menu menu;
@@ -69,7 +69,7 @@ public class ListEntriesActivity extends Activity {
         actionBar.setTitle("Entries");
         File[] fileList = new File(fileDirectory).listFiles();
         Arrays.sort(fileList);
-        fileNamesList = new ArrayList<Filenames>();
+        fileNamesList = new ArrayList<>();
         for (int i = 0; i < fileList.length; i++) {
             Filenames file = new Filenames(fileList[i].getName(),false);
             if(!(file.getFilename().contains("rList")||file.getFilename().contains("share_history"))){

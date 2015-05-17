@@ -1,4 +1,4 @@
-package com.example.anonymous.brainsync;
+package com.note.anonymous.brainsync;
 
 /**
  * Created by Anonymous on 19/04/2015.

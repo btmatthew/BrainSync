@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.anonymous.brainsync"
+    package="com.note.anonymous.brainsync"
     android:versionCode="1"
     android:versionName="1.0">
     >
@@ -21,7 +21,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.note.anonymous.brainsync.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
@@ -33,33 +33,33 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddEntryActivity"
+            android:name="com.note.anonymous.brainsync.AddEntryActivity"
             android:label="@string/title_activity_add_entry"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.note.anonymous.brainsync.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name=".SuccessActivity"
+            android:name="com.note.anonymous.brainsync.SuccessActivity"
             android:label="@string/title_activity_success"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".ListEntriesActivity"
+            android:name="com.note.anonymous.brainsync.ListEntriesActivity"
             android:label="@string/title_activity_list_entries"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.note.anonymous.brainsync.MainActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".DisplaySelectedItem"
+            android:name="com.note.anonymous.brainsync.DisplaySelectedItem"
             android:label="@string/title_activity_display_selected_item"
-            android:parentActivityName=".ListEntriesActivity"
+            android:parentActivityName="com.note.anonymous.brainsync.ListEntriesActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".EditActivity"
+            android:name="com.note.anonymous.brainsync.EditActivity"
             android:label="@string/edit_button"
-            android:parentActivityName=".ListEntriesActivity"
+            android:parentActivityName="com.note.anonymous.brainsync.ListEntriesActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -79,7 +79,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SearchActivity"
+            android:name="com.note.anonymous.brainsync.SearchActivity"
             android:label="@string/title_activity_search"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -91,51 +91,51 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".Settings"
+            android:name="com.note.anonymous.brainsync.Settings"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.note.anonymous.brainsync.MainActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.anonymous.brainsync.MainActivity" />
+                android:value="com.note.anonymous.brainsync.MainActivity" />
         </activity>
         <activity
-            android:name=".DropboxBackup"
-            android:parentActivityName=".Settings"
+            android:name="com.note.anonymous.brainsync.DropboxBackup"
+            android:parentActivityName="com.note.anonymous.brainsync.Settings"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.anonymous.brainsync.Settings" />
+                android:value="com.note.anonymous.brainsync.Settings" />
         </activity>
         <activity
-            android:name=".DropboxImport"
+            android:name="com.note.anonymous.brainsync.DropboxImport"
             android:label="@string/title_activity_dropbox_import"
-            android:parentActivityName=".Settings" >
+            android:parentActivityName="com.note.anonymous.brainsync.Settings" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.anonymous.brainsync.Settings" />
+                android:value="com.note.anonymous.brainsync.Settings" />
         </activity>
         <activity
-            android:name=".About"
+            android:name="com.note.anonymous.brainsync.About"
             android:label="@string/title_activity_about"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName="com.note.anonymous.brainsync.MainActivity" >
 
         </activity>
         <activity
-            android:name=".Feedback"
+            android:name="com.note.anonymous.brainsync.Feedback"
             android:label="@string/title_activity_feedback"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
-            android:parentActivityName=".Settings">
+            android:parentActivityName="com.note.anonymous.brainsync.Settings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.anonymous.brainsync.Settings" />
+                android:value="com.note.anonymous.brainsync.Settings" />
         </activity>
         <activity android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
 
-        <receiver android:name=".ViewNotes" >
+        <receiver android:name="com.note.anonymous.brainsync.ViewNotes" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -145,7 +145,7 @@
                 android:resource="@xml/view_notes_info" />
         </receiver>
         <service
-            android:name=".WidgetService"
+            android:name="com.note.anonymous.brainsync.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 

@@ -1,4 +1,4 @@
-package com.example.anonymous.brainsync;
+package com.note.anonymous.brainsync;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,90 +22,105 @@ import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.session.AppKeyPair;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by Matthew Bulat on 13/04/2015.
- */
-public class DropboxBackup extends Activity {
+
+public class DropboxImport extends Activity {
     private String fileDirectory;
     final static private String PREFS_NAME="dropboxToken";
     final static private String APP_KEY = "shz2ba3aei84dxd";
     final static private String APP_SECRET = "vz5ksv0lk7xxylp";
     private DropboxAPI<AndroidAuthSession> mDBApi;
-    CustomAdapter dataAdapter=null;
+    private List<DropboxAPI.Entry> files;
     private ArrayList<Filenames> fileNamesList;
-
+    CustomAdapter dataAdapter=null;
+    private Thread collectFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dropbox_backup);
+        setContentView(R.layout.activity_dropbox_import);
         fileDirectory = getString(R.string.directoryLocation);
-        File file = new File(fileDirectory);
-        if(file.list().length<0){
-            runOnUiThread(new Toasting("Your digital brain is empty! :O , please add some entries to stay in sync."));
-            finish();
+        AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
+        AndroidAuthSession session = new AndroidAuthSession(appKeys);
+        mDBApi = new DropboxAPI<>(session);
+        SharedPreferences setToken = getSharedPreferences(PREFS_NAME,0);
+        String key = setToken.getString(APP_KEY, null);
+        String token = setToken.getString(APP_SECRET,null);
+        if(key!=null&&token!=null){
+            mDBApi.getSession().setOAuth2AccessToken(token);
+            startCollection();
         }else{
-            AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
-            AndroidAuthSession session = new AndroidAuthSession(appKeys);
-            mDBApi = new DropboxAPI<AndroidAuthSession>(session);
-            SharedPreferences setToken = getSharedPreferences(PREFS_NAME,0);
-            String key = setToken.getString(APP_KEY, null);
-            String token = setToken.getString(APP_SECRET,null);
-            if(key!=null&&token!=null){
-                mDBApi.getSession().setOAuth2AccessToken(token);
-                display();
-            }else{
-                mDBApi.getSession().startOAuth2Authentication(DropboxBackup.this);
-            }
-
-
-
-
+            mDBApi.getSession().startOAuth2Authentication(DropboxImport.this);
         }
-
     }
+
+
     protected void onResume() {
         super.onResume();
         if (mDBApi.getSession().authenticationSuccessful()) {
 
             try {
                 // Required to complete auth, sets the access token on the session
-
                 mDBApi.getSession().finishAuthentication();
                 String accessToken = mDBApi.getSession().getOAuth2AccessToken();
                 SharedPreferences setToken = getSharedPreferences(PREFS_NAME, 0);
                 SharedPreferences.Editor editor= setToken.edit();
                 editor.putString(APP_KEY,"oauth2:");
-                editor.putString(APP_SECRET,accessToken);
+                editor.putString(APP_SECRET, accessToken);
                 editor.apply();
-                display();
+                startCollection();
+
             } catch (IllegalStateException e) {
                 Log.i("DbAuthLog", "Error authenticating", e);
             }
         }
-
-
     }
-    protected void display(){
-        File[] fileList = new File(fileDirectory).listFiles();
-        fileNamesList = new ArrayList<Filenames>();
+    class getFileList implements Runnable{
+        @Override
+        public void run() {
+            try {
+                DropboxAPI.Entry dirent = mDBApi.metadata("/", 1000, null, true, null);
 
-        for (int i = 0; i < fileList.length; i++) {
-            Filenames file = new Filenames(fileList[i].getName(),false);
-            if(!(file.getFilename().contains("rList")||file.getFilename().contains("share_history"))){
-                file.setFile(fileList[i]);
-                fileNamesList.add(file);
+                files = dirent.contents;
+
+            }catch(DropboxException e){
+                Log.i("DropboxException", ""+e);
             }
         }
+    }
+    protected void startCollection(){
+        collectFileName = new Thread(new getFileList());
+        collectFileName.start();
+        while(collectFileName.isAlive()){
+            findViewById(R.id.progressBarDropboxImport).setVisibility(View.VISIBLE);
+        }
+        findViewById(R.id.progressBarDropboxImport).setVisibility(View.INVISIBLE);
+        if(files.isEmpty()){
+            runOnUiThread(new Toasting("Your Dropbox is empty! We cannot upload anything to your Brain."));
+            finish();
+        }else{
+            display();
+        }
+    }
+
+    protected void display(){
+        int fileListLength=files.size();
+        fileNamesList = new ArrayList<>();
+        for(int i=0; i<fileListLength;i++){
+            Filenames file = new Filenames(files.get(i).fileName(),false);
+            fileNamesList.add(file);
+        }
         dataAdapter= new CustomAdapter(this,R.layout.row,fileNamesList);
-        ListView listView = (ListView) findViewById(R.id.dropboxSyncList);
+        ListView listView = (ListView) findViewById(R.id.importListView);
         listView.setAdapter(dataAdapter);
     }
-    private class CustomAdapter extends ArrayAdapter<Filenames>{
+
+
+    private class CustomAdapter extends ArrayAdapter<Filenames> {
         private ArrayList<Filenames> fileList;
         public CustomAdapter(Context context, int textViewResourceId, ArrayList<Filenames> fileList){
             super(context, textViewResourceId,fileList);
@@ -145,27 +160,15 @@ public class DropboxBackup extends Activity {
             return convertView;
         }
     }
-
-    public void backup(View v){
-        ArrayList<File> fileListToPass= new ArrayList<File>();
-        ArrayList<Filenames> fileList = dataAdapter.fileList;
-        for(int i=0; i<fileList.size();i++){
-            Filenames file = fileList.get(i);
-            if(file.isSelected()){
-                fileListToPass.add(file.getFile());
-            }
-        }
-        upload(fileListToPass);
-    }
     public void selectAll(View v){
         ArrayList<Filenames> fileList = dataAdapter.fileList;
         for(int i=0; i<fileList.size();i++){
             fileList.get(i).setSelected(true);
         }
         dataAdapter= new CustomAdapter(this,R.layout.row,fileNamesList);
-        ListView listView = (ListView) findViewById(R.id.dropboxSyncList);
+        ListView listView = (ListView) findViewById(R.id.importListView);
         listView.setAdapter(dataAdapter);
-        Button selectAllButton = (Button) findViewById(R.id.buttonSelectAll);
+        Button selectAllButton = (Button) findViewById(R.id.buttonSelectAllImportDropbox);
         selectAllButton.setText("Deselect All");
         selectAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,9 +184,9 @@ public class DropboxBackup extends Activity {
             fileList.get(i).setSelected(false);
         }
         dataAdapter= new CustomAdapter(this,R.layout.row,fileNamesList);
-        ListView listView = (ListView) findViewById(R.id.dropboxSyncList);
+        ListView listView = (ListView) findViewById(R.id.importListView);
         listView.setAdapter(dataAdapter);
-        Button selectAllButton = (Button) findViewById(R.id.buttonSelectAll);
+        Button selectAllButton = (Button) findViewById(R.id.buttonSelectAllImportDropbox);
         selectAllButton.setText("Select All");
         selectAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,25 +196,36 @@ public class DropboxBackup extends Activity {
         });
     }
 
+    public void importFiles(View v){
+        ArrayList<Filenames> fileListToPass= new ArrayList<>();
+        ArrayList<Filenames> fileList = dataAdapter.fileList;
+        for(int i=0; i<fileList.size();i++){
+            Filenames file = fileList.get(i);
+            if(file.isSelected()){
+                fileListToPass.add(file);
+            }
+        }
+        download(fileListToPass);
+    }
 
-    protected void upload(final ArrayList<File> fileList) {
-        findViewById(R.id.spinningCircle).setVisibility(View.VISIBLE);
+    protected void download(final ArrayList<Filenames> fileList){
+        findViewById(R.id.progressBarDropboxImport).setVisibility(View.VISIBLE);
         new Thread(new Runnable(){
             public void run() {
 
                 try {
                     for (int i = 0; i < fileList.size(); i++) {
-                        FileInputStream inputStream = new FileInputStream(fileList.get(i));
-                        mDBApi.putFileOverwrite(fileList.get(i).getName(), inputStream, fileList.get(i).length(), null);
+                        File file = new File(fileDirectory+"/"+fileList.get(i).getFilename());
+                        FileOutputStream outputStream = new FileOutputStream(file);
+                        DropboxAPI.DropboxFileInfo info = mDBApi.getFile("/"+fileList.get(i).getFilename(), null, outputStream, null);
                     }
-                    runOnUiThread(new Toasting("All done! Your Brain is uploaded to Dropbox!"));
+                    runOnUiThread(new Toasting("All done! Your Brain is downloaded from Dropbox!"));
                     finish();
                 } catch (DropboxException | IOException e) {
                     Log.i("DropboxException", ""+e);
                 }
             }
         }).start();
-
     }
 
     class Toasting implements Runnable{
@@ -232,7 +246,7 @@ public class DropboxBackup extends Activity {
                     int duration = Toast.LENGTH_LONG;
 
                     Toast toast = Toast.makeText(context, text, duration);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.setGravity(Gravity.CENTER| Gravity.CENTER, 0, 0);
                     toast.show();
 
                 }
@@ -240,4 +254,5 @@ public class DropboxBackup extends Activity {
             });
         }
     }
+
 }
