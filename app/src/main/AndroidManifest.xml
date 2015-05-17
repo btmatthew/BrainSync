@@ -37,7 +37,13 @@
             android:label="@string/title_activity_add_entry"
             android:parentActivityName="com.note.anonymous.brainsync.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.note.anonymous.brainsync.SuccessActivity"

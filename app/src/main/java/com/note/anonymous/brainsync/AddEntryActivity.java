@@ -24,13 +24,27 @@ public class AddEntryActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_entry);
-
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+        if(Intent.ACTION_SEND.equals(action)&&type!=null){
+            if("text/plain".equals(type)){
+                setTextFromShare(intent);
+            }
+        }
         //Make the app icon at the top left corner clickable so user can go to previous activity instead of using the back button
         android.app.ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Add New Entry");
     }
+    private void setTextFromShare(Intent intent){
+        EditText datafield = (EditText) findViewById(R.id.information);
+        String sharedtext = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if(sharedtext!=null){
+            datafield.setText(sharedtext);
+        }
 
+    }
     public void saveEntryMethod(View view) {
 
         //Link local EditText variables to EditText views created in XML

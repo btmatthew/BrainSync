@@ -6,7 +6,7 @@
     <string name="what_do_i_know">What Do I Know?</string>
     <string name="search_my_brain">Search My Brain</string>
     <string name="list_all_entry">List All Entries</string>
-    <string name="title_activity_add_entry">New Entry</string>
+    <string name="title_activity_add_entry">Brain Sync</string>
     <string name="save_entry">Save Entry</string>
     <string name="cancel_entry">Cancel Entry</string>
     <string name="save_update">Save Update</string>
