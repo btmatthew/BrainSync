@@ -70,6 +70,9 @@ public class MainActivity extends Activity {
             File[] fileList = new File(getString(R.string.directoryLocation)).listFiles();
             Random r = new Random();
             String selectedFile = fileList[r.nextInt(fileList.length)].getName();
+            while(selectedFile.contains("rList")||selectedFile.contains("share_history")){
+                selectedFile = fileList[r.nextInt(fileList.length)].getName();
+            }
             Intent intent = new Intent(this, DisplaySelectedItem.class);
             intent.putExtra(EXTRA_MESSAGE, selectedFile);
             startActivity(intent);
