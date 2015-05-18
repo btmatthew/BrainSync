@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
 
     //Called when the 'List All Entries' button is clicked as configured in the XML
     public void listEntriesMethod(View view){
-         if (checkFiles()) {
+        if (checkFiles()) {
              Intent intent = new Intent(this, ListEntriesActivity.class);
              startActivity(intent);
          }
@@ -66,13 +66,14 @@ public class MainActivity extends Activity {
 
     }
     public void openRandomNote(View view){
-        File[]fileList = new File(getString(R.string.directoryLocation)).listFiles();
-        Random r = new Random();
-        String selectedFile = fileList[r.nextInt(fileList.length)].getName();
-        Intent intent = new Intent(this, DisplaySelectedItem.class);
-        intent.putExtra(EXTRA_MESSAGE, selectedFile);
-        startActivity(intent);
-
+        if (checkFiles()) {
+            File[] fileList = new File(getString(R.string.directoryLocation)).listFiles();
+            Random r = new Random();
+            String selectedFile = fileList[r.nextInt(fileList.length)].getName();
+            Intent intent = new Intent(this, DisplaySelectedItem.class);
+            intent.putExtra(EXTRA_MESSAGE, selectedFile);
+            startActivity(intent);
+        }
 
     }
 
