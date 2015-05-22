@@ -17,6 +17,7 @@
         <meta-data
             android:name="android.app.default_searchable"
             android:value=".SearchActivity" />
+
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
@@ -26,9 +27,10 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="adjustNothing">
+            <meta-data android:name="android.app.default_searchable"
+                android:value="com.note.anonymous.brainsync.SearchActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -54,7 +56,10 @@
             android:name="com.note.anonymous.brainsync.ListEntriesActivity"
             android:label="@string/title_activity_list_entries"
             android:parentActivityName="com.note.anonymous.brainsync.MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            >
+            <meta-data android:name="android.app.default_searchable"
+                android:value="com.note.anonymous.brainsync.SearchActivity" />
         </activity>
         <activity
             android:name="com.note.anonymous.brainsync.DisplaySelectedItem"

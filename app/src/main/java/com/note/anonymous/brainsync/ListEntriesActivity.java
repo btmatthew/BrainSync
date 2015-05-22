@@ -31,7 +31,9 @@ public class ListEntriesActivity extends Activity {
     ArrayList<String> selectedMenuItems = new ArrayList<>();
     CustomAdapter dataAdapter=null;
     private ArrayList<Filenames> fileNamesList;
-    Menu menu;
+    private Menu menu;
+    private MenuItem item;
+    private MenuItem item1;
 
 
     @Override
@@ -61,12 +63,16 @@ public class ListEntriesActivity extends Activity {
          }
     protected void onRestart(){
         super.onRestart();
+        itemSelectedCount=0;
+        selectedMenuItems.clear();
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        android.app.ActionBar actionBar = getActionBar();
+        actionBar.setTitle("Entries");
         createList();
     }
 
     private void createList(){
-        android.app.ActionBar actionBar = getActionBar();
-        actionBar.setTitle("Entries");
         File[] fileList = new File(fileDirectory).listFiles();
         Arrays.sort(fileList);
         fileNamesList = new ArrayList<>();
@@ -94,8 +100,9 @@ public class ListEntriesActivity extends Activity {
 
 
         Toast.makeText(this, itemSelectedCount+" Item(s) Deleted", Toast.LENGTH_LONG).show();
-        itemSelectedCount=0;
-        selectedMenuItems.clear();
+        //Cleaning up action bar
+
+        //Sends broadcast to widget to update the viewList
         Intent intentWidget= new Intent(this, ViewNotes.class);
         intentWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         int[] ids=AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ViewNotes.class));
@@ -155,9 +162,12 @@ public class ListEntriesActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        if(itemSelectedCount==0){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        }else{
+            onRestart();
+        }
 
 
     }
@@ -219,8 +229,8 @@ public class ListEntriesActivity extends Activity {
             return convertView;
         }
         private void selectItem(View v){
-            MenuItem item = menu.findItem(R.id.deleteMenuButton);
-            MenuItem item1 = menu.findItem(R.id.search);
+            item = menu.findItem(R.id.deleteMenuButton);
+            item1 = menu.findItem(R.id.search);
             android.app.ActionBar actionBar = getActionBar();
 
             TextView tx = (TextView) v;

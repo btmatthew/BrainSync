@@ -6,11 +6,14 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
@@ -19,7 +22,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 
-public class DisplaySelectedItem extends Activity {
+public class DisplaySelectedItem extends Activity{
 
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE2";
     public final static String EXTRA_MESSAGE1 = "com.example.anonymous.brainsync.MESSAGE3";
@@ -33,7 +36,7 @@ public class DisplaySelectedItem extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_selected_item);
         fileDirectory = getString(R.string.directoryLocation);
-        FloatingActionButton fabButton = new FloatingActionButton.Builder(this)
+        final FloatingActionButton fabButton = new FloatingActionButton.Builder(this)
                 .withDrawable(getResources().getDrawable(R.drawable.ic_action_edit))
                 .withButtonColor(Color.GRAY)
                 .withGravity(Gravity.BOTTOM | Gravity.RIGHT)
@@ -68,12 +71,24 @@ public class DisplaySelectedItem extends Activity {
 
         }
         RelativeLayout view = (RelativeLayout)findViewById(R.id.mainLayoutDisplayItem);
-
         TextView textView = (TextView)findViewById(R.id.noteText);
-        //Creates a TextView component for this activity
-        textView.setTextSize(20);
 
+        //checks if the scrollView reached the botton of page, and hides the button
+        final ScrollView scrollView =(ScrollView)findViewById(R.id.scrollView);
+        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if((scrollView.getChildAt(0).getHeight()-scrollView.getScrollY())!=scrollView.getHeight()){
+                    fabButton.showFloatingActionButton();
+                }else{
+                    fabButton.hideFloatingActionButton();
+
+                }
+            }
+        });
+        //Creates a TextView component for this activity
         //Sets the data received from previous activity into the TextView
+        textView.setTextSize(20);
         textView.setText(body);
         textView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -90,14 +105,11 @@ public class DisplaySelectedItem extends Activity {
             }
         });
 
-
-
         //Make the app icon at the top left corner clickable so user can go to previous activity instead of using the back button
         android.app.ActionBar actionBar = getActionBar();
         actionBar.setTitle(title);
 
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

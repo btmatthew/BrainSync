@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,12 +32,14 @@ public class SearchActivity extends ListActivity{
     private int itemSelectedCount;
     private String directory;
     private Menu menu;
+    private MenuItem item;
     private CustomAdapter dataAdapter=null;
     private ArrayList<Filenames> fileNamesList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
         ActionBar actionBar = getActionBar();
         actionBar.show();
         Intent intent = getIntent();
@@ -68,8 +71,6 @@ public class SearchActivity extends ListActivity{
 
     public void carryOutSearch(String requestedEntry) {
 
-        android.app.ActionBar actionBar = getActionBar();
-        actionBar.setTitle("Search Result");
         //Create File object and pass to it the directory where all our files are stored
         File sQuery = new File(directory);
         //List all the files in that directory and passes it to availableFiles array
@@ -108,6 +109,11 @@ public class SearchActivity extends ListActivity{
     }
     protected void onRestart(){
         super.onRestart();
+        itemSelectedCount=0;
+        selectedMenuItems.clear();
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        android.app.ActionBar actionBar = getActionBar();
+        actionBar.setTitle("Search Result");
         carryOutSearch(query);
     }
     private class CustomAdapter extends ArrayAdapter<Filenames>{
@@ -165,7 +171,7 @@ public class SearchActivity extends ListActivity{
             return convertView;
         }
         private void selectItem(View v){
-            MenuItem item = menu.findItem(R.id.deleteMenuButton);
+            item = menu.findItem(R.id.deleteMenuButton);
             android.app.ActionBar actionBar = getActionBar();
 
             TextView tx = (TextView) v;
@@ -231,7 +237,16 @@ public class SearchActivity extends ListActivity{
         intent.putExtra(EXTRA_MESSAGE, title);
         startActivity(intent);
     }
+    @Override
+    public void onBackPressed() {
+        if(itemSelectedCount==0){
+            finish();
+        }else{
+            onRestart();
+        }
 
+
+    }
 
     //Adds the search menu so user can search still carry out search without going back
     @Override
