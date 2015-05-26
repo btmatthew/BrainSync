@@ -86,7 +86,7 @@ public class SearchActivity extends ListActivity{
             for (int i = 0; i < availableFiles.length; i++) {
                 String fileTitle=availableFiles[i].getName();
 
-                if(fileTitle.contains(requestedEntry)){
+                if(fileTitle.toLowerCase().contains(requestedEntry)){
                     Filenames file = new Filenames(fileTitle,false);
                     if(!(file.getFilename().contains("rList")||file.getFilename().contains("share_history"))){
                         file.setFile(availableFiles[i]);
