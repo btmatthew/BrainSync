@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,7 +25,6 @@ import java.util.ArrayList;
 
 
 public class SearchActivity extends ListActivity{
-    public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
     private String query;
     private ArrayList<String> selectedMenuItems = new ArrayList<>();
     private int itemSelectedCount;
@@ -111,6 +109,7 @@ public class SearchActivity extends ListActivity{
         super.onRestart();
         itemSelectedCount=0;
         selectedMenuItems.clear();
+        item = menu.findItem(R.id.deleteMenuButton);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         android.app.ActionBar actionBar = getActionBar();
         actionBar.setTitle("Search Result");
@@ -234,7 +233,7 @@ public class SearchActivity extends ListActivity{
     //Same procedure used in the ListEntriesActivity to display content of a selected file is re-used here
     private void openItem(String title){
         Intent intent = new Intent(this, DisplaySelectedItem.class);
-        intent.putExtra(EXTRA_MESSAGE, title);
+        intent.putExtra("EXTRA_MESSAGE", title);
         startActivity(intent);
     }
     @Override

@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.note.anonymous.brainsync.Reminder"
+    >
+
+    <TextView android:text="@string/alarmText" android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarmtext"/>
+
+
+    <DatePicker
+        android:paddingTop="0dp"
+        android:id="@+id/datepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/alarmtext"/>
+
+    <TimePicker
+        android:id="@+id/timepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/datepicker"/>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/setreminder"
+        android:id="@+id/setreminder"
+        android:layout_below="@id/timepicker"/>
+
+</RelativeLayout>

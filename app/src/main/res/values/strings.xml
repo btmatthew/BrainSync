@@ -2,6 +2,7 @@
     <string name="app_name">BrainSync</string>
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>
+    <string name="about_brainsync">About BrainSync</string>
     <string name="add_entry">Add An Entry</string>
     <string name="what_do_i_know">What Do I Know?</string>
     <string name="search_my_brain">Search My Brain</string>
@@ -36,7 +37,6 @@
     <string name="selectAllButtonLableDropboxActivity">Select All</string>
     <string name="backupButtonLableDropboxActivity">Back Up</string>
     <string name="textLable">Select Items to Back Up</string>
-    <string name="title_activity_about">About</string>
     <string name="dialog_yes">Yes, Please</string>
     <string name="dialog_no">No</string>
     <string name="title_activity_dropbox_import">Dropbox Import</string>
@@ -57,6 +57,12 @@
     <string name="processBarTextSettings">Importing Stand by</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="menuDeleteButton">Delete note</string>
+    <string name="title_activity_reminder">Reminder</string>
+
+    <string name="alarmText">Remind Me About This Entry On:</string>
+    <string name="setreminder">Set Reminder</string>
+    <string name="preferences">Preferences</string>
+    <string name="preftext">Adjust Display Text</string>
 
 
 

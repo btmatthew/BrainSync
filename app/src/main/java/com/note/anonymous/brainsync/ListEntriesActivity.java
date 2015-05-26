@@ -19,12 +19,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ListEntriesActivity extends Activity {
 
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
+    public final static String EXTRA_MESSAGE1 = "com.example.anonymous.brainsync.MESSAGE1";
+    private String title;
+    private String body="";
     private String fileDirectory;
     //These are all created here so I could use them in multiple methods in this activity
     int itemSelectedCount = 0;
@@ -61,10 +66,13 @@ public class ListEntriesActivity extends Activity {
         createList();
 
          }
+
     protected void onRestart(){
         super.onRestart();
         itemSelectedCount=0;
         selectedMenuItems.clear();
+        item = menu.findItem(R.id.deleteMenuButton);
+        item1 = menu.findItem(R.id.search);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         android.app.ActionBar actionBar = getActionBar();
@@ -93,7 +101,6 @@ public class ListEntriesActivity extends Activity {
         for (int i = 0; i < itemSelectedCount; i++) {
 
             //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
-            //Not sure why the concatenation works but it does... :P
             File dir = new File(fileDirectory + selectedMenuItems.get(i));
             dir.delete();
         }
@@ -153,6 +160,9 @@ public class ListEntriesActivity extends Activity {
                 break;
             case R.id.deleteMenuButton:
                 deleteMethod();
+                break;
+            case R.id.editMenuButton:
+                callEditActivity();
                 break;
 
         }
@@ -229,8 +239,11 @@ public class ListEntriesActivity extends Activity {
             return convertView;
         }
         private void selectItem(View v){
+
             item = menu.findItem(R.id.deleteMenuButton);
             item1 = menu.findItem(R.id.search);
+            //--Playing around :P
+            // MenuItem item2 = menu.findItem(R.id.editMenuButton);
             android.app.ActionBar actionBar = getActionBar();
 
             TextView tx = (TextView) v;
@@ -243,13 +256,17 @@ public class ListEntriesActivity extends Activity {
                 itemSelectedCount = selectedMenuItems.size();
                 if(itemSelectedCount==0){
                     actionBar.setTitle("Entries");
+                   // item2.setVisible(false);
                     item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 }else if(itemSelectedCount==1){
                     actionBar.setTitle("Item Selected "+itemSelectedCount);
                     item.setVisible(true);
                     item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                     item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                   // item2.setVisible(true);
+                   // item2.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 }else{
+                  //  item2.setVisible(false);
                     actionBar.setTitle("Items Selected "+itemSelectedCount);
                     item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                 }
@@ -262,20 +279,49 @@ public class ListEntriesActivity extends Activity {
                 if(itemSelectedCount==0){
                     actionBar.setTitle("Entries");
                     item.setVisible(false);
+                  //  item2.setVisible(false);
                     item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                     item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                  //  item2.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                 }else if(itemSelectedCount==1){
                     actionBar.setTitle("Item Selected "+itemSelectedCount);
-
+                  //  item2.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                  //  item2.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                  //  item2.setVisible(true);
                 }else{
                     actionBar.setTitle("Items Selected "+itemSelectedCount);
+                  //  item2.setVisible(false);
                 }
             }
         }
     }
+
+    protected void callEditActivity(){
+        title = selectedMenuItems.get(0);
+        try {
+            FileInputStream readingFromFile = openFileInput(title);
+            int c;
+            //Condition is true as long as we haven't gotten to the end of the file
+            while( (c = readingFromFile.read()) != -1){
+
+                body = body + Character.toString((char)c);
+            }
+            readingFromFile.close();
+        }catch(IOException e){
+
+        }
+        itemSelectedCount=0;
+        selectedMenuItems.clear();
+        Intent intent = new Intent(this, EditActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, title);
+        intent.putExtra(EXTRA_MESSAGE1, body);
+        startActivity(intent);
+
+    }
+
     private void openItem(String title){
         Intent intent = new Intent(this, DisplaySelectedItem.class);
-        intent.putExtra(EXTRA_MESSAGE, title);
+        intent.putExtra("EXTRA_MESSAGE", title);
         startActivity(intent);
     }
 }

@@ -85,7 +85,6 @@ public class AddEntryActivity extends Activity {
 
                                     FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
                                     PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
-                                    writer.println();
                                     writer.println(information);
                                     writer.close();
 
@@ -109,7 +108,6 @@ public class AddEntryActivity extends Activity {
                     //Create a file and write to it. Input in the Title EditText field is used as file name
                     FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
                     PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
-                    writer.println();
                     writer.println(information);
                     writer.close();
 
@@ -126,7 +124,7 @@ public class AddEntryActivity extends Activity {
 
             }
         } catch (NullPointerException a) {
-
+                a.printStackTrace();
                 Toast.makeText(this, "Exception Caught", Toast.LENGTH_LONG).show();
             }
 

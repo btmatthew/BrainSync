@@ -6,6 +6,11 @@
     <item android:id="@+id/delete_menu_buttonSelectedItem"
         android:title="@string/menuDeleteButton"/>
 
+    <item
+        android:id="@+id/set_reminder"
+        android:title="@string/setreminder"
+        />
+
     <item android:id="@+id/edit_menu_button"
         android:title="@string/edit_button"
         android:icon="@drawable/ic_action_edit"

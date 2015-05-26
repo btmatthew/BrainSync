@@ -9,8 +9,9 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
+        android:layout_weight="0.5"
         android:id="@+id/editTextTitle"
+        android:inputType="textShortMessage"
 
         />
 
@@ -22,7 +23,7 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="fill_parent"
             android:textSize="20sp"
             android:gravity="top"
             android:id="@+id/editTextBody"

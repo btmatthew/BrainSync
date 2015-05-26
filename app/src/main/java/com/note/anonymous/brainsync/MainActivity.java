@@ -4,7 +4,6 @@ package com.note.anonymous.brainsync;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +17,9 @@ import java.util.Random;
 
 
 public class MainActivity extends Activity {
+
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,10 +37,11 @@ public class MainActivity extends Activity {
 
     //Called when the 'List All Entries' button is clicked as configured in the XML
     public void listEntriesMethod(View view){
-        if (checkFiles()) {
+         if (checkFiles()) {
              Intent intent = new Intent(this, ListEntriesActivity.class);
              startActivity(intent);
          }
+
     }
 
     //Called when the 'Search My Brain' button is clicked as configured in the XML
@@ -49,15 +51,7 @@ public class MainActivity extends Activity {
         }
     }
     public boolean checkFiles(){
-        File[]fileList = new File(getString(R.string.directoryLocation)).listFiles();
-        int size=0;
-        for(int i =0;i<fileList.length;i++){
-            if(!(fileList[i].getName().contains("rList")||fileList[i].getName().contains("share_history"))){
-                size++;
-            }
-        }
-
-        if(size>0){
+        if(new File(getString(R.string.directoryLocation)).length()>0){
             return true;
         }else{
             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
@@ -75,7 +69,7 @@ public class MainActivity extends Activity {
                 selectedFile = fileList[r.nextInt(fileList.length)].getName();
             }
             Intent intent = new Intent(this, DisplaySelectedItem.class);
-            intent.putExtra(EXTRA_MESSAGE, selectedFile);
+            intent.putExtra("EXTRA_MESSAGE", selectedFile);
             startActivity(intent);
         }
 

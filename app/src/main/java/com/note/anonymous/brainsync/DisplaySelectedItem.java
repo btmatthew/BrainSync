@@ -3,10 +3,12 @@ package com.note.anonymous.brainsync;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,16 +18,17 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
 
-public class DisplaySelectedItem extends Activity{
+public class DisplaySelectedItem extends Activity {
 
-    public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE2";
-    public final static String EXTRA_MESSAGE1 = "com.example.anonymous.brainsync.MESSAGE3";
+    public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
+    public final static String EXTRA_MESSAGE1 = "com.example.anonymous.brainsync.MESSAGE1";
     private String title;
     private String body="";
     private ShareActionProvider mShareActionProvider;
@@ -46,17 +49,20 @@ public class DisplaySelectedItem extends Activity{
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callEditActiity();
+                callEditActivity();
             }
         });
 
 
 
         //Gets the intent from the activity that's calling this one (i.e either the ListEntriesActivity or the SearchActivity)
-        Intent intent = getIntent();
+        //Intent intent = getIntent();
 
-        //Queries the activity for the data it's passing and assigns it to local string variable message
-        title = intent.getStringExtra(ListEntriesActivity.EXTRA_MESSAGE);
+        title = getIntent().getExtras().getString("EXTRA_MESSAGE");
+
+        //Queries the activity for the data it's passing and assigns it to local string variable title
+        //title = intent.getStringExtra("EXTRA_MESSAGE");
+
         StringBuilder stringBuilder = new StringBuilder();
         try {
             FileInputStream readingFromFile = openFileInput(title);
@@ -67,11 +73,13 @@ public class DisplaySelectedItem extends Activity{
             }
             body=stringBuilder.toString();
             readingFromFile.close();
-        }catch(IOException e){
-
+        }catch(IOException | NullPointerException e){
+            Toast.makeText(this, "Null Pointer caught", Toast.LENGTH_SHORT).show();
         }
         RelativeLayout view = (RelativeLayout)findViewById(R.id.mainLayoutDisplayItem);
+
         TextView textView = (TextView)findViewById(R.id.noteText);
+        //Creates a TextView component for this activity
 
         //checks if the scrollView reached the botton of page, and hides the button
         final ScrollView scrollView =(ScrollView)findViewById(R.id.scrollView);
@@ -88,28 +96,40 @@ public class DisplaySelectedItem extends Activity{
         });
         //Creates a TextView component for this activity
         //Sets the data received from previous activity into the TextView
-        textView.setTextSize(20);
+
+        final String AppPrefs = "AppPrefs";
+        String size = "sizeKey";
+        String style = "styleKey";
+        SharedPreferences sharedPreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
+
+
+
+            int sel = sharedPreferences.getInt(style, 1);
+
+            switch (sel) {
+                case 1:
+                    textView.setTypeface(null, Typeface.NORMAL);
+                    break;
+                case 2:
+                    textView.setTypeface(null, Typeface.BOLD);
+                    break;
+                case 3:
+                    textView.setTypeface(null, Typeface.ITALIC);
+                    break;
+                case 4:
+                    textView.setTypeface(null, Typeface.BOLD_ITALIC);
+                    break;
+            }
+
+        textView.setTextSize(sharedPreferences.getInt(size, 20));
         textView.setText(body);
-        textView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                callEditActiity();
-                return true;
-            }
-        });
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                callEditActiity();
-                return true;
-            }
-        });
 
         //Make the app icon at the top left corner clickable so user can go to previous activity instead of using the back button
         android.app.ActionBar actionBar = getActionBar();
         actionBar.setTitle(title);
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -136,7 +156,7 @@ public class DisplaySelectedItem extends Activity{
         //If the selected menu item is search launch the search bar at the top of the screen. See this section in MainActivity for more explanation
         switch (id) {
             case R.id.edit_menu_button:
-                callEditActiity();
+                callEditActivity();
                 break;
             case R.id.action_settings:
                 Intent intent1 = new Intent(this, Settings.class);
@@ -145,12 +165,18 @@ public class DisplaySelectedItem extends Activity{
             case R.id.delete_menu_buttonSelectedItem:
                 deleteNote();
                 break;
+            case R.id.set_reminder:
+                Intent intent = new Intent(this, Reminder.class);
+                intent.putExtra(EXTRA_MESSAGE, title);
+                startActivity(intent);
+                break;
             }
 
 
         return super.onOptionsItemSelected(item);
     }
-    protected void callEditActiity(){
+
+    protected void callEditActivity(){
         Intent intent = new Intent(this, EditActivity.class);
         intent.putExtra(EXTRA_MESSAGE, title);
         intent.putExtra(EXTRA_MESSAGE1, body);
@@ -166,5 +192,6 @@ public class DisplaySelectedItem extends Activity{
         sendBroadcast(intentWidget);
         finish();
     }
+
 }
 

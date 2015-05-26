@@ -20,6 +20,14 @@
     <item android:id="@+id/about" android:title="@string/action_about"
         android:orderInCategory="100" app:showAsAction="never"
         />
+
+    <item android:id="@+id/editMenuButton"
+        android:title="@string/edit_button"
+        android:icon="@drawable/ic_action_edit"
+        app:showAsAction="always"
+        android:visible="false"
+        android:orderInCategory="100"/>
+
     <item android:id="@+id/deleteMenuButton"
         android:title="@string/menuDeleteButton"
         android:orderInCategory="100"
@@ -27,5 +35,8 @@
         android:visible="false"
         android:icon="@drawable/ic_action_discard"
         />
+
+
+
 
 </menu>

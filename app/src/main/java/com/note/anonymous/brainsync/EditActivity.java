@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,17 +21,22 @@ import java.io.PrintWriter;
 
 
 public class EditActivity extends Activity {
+
+    public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
+    public final static String EXTRA_MESSAGE1 = "com.example.anonymous.brainsync.MESSAGE1";
     private EditText titlefield;
     private EditText datafield;
     private String originalTitle;
+    private String originalBody;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
         Intent intent = getIntent();
-        originalTitle = intent.getStringExtra(DisplaySelectedItem.EXTRA_MESSAGE);
-        String body = intent.getStringExtra(DisplaySelectedItem.EXTRA_MESSAGE1);
+        originalTitle = intent.getStringExtra(EXTRA_MESSAGE);
+        String body = intent.getStringExtra(EXTRA_MESSAGE1);
+        originalBody = body;
         titlefield = ((EditText)findViewById(R.id.editTextTitle));
         datafield = ((EditText)findViewById(R.id.editTextBody));
         titlefield.setText(originalTitle);
@@ -76,7 +82,6 @@ public class EditActivity extends Activity {
             //Create a file and write to it. Input in the Title EditText field is used as file name
             FileOutputStream updateEntry = openFileOutput(title, Context.MODE_PRIVATE);
             PrintWriter writer = new PrintWriter(new OutputStreamWriter(updateEntry));
-            writer.println();
             writer.println(information);
             writer.close();
 
@@ -142,9 +147,12 @@ public class EditActivity extends Activity {
     public void onBackPressed() {
 
         String title = titlefield.getText().toString().trim();
-        String information = datafield.getText().toString().trim();
+        String information = datafield.getText().toString();
 
-        if(title.equals("") && information.equals("")) {
+        Log.d("G", String.valueOf(originalBody.length()));
+        Log.d("G", String.valueOf(information.length()));
+
+        if(originalTitle.equals(title) || originalBody.equals(information)){
 
             EditActivity.super.onBackPressed();
 
@@ -159,7 +167,8 @@ public class EditActivity extends Activity {
                             EditActivity.super.onBackPressed();
                         }
                     }).create().show();
-        }
+
+            }
 
 
     }

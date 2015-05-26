@@ -70,7 +70,7 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
     public RemoteViews getViewAt(int position) {
         String title=widgetList.get(position);
         Intent viewEntry = new Intent(context, DisplaySelectedItem.class);
-        viewEntry.putExtra(ViewNotes.EXTRA_MESSAGE,title);
+        viewEntry.putExtra("EXTRA_MESSAGE",title);
 
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.row_for_widget);
