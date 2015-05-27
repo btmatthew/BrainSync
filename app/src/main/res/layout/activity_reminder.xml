@@ -1,12 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.note.anonymous.brainsync.Reminder"
+    android:orientation="vertical"
     >
 
     <TextView android:text="@string/alarmText" android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/alarmtext"/>
+        android:id="@+id/alarmtext"
+        android:layout_weight="0.5"/>
 
 
     <DatePicker
@@ -14,19 +16,22 @@
         android:id="@+id/datepicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/alarmtext"/>
+        android:layout_weight="1"
+        />
 
     <TimePicker
         android:id="@+id/timepicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/datepicker"/>
+        android:layout_weight="1"
+        />
 
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/setreminder"
         android:id="@+id/setreminder"
-        android:layout_below="@id/timepicker"/>
+        android:layout_weight="0.5"
+        />
 
-</RelativeLayout>
+</LinearLayout>
