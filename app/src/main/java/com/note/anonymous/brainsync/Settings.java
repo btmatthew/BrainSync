@@ -84,7 +84,7 @@ public class Settings extends Activity {
         linearlayout.setOrientation(LinearLayout.VERTICAL);
         final TextView sampletext = new TextView(this);
         sampletext.setText("Text Preview");
-        sampletext.setTextSize(sharedpreferences.getInt(size, 1));
+        sampletext.setTextSize(sharedpreferences.getInt(size, 20));
         sampletext.setGravity(Gravity.CENTER);
         sampletext.setPadding(0,0,0,30);
 
