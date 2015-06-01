@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -33,20 +34,25 @@ public class SearchActivity extends ListActivity{
     private MenuItem item;
     private CustomAdapter dataAdapter=null;
     private ArrayList<Filenames> fileNamesList;
+    private DatabaseAdapter db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
         ActionBar actionBar = getActionBar();
-        actionBar.show();
+
         Intent intent = getIntent();
         directory=getString(R.string.directoryLocation);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             //Get the search query and assign it to string query.
             query = intent.getStringExtra(SearchManager.QUERY).trim();
+            actionBar.setTitle("Search Results for "+query);
+            actionBar.show();
             //Pass query to search method
             carryOutSearch(query);
+
         }
 
         FloatingActionButton fabButton = new FloatingActionButton.Builder(this)
@@ -69,36 +75,28 @@ public class SearchActivity extends ListActivity{
 
     public void carryOutSearch(String requestedEntry) {
 
-        //Create File object and pass to it the directory where all our files are stored
-        File sQuery = new File(directory);
-        //List all the files in that directory and passes it to availableFiles array
-        File[] availableFiles = sQuery.listFiles();
-        //If statement prevents the app from crashing when there are no entries upon search
-        if (availableFiles == null) {
+        db = new DatabaseAdapter(this);
+
+        if(db.getNumberOfRows()==0){
             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-        } else {
-            //Gets the size of the array
-            //For loop based on the size of the array gets the name of all files in the directory
-            fileNamesList = new ArrayList<>();
-
-            for (int i = 0; i < availableFiles.length; i++) {
-                String fileTitle=availableFiles[i].getName();
-
-                if(fileTitle.toLowerCase().contains(requestedEntry)){
-                    Filenames file = new Filenames(fileTitle,false);
-                    if(!(file.getFilename().contains("rList")||file.getFilename().contains("share_history"))){
-                        file.setFile(availableFiles[i]);
-                        fileNamesList.add(file);
-                    }
+        }else{
+            Cursor cursor = db.searchByPartOfTitle(requestedEntry);
+            int cursorSize=cursor.getCount();
+            if(cursorSize!=0){
+                fileNamesList = new ArrayList<>();
+                for(int i = 0;i<cursorSize;i++){
+                    cursor.moveToNext();
+                    Filenames file = new Filenames();
+                    file.setFilename(cursor.getString(0));
+                    file.setSelected(false);
+                    fileNamesList.add(file);
                 }
-            }
-            if(fileNamesList.size() != 0) {
                 dataAdapter= new CustomAdapter(this,R.layout.list_entries_row,fileNamesList);
                 ListView listView = (ListView) findViewById(android.R.id.list);
                 listView.setAdapter(dataAdapter);
-            } else {
+            }else{
                 Toast.makeText(this, requestedEntry + " does not exist", Toast.LENGTH_LONG).show();
                 onSearchRequested();
             }
@@ -112,7 +110,7 @@ public class SearchActivity extends ListActivity{
         item = menu.findItem(R.id.deleteMenuButton);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         android.app.ActionBar actionBar = getActionBar();
-        actionBar.setTitle("Search Result");
+        actionBar.setTitle("Search Results for "+query);
         carryOutSearch(query);
     }
     private class CustomAdapter extends ArrayAdapter<Filenames>{
@@ -182,7 +180,7 @@ public class SearchActivity extends ListActivity{
                 selectedMenuItems.add(filename.getFilename());
                 itemSelectedCount = selectedMenuItems.size();
                 if(itemSelectedCount==0){
-                    actionBar.setTitle("Entries");
+                    actionBar.setTitle("Search Results for "+query);
                 }else if(itemSelectedCount==1){
                     actionBar.setTitle("Item Selected "+itemSelectedCount);
                     item.setVisible(true);
@@ -197,7 +195,7 @@ public class SearchActivity extends ListActivity{
                 selectedMenuItems.remove(b);
                 itemSelectedCount = selectedMenuItems.size();
                 if(itemSelectedCount==0){
-                    actionBar.setTitle("Entries");
+                    actionBar.setTitle("Search Results for "+query);
                     item.setVisible(false);
                     item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                 }else if(itemSelectedCount==1){
@@ -214,7 +212,9 @@ public class SearchActivity extends ListActivity{
         for (int i = 0; i < itemSelectedCount; i++) {
             //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
             //Not sure why the concatenation works but it does... :P
-            File dir = new File(directory + selectedMenuItems.get(i));
+            String fileName = selectedMenuItems.get(i);
+            db.deleteEntry(fileName);
+            File dir = new File(directory + fileName);
             dir.delete();
         }
         Intent intentWidget = new Intent(this, ViewNotes.class);

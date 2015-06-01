@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -22,7 +23,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ListEntriesActivity extends Activity {
 
@@ -39,6 +41,7 @@ public class ListEntriesActivity extends Activity {
     private Menu menu;
     private MenuItem item;
     private MenuItem item1;
+    private DatabaseAdapter db;
 
 
     @Override
@@ -81,27 +84,41 @@ public class ListEntriesActivity extends Activity {
     }
 
     private void createList(){
-        File[] fileList = new File(fileDirectory).listFiles();
-        Arrays.sort(fileList);
+        db = new DatabaseAdapter(this);
+        Cursor cursor = db.getAllData();
         fileNamesList = new ArrayList<>();
-        for (int i = 0; i < fileList.length; i++) {
-            Filenames file = new Filenames(fileList[i].getName(),false);
-            if(!(file.getFilename().contains("rList")||file.getFilename().contains("share_history"))){
-                file.setFile(fileList[i]);
-                fileNamesList.add(file);
-            }
+        for (int i = 0; i < db.getNumberOfRows(); i++) {
+            cursor.moveToNext();
+            String fileName = cursor.getString(0);
+            Filenames file = new Filenames();
+            file.setFilename(fileName);
+            file.setSelected(false);
+            file.setFile(new File(fileName));
+            fileNamesList.add(file);
+
         }
+
+        Collections.sort(fileNamesList, new CustomComparator());
         dataAdapter= new CustomAdapter(this,R.layout.list_entries_row,fileNamesList);
         ListView listView = (ListView) findViewById(R.id.listEntriesView);
         listView.setAdapter(dataAdapter);
     }
+    //Method used for purpose of sorting the ArrayList which holds Filename object
+    public class CustomComparator implements Comparator<Filenames>{
 
+        @Override
+        public int compare(Filenames lhs, Filenames rhs) {
+            return (lhs).getFilename().compareTo(rhs.getFilename());
+        }
+    }
     public void deleteMethod() {
         //Carries out the delete action based on the size of the arraylist held by the variable itemSelectedCount
         for (int i = 0; i < itemSelectedCount; i++) {
-
+            String fileName = selectedMenuItems.get(i);
+            //Removes the file from Database
+            db.deleteEntry(fileName);
             //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
-            File dir = new File(fileDirectory + selectedMenuItems.get(i));
+            File dir = new File(fileDirectory + fileName);
             dir.delete();
         }
 
@@ -256,17 +273,13 @@ public class ListEntriesActivity extends Activity {
                 itemSelectedCount = selectedMenuItems.size();
                 if(itemSelectedCount==0){
                     actionBar.setTitle("Entries");
-                   // item2.setVisible(false);
                     item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 }else if(itemSelectedCount==1){
                     actionBar.setTitle("Item Selected "+itemSelectedCount);
                     item.setVisible(true);
                     item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                     item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-                   // item2.setVisible(true);
-                   // item2.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 }else{
-                  //  item2.setVisible(false);
                     actionBar.setTitle("Items Selected "+itemSelectedCount);
                     item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                 }
@@ -279,18 +292,12 @@ public class ListEntriesActivity extends Activity {
                 if(itemSelectedCount==0){
                     actionBar.setTitle("Entries");
                     item.setVisible(false);
-                  //  item2.setVisible(false);
                     item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                     item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                  //  item2.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                 }else if(itemSelectedCount==1){
                     actionBar.setTitle("Item Selected "+itemSelectedCount);
-                  //  item2.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                  //  item2.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                  //  item2.setVisible(true);
                 }else{
                     actionBar.setTitle("Items Selected "+itemSelectedCount);
-                  //  item2.setVisible(false);
                 }
             }
         }

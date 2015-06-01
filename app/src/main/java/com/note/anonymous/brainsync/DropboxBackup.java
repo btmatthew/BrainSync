@@ -3,6 +3,7 @@ package com.note.anonymous.brainsync;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,6 +26,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by Matthew Bulat on 13/04/2015.
@@ -32,20 +35,24 @@ import java.util.ArrayList;
 public class DropboxBackup extends Activity {
     private String fileDirectory;
     final static private String PREFS_NAME="dropboxToken";
-    final static private String APP_KEY = "";
-    final static private String APP_SECRET = "";
+    final static private String APP_KEY = "shz2ba3aei84dxd";
+    final static private String APP_SECRET = "vz5ksv0lk7xxylp";
     private DropboxAPI<AndroidAuthSession> mDBApi;
-    CustomAdapter dataAdapter=null;
+    private CustomAdapter dataAdapter=null;
     private ArrayList<Filenames> fileNamesList;
+    private DatabaseAdapter db;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dropbox_backup);
+        db = new DatabaseAdapter(this);
         fileDirectory = getString(R.string.directoryLocation);
         File file = new File(fileDirectory);
-        if(file.list().length<0){
+
+        if(db.getNumberOfRows()<0){
             runOnUiThread(new Toasting("Your digital brain is empty! :O , please add some entries to stay in sync."));
             finish();
         }else{
@@ -61,10 +68,6 @@ public class DropboxBackup extends Activity {
             }else{
                 mDBApi.getSession().startOAuth2Authentication(DropboxBackup.this);
             }
-
-
-
-
         }
 
     }
@@ -91,19 +94,29 @@ public class DropboxBackup extends Activity {
 
     }
     protected void display(){
-        File[] fileList = new File(fileDirectory).listFiles();
+        Cursor cursor = db.getAllData();
         fileNamesList = new ArrayList<>();
 
-        for (int i = 0; i < fileList.length; i++) {
-            Filenames file = new Filenames(fileList[i].getName(),false);
-            if(!(file.getFilename().contains("rList")||file.getFilename().contains("share_history"))){
-                file.setFile(fileList[i]);
-                fileNamesList.add(file);
-            }
+        for (int i = 0; i < cursor.getCount(); i++) {
+            Filenames file = new Filenames();
+            cursor.moveToNext();
+            String fileName =cursor.getString(0);
+            file.setFilename(fileName);
+            file.setSelected(false);
+            file.setFile(new File(fileDirectory+fileName));
+            fileNamesList.add(file);
         }
+        Collections.sort(fileNamesList, new CustomComparator());
         dataAdapter= new CustomAdapter(this,R.layout.row,fileNamesList);
         ListView listView = (ListView) findViewById(R.id.dropboxSyncList);
         listView.setAdapter(dataAdapter);
+    }
+    public class CustomComparator implements Comparator<Filenames> {
+
+        @Override
+        public int compare(Filenames lhs, Filenames rhs) {
+            return (lhs).getFilename().compareTo(rhs.getFilename());
+        }
     }
     private class CustomAdapter extends ArrayAdapter<Filenames>{
         private ArrayList<Filenames> fileList;

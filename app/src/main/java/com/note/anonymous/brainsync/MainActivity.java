@@ -3,6 +3,7 @@ package com.note.anonymous.brainsync;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +52,7 @@ public class MainActivity extends Activity {
         }
     }
     public boolean checkFiles(){
-        if(new File(getString(R.string.directoryLocation)).length()>0){
+        if(new DatabaseAdapter(this).getNumberOfRows()>0){
             return true;
         }else{
             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
@@ -62,12 +63,10 @@ public class MainActivity extends Activity {
     }
     public void openRandomNote(View view){
         if (checkFiles()) {
-            File[] fileList = new File(getString(R.string.directoryLocation)).listFiles();
+            Cursor cursor = new DatabaseAdapter(this).getAllData();
             Random r = new Random();
-            String selectedFile = fileList[r.nextInt(fileList.length)].getName();
-            while(selectedFile.contains("rList")||selectedFile.contains("share_history")){
-                selectedFile = fileList[r.nextInt(fileList.length)].getName();
-            }
+            cursor.moveToPosition(r.nextInt(new DatabaseAdapter(this).getNumberOfRows()));
+            String selectedFile = cursor.getString(0);
             Intent intent = new Intent(this, DisplaySelectedItem.class);
             intent.putExtra("EXTRA_MESSAGE", selectedFile);
             startActivity(intent);

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,11 +29,14 @@ public class EditActivity extends Activity {
     private EditText datafield;
     private String originalTitle;
     private String originalBody;
+    private DatabaseAdapter db;
+    private Filenames filenames;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
-
+        db = new DatabaseAdapter(this);
+        filenames = new Filenames();
         Intent intent = getIntent();
         originalTitle = intent.getStringExtra(EXTRA_MESSAGE);
         String body = intent.getStringExtra(EXTRA_MESSAGE1);
@@ -59,7 +63,9 @@ public class EditActivity extends Activity {
                         .setMessage("What would you like to do?")
                         .setNegativeButton("Create new note\n and keep existing.", new DialogInterface.OnClickListener(){
                             public void onClick(DialogInterface arg0, int arg1){
-                                writeFile(editedTitle, information);
+                                newEntryThread(editedTitle);
+                            writeFile(editedTitle, information);
+
                             }
                         })
                         .setPositiveButton("Overwrite the existing note.", new DialogInterface.OnClickListener() {
@@ -67,6 +73,7 @@ public class EditActivity extends Activity {
                             File from = new File(getString(R.string.directoryLocation)+originalTitle);
                             File to = new File(getString(R.string.directoryLocation)+editedTitle);
                                 from.renameTo(to);
+                                updateEditDate(editedTitle);
                                 writeFile(editedTitle, information);
 
                             }
@@ -79,6 +86,8 @@ public class EditActivity extends Activity {
     private void writeFile(String title,String information){
 
         try {
+            //Adds new entry to database
+
             //Create a file and write to it. Input in the Title EditText field is used as file name
             FileOutputStream updateEntry = openFileOutput(title, Context.MODE_PRIVATE);
             PrintWriter writer = new PrintWriter(new OutputStreamWriter(updateEntry));
@@ -149,9 +158,6 @@ public class EditActivity extends Activity {
         String title = titlefield.getText().toString().trim();
         String information = datafield.getText().toString();
 
-        Log.d("G", String.valueOf(originalBody.length()));
-        Log.d("G", String.valueOf(information.length()));
-
         if(originalTitle.equals(title) || originalBody.equals(information)){
 
             EditActivity.super.onBackPressed();
@@ -171,5 +177,38 @@ public class EditActivity extends Activity {
             }
 
 
+    }
+    private void newEntryThread(final String title){
+        final Context context = this;
+        new Thread(new Runnable() {
+            public void run() {
+                Time now = new Time();
+                now.setToNow();
+                Long time = now.toMillis(false);
+                Filenames filenames = new Filenames();
+
+                filenames.setFilename(title);
+                filenames.setCreationDate(time);
+                filenames.setFileTypeText();
+                DatabaseAdapter db = new DatabaseAdapter(context);
+                db.addEntry(filenames);
+            }
+        }).start();
+    }
+    private void updateEditDate(final String title){
+        final Context context = this;
+        new Thread(new Runnable() {
+            public void run() {
+                Time now = new Time();
+                now.setToNow();
+                Long time = now.toMillis(false);
+                Filenames filenames = new Filenames();
+
+                filenames.setFilename(title);
+                filenames.setEditedDate(time);
+                DatabaseAdapter db = new DatabaseAdapter(context);
+                db.updateEditDate(filenames);
+            }
+        }).start();
     }
 }

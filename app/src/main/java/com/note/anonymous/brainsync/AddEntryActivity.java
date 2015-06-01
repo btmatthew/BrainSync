@@ -5,7 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.text.format.Time;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -51,6 +54,7 @@ public class AddEntryActivity extends Activity {
         EditText titlefield = (EditText) findViewById(R.id.titleBar);
         EditText datafield = (EditText) findViewById(R.id.information);
 
+
         //Get user inputs from the EditText fields
         final String title = titlefield.getText().toString().trim();
         final String information = datafield.getText().toString().trim();
@@ -59,14 +63,17 @@ public class AddEntryActivity extends Activity {
             Toast.makeText(this, "Title cannot be empty :)", Toast.LENGTH_LONG).show();
 
         } else {
-                //      String fileDirectory = getString(R.string.directoryLocation);
+
                 File dir = new File("data/data/com.example.anonymous.brainsync/files");
                 File[] filelist = dir.listFiles();
 
-                //Prevent null pointer exception on non-samsung devices
-                if (dir.listFiles() == null) {
+
+
+                if (new DatabaseAdapter(this).getNumberOfRows() == 0) {
 
                     try {
+                        //Add entry to the database on a seperate thread
+                        newEntryThread(title, this);
 
                         //Create a file and write to it. Input in the Title EditText field is used as file name
                         FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
@@ -86,12 +93,7 @@ public class AddEntryActivity extends Activity {
                     }
                 } else {
 
-                    String[] a = new String[filelist.length];
-                    for (int i = 0; i < a.length; i++) {
-                        a[i] = filelist[i].getName();
-                    }
-
-                    if (Arrays.asList(a).contains(title)) {
+                    if (new DatabaseAdapter(this).searchByTitle(title)) {
 
                         new AlertDialog.Builder(this)
                                 .setTitle("Hold Up...")
@@ -99,34 +101,14 @@ public class AddEntryActivity extends Activity {
                                 .setNegativeButton("No, Go Back!", null)
                                 .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface arg0, int arg1) {
-                                        overwriteMethod();
-                                    }
-
-                                    private void overwriteMethod() {
-                                        try {
-
-                                            FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
-                                            PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
-                                            writer.println(information);
-                                            writer.close();
-
-
-                                            //Start the success activity after file creation and writing has been done
-                                            finish();
-                                            Intent intent = new Intent(AddEntryActivity.this, SuccessActivity.class);
-                                            startActivity(intent);
-
-                                        } catch (IOException e) {
-
-                                            e.printStackTrace();
-                                        }
+                                        overwriteMethod(title,information);
                                     }
                                 }).create().show();
 
                     } else {
 
                         try {
-
+                            newEntryThread(title, this);
                             //Create a file and write to it. Input in the Title EditText field is used as file name
                             FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
                             PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
@@ -151,7 +133,25 @@ public class AddEntryActivity extends Activity {
             }
         }
     }
+    private void overwriteMethod(String title, String information) {
+        try {
+            updateEditDate(title,this);
+            FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
+            writer.println(information);
+            writer.close();
 
+
+            //Start the success activity after file creation and writing has been done
+            finish();
+            Intent intent = new Intent(AddEntryActivity.this, SuccessActivity.class);
+            startActivity(intent);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
     //Cancels entry and returns user to the MainActivity
     public void cancelEntryMethod(View view) {
 
@@ -207,5 +207,36 @@ public class AddEntryActivity extends Activity {
         }
 
         }
+    //Thread used for purpose of adding entry to the database
+    private void newEntryThread(final String title, final Context context){
+        new Thread(new Runnable() {
+            public void run() {
+                Time now = new Time();
+                now.setToNow();
+                Long time = now.toMillis(false);
+                Filenames filenames = new Filenames();
 
+                filenames.setFilename(title);
+                filenames.setCreationDate(time);
+                filenames.setFileTypeText();
+                DatabaseAdapter db = new DatabaseAdapter(context);
+                db.addEntry(filenames);
+            }
+        }).start();
+    }
+    private void updateEditDate(final String title, final Context context){
+        new Thread(new Runnable() {
+            public void run() {
+                Time now = new Time();
+                now.setToNow();
+                Long time = now.toMillis(false);
+                Filenames filenames = new Filenames();
+
+                filenames.setFilename(title);
+                filenames.setEditedDate(time);
+                DatabaseAdapter db = new DatabaseAdapter(context);
+                db.updateEditDate(filenames);
+            }
+        }).start();
+    }
 }

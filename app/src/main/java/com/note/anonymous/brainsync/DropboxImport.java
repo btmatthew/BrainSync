@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,13 +32,14 @@ import java.util.List;
 public class DropboxImport extends Activity {
     private String fileDirectory;
     final static private String PREFS_NAME="dropboxToken";
-    final static private String APP_KEY = "";
-    final static private String APP_SECRET = "";
+    final static private String APP_KEY = "shz2ba3aei84dxd";
+    final static private String APP_SECRET = "vz5ksv0lk7xxylp";
     private DropboxAPI<AndroidAuthSession> mDBApi;
     private List<DropboxAPI.Entry> files;
     private ArrayList<Filenames> fileNamesList;
     CustomAdapter dataAdapter=null;
     private Thread collectFileName;
+    DatabaseAdapter db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class DropboxImport extends Activity {
         SharedPreferences setToken = getSharedPreferences(PREFS_NAME,0);
         String key = setToken.getString(APP_KEY, null);
         String token = setToken.getString(APP_SECRET,null);
+        db = new DatabaseAdapter(this);
         if(key!=null&&token!=null){
             mDBApi.getSession().setOAuth2AccessToken(token);
             startCollection();
@@ -111,7 +114,9 @@ public class DropboxImport extends Activity {
         int fileListLength=files.size();
         fileNamesList = new ArrayList<>();
         for(int i=0; i<fileListLength;i++){
-            Filenames file = new Filenames(files.get(i).fileName(),false);
+            Filenames file = new Filenames();
+            file.setFilename(files.get(i).fileName());
+            file.setSelected(false);
             fileNamesList.add(file);
         }
         dataAdapter= new CustomAdapter(this,R.layout.row,fileNamesList);
@@ -215,7 +220,14 @@ public class DropboxImport extends Activity {
 
                 try {
                     for (int i = 0; i < fileList.size(); i++) {
-                        File file = new File(fileDirectory+"/"+fileList.get(i).getFilename());
+                        String fileName = fileList.get(i).getFilename();
+                        //Boolean fileExists=db.searchByTitle(fileName);
+                        if(db.searchByTitle(fileName)){
+                            updateEditDate(fileName);
+                        }else{
+                            newEntryThread(fileName);
+                        }
+                        File file = new File(fileDirectory+"/"+fileName);
                         FileOutputStream outputStream = new FileOutputStream(file);
                         DropboxAPI.DropboxFileInfo info = mDBApi.getFile("/"+fileList.get(i).getFilename(), null, outputStream, null);
                     }
@@ -227,7 +239,36 @@ public class DropboxImport extends Activity {
             }
         }).start();
     }
+    private void newEntryThread(final String title){
+        new Thread(new Runnable() {
+            public void run() {
+                Time now = new Time();
+                now.setToNow();
+                Long time = now.toMillis(false);
+                Filenames filenames = new Filenames();
 
+                filenames.setFilename(title);
+                filenames.setCreationDate(time);
+                filenames.setFileTypeText();
+                //DatabaseAdapter db = new DatabaseAdapter(context);
+                db.addEntry(filenames);
+            }
+        }).start();
+    }
+    private void updateEditDate(final String title){
+        new Thread(new Runnable() {
+            public void run() {
+                Time now = new Time();
+                now.setToNow();
+                Long time = now.toMillis(false);
+                Filenames filenames = new Filenames();
+
+                filenames.setFilename(title);
+                filenames.setEditedDate(time);
+                db.updateEditDate(filenames);
+            }
+        }).start();
+    }
     class Toasting implements Runnable{
 
         private String data;
