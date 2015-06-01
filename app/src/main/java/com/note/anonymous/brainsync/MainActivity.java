@@ -78,9 +78,9 @@ public class MainActivity extends Activity {
 
     //Calls settings activity
     public void goSettings(View view){
+
         Intent intent = new Intent(this, Settings.class);
         startActivity(intent);
-
     }
 
     @Override

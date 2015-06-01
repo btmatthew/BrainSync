@@ -3,7 +3,9 @@ package com.note.anonymous.brainsync;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -19,12 +22,20 @@ public class Reminder extends Activity {
     TimePicker timePicker;
     DatePicker datePicker;
     private String entry;
-    int alarmid =1;
-    int notifid =1;
+    final String AppPrefs = "AppPrefs";
+    SharedPreferences sharedpreferences;
+    String alarm = "alarmKey";
+    String notification = "notificationKey";
+    String pendingnotification = "pendingKey";
+
+    int alarmid;
+    int notifid;
+    int pendingcode;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder);
         Intent intent = getIntent();
@@ -34,6 +45,10 @@ public class Reminder extends Activity {
         set.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
+                sharedpreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
+                alarmid = sharedpreferences.getInt(alarm, 0);
+                notifid = sharedpreferences.getInt(notification, 0);
+                pendingcode = sharedpreferences.getInt(pendingnotification, 0);
 
                 timePicker = (TimePicker) findViewById(R.id.timepicker);
                 datePicker = (DatePicker) findViewById(R.id.datepicker);
@@ -55,21 +70,38 @@ public class Reminder extends Activity {
                 //---PendingIntent to launch activity when the alarm triggers-
 //                Intent intent = new Intent("com.note.anonymous.DisplayReminder");
 //                intent.putExtra("NotifID", notifid);
-                PendingIntent displayIntent = PendingIntent.getActivity(getBaseContext(), alarmid, new Intent("com.note.anonymous.DisplayReminder")
-                        .putExtra("NotifID", notifid).putExtra("Title", entry), 0);
+//                PendingIntent displayIntent = PendingIntent.getActivity(getBaseContext(), alarmid, new Intent("com.note.anonymous.DisplayReminder")
+//                        .putExtra("NotifID", notifid).putExtra("Title", entry), 0);
 
+                Intent launch = new Intent(Reminder.this, DisplayNotification.class);
+                launch.putExtra("NotifID", notifid);
+                launch.putExtra("Title", entry);
+                launch.putExtra("Pending", pendingcode);
+
+                PendingIntent dip = PendingIntent.getService(getBaseContext(), alarmid, launch, 0);
 
 
                 //---sets the alarm to trigger---
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), displayIntent);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), dip);
 
 
+                alarmid = alarmid + 1;
+                notifid = notifid + 1;
+                pendingcode = pendingcode + 1;
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putInt(alarm, alarmid);
+                editor.putInt(notification, notifid);
+                editor.putInt(pendingnotification, pendingcode);
+                editor.commit();
+
+                Toast.makeText(Reminder.this, "Reminder Set Successfully :)", Toast.LENGTH_SHORT).show();
                 //Go back to the entry
                 Intent intent = new Intent(Reminder.this, DisplaySelectedItem.class);
                 intent.putExtra("EXTRA_MESSAGE", entry);
                 startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
+
 
     }
 

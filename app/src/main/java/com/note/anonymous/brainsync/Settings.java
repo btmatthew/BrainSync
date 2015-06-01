@@ -77,7 +77,7 @@ public class Settings extends Activity {
         seekbar.setMax(50);
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Preferences");
+        dialog.setTitle("Sample");
 
         LinearLayout linearlayout = new LinearLayout(this);
 
