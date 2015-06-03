@@ -32,74 +32,73 @@ public class Reminder extends Activity {
     int notifid;
     int pendingcode;
 
-    /** Called when the activity is first created. */
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder);
         Intent intent = getIntent();
-        entry = intent.getStringExtra(DisplaySelectedItem.EXTRA_MESSAGE);
-        //---Button view---
+        entry = intent.getStringExtra("EntryTitle");
+        timePicker = (TimePicker) findViewById(R.id.timepicker);
+        datePicker = (DatePicker) findViewById(R.id.datepicker);
+
+        //Button view
         Button set = (Button) findViewById(R.id.setreminder);
         set.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                sharedpreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
-                alarmid = sharedpreferences.getInt(alarm, 0);
-                notifid = sharedpreferences.getInt(notification, 0);
-                pendingcode = sharedpreferences.getInt(pendingnotification, 0);
 
-                timePicker = (TimePicker) findViewById(R.id.timepicker);
-                datePicker = (DatePicker) findViewById(R.id.datepicker);
-
-                //---use the AlarmManager to trigger an alarm---
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-                //---get current date and time---
-                Calendar calendar = Calendar.getInstance();
-
-                //---sets the time for the alarm to trigger---
-                calendar.set(Calendar.YEAR, datePicker.getYear());
-                calendar.set(Calendar.MONTH, datePicker.getMonth());
-                calendar.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
-                calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
-                calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
-                calendar.set(Calendar.SECOND, 0);
-
-                //---PendingIntent to launch activity when the alarm triggers-
-//                Intent intent = new Intent("com.note.anonymous.DisplayReminder");
-//                intent.putExtra("NotifID", notifid);
-//                PendingIntent displayIntent = PendingIntent.getActivity(getBaseContext(), alarmid, new Intent("com.note.anonymous.DisplayReminder")
-//                        .putExtra("NotifID", notifid).putExtra("Title", entry), 0);
-
-                Intent launch = new Intent(Reminder.this, DisplayNotification.class);
-                launch.putExtra("NotifID", notifid);
-                launch.putExtra("Title", entry);
-                launch.putExtra("Pending", pendingcode);
-
-                PendingIntent dip = PendingIntent.getService(getBaseContext(), alarmid, launch, 0);
+                    sharedpreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
+                    alarmid = sharedpreferences.getInt(alarm, 0);
+                    notifid = sharedpreferences.getInt(notification, 0);
+                    pendingcode = sharedpreferences.getInt(pendingnotification, 0);
 
 
-                //---sets the alarm to trigger---
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), dip);
+                    //use the AlarmManager to trigger an alarm
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+                    //get current date and time
+                    Calendar calendar = Calendar.getInstance();
+
+                    //sets the time for the alarm to trigger
+                    calendar.set(Calendar.YEAR, datePicker.getYear());
+                    calendar.set(Calendar.MONTH, datePicker.getMonth());
+                    calendar.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
+                    calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
+                    calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+                    calendar.set(Calendar.SECOND, 0);
+
+                    //PendingIntent to launch activity when the alarm triggers
+                    Intent launch = new Intent(Reminder.this, DisplayNotification.class);
+                    launch.putExtra("NotifID", notifid);
+                    launch.putExtra("Title", entry);
+                    launch.putExtra("Pending", pendingcode);
+
+                    PendingIntent alarmOff = PendingIntent.getService(getBaseContext(), alarmid, launch, 0);
 
 
-                alarmid = alarmid + 1;
-                notifid = notifid + 1;
-                pendingcode = pendingcode + 1;
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putInt(alarm, alarmid);
-                editor.putInt(notification, notifid);
-                editor.putInt(pendingnotification, pendingcode);
-                editor.commit();
+                    //sets the alarm to trigger
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmOff);
 
-                Toast.makeText(Reminder.this, "Reminder Set Successfully :)", Toast.LENGTH_SHORT).show();
-                //Go back to the entry
-                Intent intent = new Intent(Reminder.this, DisplaySelectedItem.class);
-                intent.putExtra("EXTRA_MESSAGE", entry);
-                startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-            }
+                    alarmid = alarmid + 1;
+                    notifid = notifid + 1;
+                    pendingcode = pendingcode + 1;
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putInt(alarm, alarmid);
+                    editor.putInt(notification, notifid);
+                    editor.putInt(pendingnotification, pendingcode);
+                    editor.commit();
+
+                    Toast.makeText(Reminder.this, "Reminder Set Successfully :)", Toast.LENGTH_SHORT).show();
+                    //Go back to the entry
+//                    Intent intent = new Intent(Reminder.this, DisplaySelectedItem.class);
+//                    intent.putExtra("EXTRA_MESSAGE", entry);
+//                    startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
+                Reminder.super.onBackPressed();
+                }
+
         });
 
 

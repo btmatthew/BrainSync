@@ -6,8 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,7 @@ public class EditActivity extends Activity {
     private String originalBody;
     private DatabaseAdapter db;
     private Filenames filenames;
+    int MonitorChange = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +47,25 @@ public class EditActivity extends Activity {
         datafield = ((EditText)findViewById(R.id.editTextBody));
         titlefield.setText(originalTitle);
         datafield.setText(body);
+
+        titlefield.addTextChangedListener(textWatcher);
+        datafield.addTextChangedListener(textWatcher);
+
     }
+
+    TextWatcher textWatcher = new TextWatcher() {
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before,
+                                  int count) {
+            MonitorChange = 1;
+        }
+    };
 
     public void updateEntryMethod(View view) {
 
@@ -108,15 +128,27 @@ public class EditActivity extends Activity {
 
     public void cancelUpdateMethod (View view) {
 
-        String title = titlefield.getText().toString().trim();
-        String information = datafield.getText().toString().trim();
+//        String title = titlefield.getText().toString().trim();
+//        String information = datafield.getText().toString().trim();
+//
+//        if(title.equals("") && information.equals("")) {
+//
+//            EditActivity.super.onBackPressed();
+//
+//        } else {
+//
+//            new AlertDialog.Builder(this)
+//                    .setTitle("Cancel Edit?")
+//                    .setMessage("New information will not be saved. Are you sure you want to cancel?")
+//                    .setNegativeButton("No, Go Back!", null)
+//                    .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface arg0, int arg1) {
+//                            EditActivity.super.onBackPressed();
+//                        }
+//                    }).create().show();
+//        }
 
-        if(title.equals("") && information.equals("")) {
-
-            EditActivity.super.onBackPressed();
-
-        } else {
-
+        if (MonitorChange == 1){
             new AlertDialog.Builder(this)
                     .setTitle("Cancel Edit?")
                     .setMessage("New information will not be saved. Are you sure you want to cancel?")
@@ -126,7 +158,14 @@ public class EditActivity extends Activity {
                             EditActivity.super.onBackPressed();
                         }
                     }).create().show();
+        } else {
+            EditActivity.super.onBackPressed();
         }
+
+
+
+
+
     }
 
 
@@ -155,15 +194,28 @@ public class EditActivity extends Activity {
     @Override
     public void onBackPressed() {
 
-        String title = titlefield.getText().toString().trim();
-        String information = datafield.getText().toString();
+//        String title = titlefield.getText().toString().trim();
+//        String information = datafield.getText().toString();
+//
+//        if(originalTitle.equals(title) || originalBody.equals(information)){
+//
+//            EditActivity.super.onBackPressed();
+//
+//        } else {
+//
+//            new AlertDialog.Builder(this)
+//                    .setTitle("Cancel Edit?")
+//                    .setMessage("New information will not be saved. Are you sure you want to cancel?")
+//                    .setNegativeButton("No, Go Back!", null)
+//                    .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface arg0, int arg1) {
+//                            EditActivity.super.onBackPressed();
+//                        }
+//                    }).create().show();
+//
+//            }
 
-        if(originalTitle.equals(title) || originalBody.equals(information)){
-
-            EditActivity.super.onBackPressed();
-
-        } else {
-
+        if (MonitorChange == 1){
             new AlertDialog.Builder(this)
                     .setTitle("Cancel Edit?")
                     .setMessage("New information will not be saved. Are you sure you want to cancel?")
@@ -173,8 +225,9 @@ public class EditActivity extends Activity {
                             EditActivity.super.onBackPressed();
                         }
                     }).create().show();
-
-            }
+        } else {
+            EditActivity.super.onBackPressed();
+        }
 
 
     }

@@ -48,7 +48,7 @@ public class SearchActivity extends ListActivity{
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             //Get the search query and assign it to string query.
             query = intent.getStringExtra(SearchManager.QUERY).trim();
-            actionBar.setTitle("Search Results for "+query);
+            actionBar.setTitle("Search Results for '"+query+"'");
             actionBar.show();
             //Pass query to search method
             carryOutSearch(query);

@@ -1,9 +1,11 @@
 package com.note.anonymous.brainsync;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -14,11 +16,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -74,8 +76,29 @@ public class DisplaySelectedItem extends Activity {
             body=stringBuilder.toString();
             readingFromFile.close();
         }catch(IOException | NullPointerException e){
-            Toast.makeText(this, "Null Pointer caught", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Entry has been deleted!", Toast.LENGTH_LONG).show();
+            final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            LinearLayout linearlayout = new LinearLayout(this);
+
+            TextView textView = new TextView(this);
+            textView.setText("This entry has either been deleted or has had it's title changed!");
+            textView.setTextSize(20);
+
+            linearlayout.addView(textView);
+            dialog.setView(linearlayout);
+
+            dialog.setTitle("Something Happened...");
+
+            dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+            dialog.show();
         }
+
         RelativeLayout view = (RelativeLayout)findViewById(R.id.mainLayoutDisplayItem);
 
         TextView textView = (TextView)findViewById(R.id.noteText);
@@ -167,7 +190,7 @@ public class DisplaySelectedItem extends Activity {
                 break;
             case R.id.set_reminder:
                 Intent intent = new Intent(this, Reminder.class);
-                intent.putExtra(EXTRA_MESSAGE, title);
+                intent.putExtra("EntryTitle", title);
                 startActivity(intent);
                 break;
             }

@@ -87,6 +87,7 @@ public class Settings extends Activity {
         sampletext.setTextSize(sharedpreferences.getInt(size, 20));
         sampletext.setGravity(Gravity.CENTER);
         sampletext.setPadding(0,0,0,30);
+        sampletext.setHeight(200);
 
         final TextView slidertext = new TextView(this);
         slidertext.setText("Move slider to adjust text size (Minimum is 10)");
@@ -233,7 +234,7 @@ public class Settings extends Activity {
 
         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int arg1) {
 
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 if(change<10){
