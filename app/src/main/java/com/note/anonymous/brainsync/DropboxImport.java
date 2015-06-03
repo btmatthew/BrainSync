@@ -221,7 +221,6 @@ public class DropboxImport extends Activity {
                 try {
                     for (int i = 0; i < fileList.size(); i++) {
                         String fileName = fileList.get(i).getFilename();
-                        //Boolean fileExists=db.searchByTitle(fileName);
                         if(db.searchByTitle(fileName)){
                             updateEditDate(fileName);
                         }else{

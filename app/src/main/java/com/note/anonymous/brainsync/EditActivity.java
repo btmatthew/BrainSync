@@ -93,7 +93,7 @@ public class EditActivity extends Activity {
                             File from = new File(getString(R.string.directoryLocation)+originalTitle);
                             File to = new File(getString(R.string.directoryLocation)+editedTitle);
                                 from.renameTo(to);
-                                updateEditDate(editedTitle);
+                                updateEntryThread(editedTitle,originalTitle);
                                 writeFile(editedTitle, information);
 
                             }
@@ -245,6 +245,22 @@ public class EditActivity extends Activity {
                 filenames.setFileTypeText();
                 DatabaseAdapter db = new DatabaseAdapter(context);
                 db.addEntry(filenames);
+            }
+        }).start();
+    }
+    private void updateEntryThread(final String newTitle, final String oldTitle){
+        final Context context = this;
+        new Thread(new Runnable() {
+            public void run() {
+                Time now = new Time();
+                now.setToNow();
+                Long time = now.toMillis(false);
+                Filenames filenames = new Filenames();
+                //filenames.setEditedDate(time);
+                filenames.setFilename(newTitle);
+                DatabaseAdapter db = new DatabaseAdapter(context);
+                db.updateTitle(filenames,oldTitle);
+                updateEditDate(newTitle);
             }
         }).start();
     }

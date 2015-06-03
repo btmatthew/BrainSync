@@ -89,5 +89,11 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         Cursor cursor = db.rawQuery("select * from "+TABLE_NAME+" where noteTitle like "+"'%"+noteTitle+"%'",null);
         return cursor;
     }
+    public void updateTitle(Filenames newTitle, String oldTitle){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN1,newTitle.getFilename());
+        db.update(TABLE_NAME, contentValues, COLUMN1 + "=?", new String[]{oldTitle});
+    }
 
 }
