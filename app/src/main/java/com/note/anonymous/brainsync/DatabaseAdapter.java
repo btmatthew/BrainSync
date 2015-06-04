@@ -46,7 +46,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN1,filenames.getFilename());
         contentValues.put(COLUMN2,filenames.getCreationDate());
-        contentValues.put(COLUMN3,0);
+        contentValues.put(COLUMN3,0L);
         contentValues.put(COLUMN5, filenames.getFileType());
         db.insert(TABLE_NAME, null, contentValues);
     }
@@ -65,7 +65,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN3,filenames.getEditedDate());
-        db.update(TABLE_NAME,contentValues,COLUMN3+"=?",new String[]{filenames.getFilename()});
+        db.update(TABLE_NAME,contentValues,COLUMN1+"=?",new String[]{filenames.getFilename()});
     }
     public int getNumberOfRows(){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -93,6 +93,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN1,newTitle.getFilename());
+        contentValues.put(COLUMN3,newTitle.getEditedDate());
         db.update(TABLE_NAME, contentValues, COLUMN1 + "=?", new String[]{oldTitle});
     }
 

@@ -7,13 +7,16 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class SearchActivity extends ListActivity{
@@ -35,6 +39,13 @@ public class SearchActivity extends ListActivity{
     private CustomAdapter dataAdapter=null;
     private ArrayList<Filenames> fileNamesList;
     private DatabaseAdapter db;
+    final static private String SORT_NAME_SEARCH="sortMethod";
+    final static private String SORT_METHOD_SEARCH = null;
+    private static final int SUBMENU1 = 3;
+    private static final int SUBMENU2 = 4;
+    private static final int SUBMENU3 = 5;
+    private static final int GROUP1 = 6;
+    private int sortingMethod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +85,8 @@ public class SearchActivity extends ListActivity{
     }
 
     public void carryOutSearch(String requestedEntry) {
-
+        SharedPreferences getSorting = getSharedPreferences(SORT_NAME_SEARCH, 0);
+        sortingMethod = getSorting.getInt(SORT_METHOD_SEARCH, 0);
         db = new DatabaseAdapter(this);
 
         if(db.getNumberOfRows()==0){
@@ -90,8 +102,21 @@ public class SearchActivity extends ListActivity{
                     cursor.moveToNext();
                     Filenames file = new Filenames();
                     file.setFilename(cursor.getString(0));
+                    file.setCreationDate(Long.parseLong(cursor.getString(1)));
+                    file.setEditedDate(Long.parseLong(cursor.getString(2)));
                     file.setSelected(false);
                     fileNamesList.add(file);
+                }
+                switch(sortingMethod){
+                    case 0:
+                        Collections.sort(fileNamesList, new Sorting.CustomComparatorByTitle());
+                        break;
+                    case 1:
+                        Collections.sort(fileNamesList, new Sorting.CustomComparatorByDateEditedYoungestToOldest());
+                        break;
+                    case 2:
+                        Collections.sort(fileNamesList, new Sorting.CustomComparatorByDateCreatedYoungestToOldest());
+                        break;
                 }
                 dataAdapter= new CustomAdapter(this,R.layout.list_entries_row,fileNamesList);
                 ListView listView = (ListView) findViewById(android.R.id.list);
@@ -253,6 +278,11 @@ public class SearchActivity extends ListActivity{
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search, menu);
         this.menu=menu;
+        SubMenu subMenu = menu.addSubMenu(0,Menu.NONE,1,"Sort by").setIcon(R.drawable.ic_action_sort_by_size);
+
+        subMenu.add(GROUP1,SUBMENU1,1,"A-Z");
+        subMenu.add(GROUP1, SUBMENU2, 2, "Edit date");
+        subMenu.add(GROUP1,SUBMENU3,3,"Creation date");
         return true;
     }
 
@@ -273,9 +303,25 @@ public class SearchActivity extends ListActivity{
                 Intent intent = new Intent(this, Settings.class);
                 startActivity(intent);
                 break;
+            case SUBMENU1:
+                setSorting(0);
+                break;
+            case SUBMENU2:
+                setSorting(1);
+                break;
+            case SUBMENU3:
+                setSorting(2);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void setSorting(int sort){
+        SharedPreferences setSorting = getSharedPreferences(SORT_NAME_SEARCH, 0);
+        SharedPreferences.Editor editor= setSorting.edit();
+        editor.putInt(SORT_METHOD_SEARCH,sort);
+        editor.apply();
+        onRestart();
     }
 
 

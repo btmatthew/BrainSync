@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -99,6 +100,7 @@ public class EditActivity extends Activity {
                             }
                         }).create().show();
             }else{
+                updateEditDate(editedTitle);
                 writeFile(editedTitle,information);
             }
         }
@@ -254,23 +256,24 @@ public class EditActivity extends Activity {
             public void run() {
                 Time now = new Time();
                 now.setToNow();
-                Long time = now.toMillis(false);
+
                 Filenames filenames = new Filenames();
-                //filenames.setEditedDate(time);
                 filenames.setFilename(newTitle);
+                filenames.setEditedDate(now.toMillis(false));
                 DatabaseAdapter db = new DatabaseAdapter(context);
-                db.updateTitle(filenames,oldTitle);
-                updateEditDate(newTitle);
+                db.updateTitle(filenames, oldTitle);
             }
         }).start();
     }
     private void updateEditDate(final String title){
+
         final Context context = this;
         new Thread(new Runnable() {
             public void run() {
                 Time now = new Time();
                 now.setToNow();
                 Long time = now.toMillis(false);
+                Log.d("test", "edit being called "+time);
                 Filenames filenames = new Filenames();
 
                 filenames.setFilename(title);
