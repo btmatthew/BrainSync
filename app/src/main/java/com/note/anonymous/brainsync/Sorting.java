@@ -14,7 +14,7 @@ public class Sorting {
         @Override
         public int compare(Filenames lhs, Filenames rhs) {
 
-            return (lhs).getFilename().compareTo(rhs.getFilename());
+            return (lhs).getFilename().toLowerCase().compareTo(rhs.getFilename().toLowerCase());
         }
     }
     public static class CustomComparatorByDateCreatedYoungestToOldest implements Comparator<Filenames>{
