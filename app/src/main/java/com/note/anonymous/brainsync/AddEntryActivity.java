@@ -90,11 +90,6 @@ public class AddEntryActivity extends Activity {
                         }
 
                         alarmset = 1;
-//                        Log.d("TAG", String.valueOf(dayOfMonth));
-//                        Log.d("TAG", String.valueOf(month));
-//                        Log.d("TAG", String.valueOf(year));
-//                        Log.d("TAG", String.valueOf(currentMinute));
-//                        Log.d("TAG", String.valueOf(currentHour));
 
                     }
                 });
@@ -106,21 +101,6 @@ public class AddEntryActivity extends Activity {
             }
         });
     }
-
-    public void chooseSaveMethod(View view){
-        switch (alarmset){
-            case 0:
-                saveEntryMethod(view);
-                Log.d("TAG", "Old Method");
-                break;
-            case 1:
-                saveEntryMethod1(view);
-                Log.d("TAG", "New Method");
-        }
-
-
-    }
-
 
     private void setTextFromShare(Intent intent){
         EditText datafield = (EditText) findViewById(R.id.information);
@@ -140,6 +120,51 @@ public class AddEntryActivity extends Activity {
         //Get user inputs from the EditText fields
         final String title = titlefield.getText().toString().trim();
         final String information = datafield.getText().toString().trim();
+
+        if(alarmset == 1){
+            sharedpreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
+            alarmid = sharedpreferences.getInt(alarm, 0);
+            notifid = sharedpreferences.getInt(notification, 0);
+            pendingcode = sharedpreferences.getInt(pendingnotification, 0);
+
+
+            //use the AlarmManager to trigger an alarm
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+            //get current date and time
+            Calendar calendar = Calendar.getInstance();
+
+            //sets the time for the alarm to trigger
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            calendar.set(Calendar.HOUR_OF_DAY, currentHour);
+            calendar.set(Calendar.MINUTE, currentMinute);
+            calendar.set(Calendar.SECOND, 0);
+
+            //PendingIntent to launch activity when the alarm triggers
+            Intent launch = new Intent(AddEntryActivity.this, DisplayNotification.class);
+            launch.putExtra("NotifID", notifid);
+            launch.putExtra("Title", title);
+            launch.putExtra("Pending", pendingcode);
+
+            PendingIntent alarmOff = PendingIntent.getService(getBaseContext(), alarmid, launch, 0);
+
+
+            //sets the alarm to trigger
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmOff);
+
+            alarmid = alarmid + 1;
+            notifid = notifid + 1;
+            pendingcode = pendingcode + 1;
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putInt(alarm, alarmid);
+            editor.putInt(notification, notifid);
+            editor.putInt(pendingnotification, pendingcode);
+            editor.commit();
+            //Log.d("TAG", "Alarm Set");
+
+        }
 
         if (title.equals("")) {
             Toast.makeText(this, "Title cannot be empty :)", Toast.LENGTH_LONG).show();
@@ -214,133 +239,6 @@ public class AddEntryActivity extends Activity {
         }
     }
 
-    public void saveEntryMethod1(View view) {
-
-        //Link local EditText variables to EditText views created in XML
-        EditText titlefield = (EditText) findViewById(R.id.titleBar);
-        EditText datafield = (EditText) findViewById(R.id.information);
-
-
-        //Get user inputs from the EditText fields
-        final String title = titlefield.getText().toString().trim();
-        final String information = datafield.getText().toString().trim();
-
-        sharedpreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
-        alarmid = sharedpreferences.getInt(alarm, 0);
-        notifid = sharedpreferences.getInt(notification, 0);
-        pendingcode = sharedpreferences.getInt(pendingnotification, 0);
-
-
-        //use the AlarmManager to trigger an alarm
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        //get current date and time
-        Calendar calendar = Calendar.getInstance();
-
-        //sets the time for the alarm to trigger
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        calendar.set(Calendar.HOUR_OF_DAY, currentHour);
-        calendar.set(Calendar.MINUTE, currentMinute);
-        calendar.set(Calendar.SECOND, 0);
-
-        //PendingIntent to launch activity when the alarm triggers
-        Intent launch = new Intent(AddEntryActivity.this, DisplayNotification.class);
-        launch.putExtra("NotifID", notifid);
-        launch.putExtra("Title", title);
-        launch.putExtra("Pending", pendingcode);
-
-        PendingIntent alarmOff = PendingIntent.getService(getBaseContext(), alarmid, launch, 0);
-
-
-        //sets the alarm to trigger
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmOff);
-
-        alarmid = alarmid + 1;
-        notifid = notifid + 1;
-        pendingcode = pendingcode + 1;
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putInt(alarm, alarmid);
-        editor.putInt(notification, notifid);
-        editor.putInt(pendingnotification, pendingcode);
-        editor.commit();
-
-
-
-        if (title.equals("")) {
-            Toast.makeText(this, "Title cannot be empty :)", Toast.LENGTH_LONG).show();
-
-        } else {
-
-            File dir = new File("data/data/com.example.anonymous.brainsync/files");
-            // File[] filelist = dir.listFiles();
-
-            if (new DatabaseAdapter(this).getNumberOfRows() == 0) {
-
-                try {
-                    //Add entry to the database on a seperate thread
-                    newEntryThread(title, this);
-
-                    //Create a file and write to it. Input in the Title EditText field is used as file name
-                    FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
-                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
-                    writer.println(information);
-                    writer.close();
-
-
-                    //Start the success activity after file creation and writing has been done
-                    finish();
-                    Intent intent = new Intent(this, SuccessActivity.class);
-                    startActivity(intent);
-
-                } catch (IOException e) {
-
-                    e.printStackTrace();
-                }
-            } else {
-
-                if (new DatabaseAdapter(this).searchByTitle(title)) {
-
-                    new AlertDialog.Builder(this)
-                            .setTitle("Hold Up...")
-                            .setMessage("An entry for '" + title + "' already exists. Saving this with the same name will overwrite the previous one. Do you wish to continue?")
-                            .setNegativeButton("No, Go Back!", null)
-                            .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface arg0, int arg1) {
-                                    overwriteMethod(title,information);
-                                }
-                            }).create().show();
-
-                } else {
-
-                    try {
-                        newEntryThread(title, this);
-                        //Create a file and write to it. Input in the Title EditText field is used as file name
-                        FileOutputStream createEntry = openFileOutput(title, Context.MODE_PRIVATE);
-                        PrintWriter writer = new PrintWriter(new OutputStreamWriter(createEntry));
-                        writer.println(information);
-                        writer.close();
-
-
-                        //Start the success activity after file creation and writing has been done
-                        finish();
-                        Intent intent = new Intent(this, SuccessActivity.class);
-                        startActivity(intent);
-
-                    } catch (IOException e) {
-
-                        e.printStackTrace();
-                    }
-
-                }
-
-
-
-            }
-        }
-    }
-
 
     private void overwriteMethod(String title, String information) {
         try {
@@ -370,7 +268,12 @@ public class AddEntryActivity extends Activity {
         String title = titlefield.getText().toString().trim();
         String information = datafield.getText().toString().trim();
 
+
         if(title.equals("") && information.equals("")) {
+
+            if(alarmset == 1){
+                Toast.makeText(this, "Reminder has been discarded", Toast.LENGTH_SHORT).show();
+            }
 
             AddEntryActivity.super.onBackPressed();
 
@@ -382,6 +285,9 @@ public class AddEntryActivity extends Activity {
                     .setNegativeButton("No, Go Back!", null)
                     .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
+                            if(alarmset == 1){
+                                Toast.makeText(AddEntryActivity.this, "Reminder has been discarded", Toast.LENGTH_SHORT).show();
+                            }
                             AddEntryActivity.super.onBackPressed();
                         }
                     }).create().show();

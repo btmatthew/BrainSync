@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
@@ -98,8 +97,6 @@ public class DisplaySelectedItem extends Activity {
 
             dialog.show();
         }
-
-        RelativeLayout view = (RelativeLayout)findViewById(R.id.mainLayoutDisplayItem);
 
         TextView textView = (TextView)findViewById(R.id.noteText);
         //Creates a TextView component for this activity

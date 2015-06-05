@@ -47,7 +47,7 @@
             android:drawableStart="@drawable/ic_action_save"
             android:text="@string/save_entry"
             android:layout_weight="1"
-            android:onClick="chooseSaveMethod"
+            android:onClick="saveEntryMethod"
             android:background="@color/green"
             />
 
