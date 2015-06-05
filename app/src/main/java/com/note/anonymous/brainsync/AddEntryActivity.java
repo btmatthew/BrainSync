@@ -41,6 +41,9 @@ public class AddEntryActivity extends Activity {
 
     int dayOfMonth, month, year, currentMinute, currentHour;
     int alarmset = 0;
+    int titleupdated = 0;
+
+
 
 
     @Override
@@ -76,7 +79,7 @@ public class AddEntryActivity extends Activity {
                 dialog.setView(linearlayout);
                 dialog.setPositiveButton("Set", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int arg1) {
                         dayOfMonth = datePicker.getDayOfMonth();
                         month = datePicker.getMonth();
                         year = datePicker.getYear();
@@ -113,58 +116,13 @@ public class AddEntryActivity extends Activity {
     public void saveEntryMethod(View view) {
 
         //Link local EditText variables to EditText views created in XML
-        EditText titlefield = (EditText) findViewById(R.id.titleBar);
+        final EditText titlefield = (EditText) findViewById(R.id.titleBar);
         EditText datafield = (EditText) findViewById(R.id.information);
 
 
         //Get user inputs from the EditText fields
         final String title = titlefield.getText().toString().trim();
         final String information = datafield.getText().toString().trim();
-
-        if(alarmset == 1){
-            sharedpreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
-            alarmid = sharedpreferences.getInt(alarm, 0);
-            notifid = sharedpreferences.getInt(notification, 0);
-            pendingcode = sharedpreferences.getInt(pendingnotification, 0);
-
-
-            //use the AlarmManager to trigger an alarm
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-            //get current date and time
-            Calendar calendar = Calendar.getInstance();
-
-            //sets the time for the alarm to trigger
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            calendar.set(Calendar.HOUR_OF_DAY, currentHour);
-            calendar.set(Calendar.MINUTE, currentMinute);
-            calendar.set(Calendar.SECOND, 0);
-
-            //PendingIntent to launch activity when the alarm triggers
-            Intent launch = new Intent(AddEntryActivity.this, DisplayNotification.class);
-            launch.putExtra("NotifID", notifid);
-            launch.putExtra("Title", title);
-            launch.putExtra("Pending", pendingcode);
-
-            PendingIntent alarmOff = PendingIntent.getService(getBaseContext(), alarmid, launch, 0);
-
-
-            //sets the alarm to trigger
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmOff);
-
-            alarmid = alarmid + 1;
-            notifid = notifid + 1;
-            pendingcode = pendingcode + 1;
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putInt(alarm, alarmid);
-            editor.putInt(notification, notifid);
-            editor.putInt(pendingnotification, pendingcode);
-            editor.commit();
-            //Log.d("TAG", "Alarm Set");
-
-        }
 
         if (title.equals("")) {
             Toast.makeText(this, "Title cannot be empty :)", Toast.LENGTH_LONG).show();
@@ -199,13 +157,19 @@ public class AddEntryActivity extends Activity {
                 } else {
 
                     if (new DatabaseAdapter(this).searchByTitle(title)) {
-
+                        titleupdated = 1;
                         new AlertDialog.Builder(this)
                                 .setTitle("Hold Up...")
                                 .setMessage("An entry for '" + title + "' already exists. Saving this with the same name will overwrite the previous one. Do you wish to continue?")
-                                .setNegativeButton("No, Go Back!", null)
+                                .setNegativeButton("No, Go Back!", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        titleupdated = 0;
+                                    }
+                                })
                                 .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface arg0, int arg1) {
+                                        titleupdated = 0;
                                         overwriteMethod(title,information);
                                     }
                                 }).create().show();
@@ -236,6 +200,56 @@ public class AddEntryActivity extends Activity {
 
 
             }
+        }
+
+        if(alarmset == 1){
+
+            if(titleupdated == 1){
+
+            }else {
+                sharedpreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
+                alarmid = sharedpreferences.getInt(alarm, 0);
+                notifid = sharedpreferences.getInt(notification, 0);
+                pendingcode = sharedpreferences.getInt(pendingnotification, 0);
+
+
+                //use the AlarmManager to trigger an alarm
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+                //get current date and time
+                Calendar calendar = Calendar.getInstance();
+
+                //sets the time for the alarm to trigger
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                calendar.set(Calendar.HOUR_OF_DAY, currentHour);
+                calendar.set(Calendar.MINUTE, currentMinute);
+                calendar.set(Calendar.SECOND, 0);
+
+                //PendingIntent to launch activity when the alarm triggers
+                Intent launch = new Intent(AddEntryActivity.this, DisplayNotification.class);
+                launch.putExtra("NotifID", notifid);
+                launch.putExtra("Title", title);
+                launch.putExtra("Pending", pendingcode);
+
+                PendingIntent alarmOff = PendingIntent.getService(getBaseContext(), alarmid, launch, 0);
+
+
+                //sets the alarm to trigger
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmOff);
+
+                alarmid = alarmid + 1;
+                notifid = notifid + 1;
+                pendingcode = pendingcode + 1;
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putInt(alarm, alarmid);
+                editor.putInt(notification, notifid);
+                editor.putInt(pendingnotification, pendingcode);
+                editor.commit();
+                Log.d("TAG", "Alarm Set");
+            }
+
         }
     }
 
