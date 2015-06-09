@@ -11,8 +11,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -63,46 +64,47 @@ public class AddEntryActivity extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Add New Entry");
 
-        Button reminder = (Button) findViewById(R.id.setaddreminder);
+//        Button reminder = (Button) findViewById(R.id.setaddreminder);
 
-        reminder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final AlertDialog.Builder dialog = new AlertDialog.Builder(AddEntryActivity.this);
-                final DatePicker datePicker = new DatePicker(AddEntryActivity.this);
-                final TimePicker timePicker = new TimePicker(AddEntryActivity.this);
+//        reminder.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                final AlertDialog.Builder dialog = new AlertDialog.Builder(AddEntryActivity.this);
+//                final DatePicker datePicker = new DatePicker(AddEntryActivity.this);
+//                final TimePicker timePicker = new TimePicker(AddEntryActivity.this);
+//
+//                LinearLayout linearlayout = new LinearLayout(AddEntryActivity.this);
+//                linearlayout.setOrientation(LinearLayout.VERTICAL);
+//                linearlayout.addView(datePicker);
+//                linearlayout.addView(timePicker);
+//                dialog.setView(linearlayout);
+//                dialog.setPositiveButton("Set", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int arg1) {
+//                        dayOfMonth = datePicker.getDayOfMonth();
+//                        month = datePicker.getMonth();
+//                        year = datePicker.getYear();
+//                        currentMinute = timePicker.getCurrentMinute();
+//                        currentHour = timePicker.getCurrentHour();
+//
+//                        if (alarmset == 0) {
+//                            Toast.makeText(AddEntryActivity.this, "Reminder has been set. :)", Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            Toast.makeText(AddEntryActivity.this, "Reminder date/time has been updated. :)", Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        alarmset = 1;
+//
+//                    }
+//                });
+//
+//                dialog.setNegativeButton("Cancel", null);
+//
+//                dialog.show();
+//
+//            }
+//        });
 
-                LinearLayout linearlayout = new LinearLayout(AddEntryActivity.this);
-                linearlayout.setOrientation(LinearLayout.VERTICAL);
-                linearlayout.addView(datePicker);
-                linearlayout.addView(timePicker);
-                dialog.setView(linearlayout);
-                dialog.setPositiveButton("Set", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int arg1) {
-                        dayOfMonth = datePicker.getDayOfMonth();
-                        month = datePicker.getMonth();
-                        year = datePicker.getYear();
-                        currentMinute = timePicker.getCurrentMinute();
-                        currentHour = timePicker.getCurrentHour();
-
-                        if (alarmset == 0) {
-                            Toast.makeText(AddEntryActivity.this, "Reminder has been set. :)", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(AddEntryActivity.this, "Reminder date/time has been updated. :)", Toast.LENGTH_SHORT).show();
-                        }
-
-                        alarmset = 1;
-
-                    }
-                });
-
-                dialog.setNegativeButton("Cancel", null);
-
-                dialog.show();
-
-            }
-        });
     }
 
     private void setTextFromShare(Intent intent){
@@ -368,5 +370,62 @@ public class AddEntryActivity extends Activity {
                 db.updateEditDate(filenames);
             }
         }).start();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_add_entry, menu);
+
+        MenuItem item = menu.findItem(R.id.add_reminder);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        return  true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.add_reminder:
+                final AlertDialog.Builder dialog = new AlertDialog.Builder(AddEntryActivity.this);
+                final DatePicker datePicker = new DatePicker(AddEntryActivity.this);
+                final TimePicker timePicker = new TimePicker(AddEntryActivity.this);
+
+                LinearLayout linearlayout = new LinearLayout(AddEntryActivity.this);
+                linearlayout.setOrientation(LinearLayout.VERTICAL);
+                linearlayout.addView(datePicker);
+                linearlayout.addView(timePicker);
+                dialog.setView(linearlayout);
+                dialog.setPositiveButton("Set", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        dayOfMonth = datePicker.getDayOfMonth();
+                        month = datePicker.getMonth();
+                        year = datePicker.getYear();
+                        currentMinute = timePicker.getCurrentMinute();
+                        currentHour = timePicker.getCurrentHour();
+
+                        if (alarmset == 0) {
+                            Toast.makeText(AddEntryActivity.this, "Reminder has been set. :)", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(AddEntryActivity.this, "Reminder date/time has been updated. :)", Toast.LENGTH_SHORT).show();
+                        }
+
+                        alarmset = 1;
+
+                    }
+                });
+
+                dialog.setNegativeButton("Cancel", null);
+
+                dialog.show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

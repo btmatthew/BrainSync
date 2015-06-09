@@ -62,8 +62,11 @@
     <string name="alarmText">Remind Me About This Entry On:</string>
     <string name="setreminder">Set Reminder</string>
     <string name="preferences">Preferences</string>
-    <string name="preftext">Adjust Display Text</string>
+    <string name="preftext">Set Some Cool Stuff</string>
     <string name="sort">Sort By</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 

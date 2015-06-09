@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -26,9 +27,12 @@ public class Settings extends Activity {
     final String AppPrefs = "AppPrefs";
     String size = "sizeKey";
     String style = "styleKey";
+    String notify = "notificationKey";
+    int notifvalue;
     SharedPreferences sharedpreferences;
-    int change;// = 20;
+    int change;
     int selectedstyle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +55,13 @@ public class Settings extends Activity {
         });
 
     }
-    protected void backup(){
+
+    protected void backup() {
         Intent intent = new Intent(this, DropboxBackup.class);
         startActivity(intent);
     }
-    protected void importDropbox(){
+
+    protected void importDropbox() {
         Intent intent = new Intent(this, DropboxImport.class);
         startActivity(intent);
     }
@@ -66,18 +72,18 @@ public class Settings extends Activity {
 
     }
 
-    public void aboutBrainSync(View view){
+    public void aboutBrainSync(View view) {
         Intent intent = new Intent(this, About.class);
         startActivity(intent);
     }
 
-    public void setPreferences(View view){
+    public void setPreferences(View view) {
         sharedpreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
         final SeekBar seekbar = new SeekBar(this);
         seekbar.setMax(50);
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Sample");
+        dialog.setTitle("Preferences");
 
         LinearLayout linearlayout = new LinearLayout(this);
 
@@ -86,7 +92,7 @@ public class Settings extends Activity {
         sampletext.setText("Text Preview");
         sampletext.setTextSize(sharedpreferences.getInt(size, 20));
         sampletext.setGravity(Gravity.CENTER);
-        sampletext.setPadding(0,0,0,30);
+        sampletext.setPadding(0, 0, 0, 30);
         sampletext.setHeight(200);
 
         final TextView slidertext = new TextView(this);
@@ -94,6 +100,21 @@ public class Settings extends Activity {
 
         final TextView textstyle = new TextView(this);
         textstyle.setText("Select Text Style");
+        textstyle.setTypeface(null, Typeface.BOLD);
+        //textstyle.setTextSize(20);
+
+        final TextView notification = new TextView(this);
+        notification.setText("Push Settings");
+        //notification.setTextSize(20);
+        notification.setPadding(0, 20, 0, 0);
+        notification.setTypeface(null, Typeface.BOLD);
+
+        final TextView soundtext = new TextView(this);
+        soundtext.setText("Play Notification Sound");
+       // soundtext.setTextSize(10);
+
+        final CheckBox soundcheck = new CheckBox(this);
+
 
         View line = new View(this);
         line.setBackgroundColor(getResources().getColor(R.color.mygrey));
@@ -104,20 +125,31 @@ public class Settings extends Activity {
         line1.setBackgroundColor(getResources().getColor(R.color.mygrey));
         line1.setLayoutParams(new LinearLayout.LayoutParams(a, 5));
 
+        View line2 = new View(this);
+        line2.setBackgroundColor(getResources().getColor(R.color.mygrey));
+        line2.setLayoutParams(new LinearLayout.LayoutParams(a, 5));
+
         LinearLayout linearlayout1 = new LinearLayout(this);
         LinearLayout seekbarlayout = new LinearLayout(this);
+        LinearLayout notificationlayout = new LinearLayout(this);
+        notificationlayout.setPadding(0,0,0,30);
+
+        notificationlayout.setOrientation(LinearLayout.HORIZONTAL);
+        notificationlayout.addView(soundtext);
+        soundtext.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.LEFT));
+        notificationlayout.addView(soundcheck);
+
+
         seekbarlayout.setOrientation(LinearLayout.HORIZONTAL);
         seekbarlayout.addView(seekbar);
-        seekbar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.LEFT ));
-        final TextView textsize = new TextView(this);
+        seekbar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.LEFT));
 
+        final TextView textsize = new TextView(this);
         textsize.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         textsize.setMaxLines(1);
         seekbarlayout.addView(textsize);
 
-
         final RadioGroup buttonstyle = new RadioGroup(this);
-
         RadioButton normal = new RadioButton(this);
         normal.setText("No Style");
         normal.setId(R.id.normal_button);
@@ -145,35 +177,40 @@ public class Settings extends Activity {
         linearlayout.addView(textstyle);
         linearlayout.addView(line1);
         linearlayout.addView(linearlayout1);
+        linearlayout.addView(notification);
+        linearlayout.addView(line2);
+        linearlayout.addView(notificationlayout);
+
 
         dialog.setView(linearlayout);
 
-            seekbar.setProgress(sharedpreferences.getInt(size, 20));
-            textsize.setText(String.valueOf(sharedpreferences.getInt(size, 20)));
-            change = sharedpreferences.getInt(size, 20);
-            int w = sharedpreferences.getInt(style, 1);
-            switch (w){
-                case 1:
-                    normal.setChecked(true);
-                    selectedstyle=1;
-                    sampletext.setTypeface(null, Typeface.NORMAL);
-                    break;
-                case 2:
-                    bold.setChecked(true);
-                    selectedstyle=2;
-                    sampletext.setTypeface(null, Typeface.BOLD);
-                    break;
-                case 3:
-                    italic.setChecked(true);
-                    selectedstyle=3;
-                    sampletext.setTypeface(null, Typeface.ITALIC);
-                    break;
-                case 4:
-                    bolditalic.setChecked(true);
-                    selectedstyle=4;
-                    sampletext.setTypeface(null, Typeface.BOLD_ITALIC);
-                    break;
-            }
+        seekbar.setProgress(sharedpreferences.getInt(size, 20));
+        textsize.setText(String.valueOf(sharedpreferences.getInt(size, 20)));
+        change = sharedpreferences.getInt(size, 20);
+        int w = sharedpreferences.getInt(style, 1);
+        switch (w) {
+            case 1:
+                normal.setChecked(true);
+                selectedstyle = 1;
+                sampletext.setTypeface(null, Typeface.NORMAL);
+                break;
+            case 2:
+                bold.setChecked(true);
+                selectedstyle = 2;
+                sampletext.setTypeface(null, Typeface.BOLD);
+                break;
+            case 3:
+                italic.setChecked(true);
+                selectedstyle = 3;
+                sampletext.setTypeface(null, Typeface.ITALIC);
+                break;
+            case 4:
+                bolditalic.setChecked(true);
+                selectedstyle = 4;
+                sampletext.setTypeface(null, Typeface.BOLD_ITALIC);
+                break;
+        }
+
 
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -192,12 +229,12 @@ public class Settings extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
-                if(seekBar.getProgress()<10){
-                    int diff = 10-seekBar.getProgress();
-                    seekBar.setProgress(diff+seekBar.getProgress());
+                if (seekBar.getProgress() < 10) {
+                    int diff = 10 - seekBar.getProgress();
+                    seekBar.setProgress(diff + seekBar.getProgress());
                     change = 10;
                     textsize.setText(String.valueOf(change));
-                }else {
+                } else {
 
                     change = seekBar.getProgress();
                 }
@@ -209,7 +246,7 @@ public class Settings extends Activity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
 
-                switch (checkedId){
+                switch (checkedId) {
                     case R.id.normal_button:
                         sampletext.setTypeface(null, Typeface.NORMAL);
                         selectedstyle = 1;
@@ -231,18 +268,39 @@ public class Settings extends Activity {
             }
         });
 
+        notifvalue = sharedpreferences.getInt(notify, 1);
+        switch (notifvalue){
+            case 0:
+                soundcheck.setChecked(false);
+                break;
+            case 1:
+                soundcheck.setChecked(true);
+        }
+
+        soundcheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (soundcheck.isChecked()) {
+                    notifvalue = 1;
+                } else {
+                    notifvalue = 0;
+                }
+            }
+        });
+
 
         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int arg1) {
 
                 SharedPreferences.Editor editor = sharedpreferences.edit();
-                if(change<10){
+                if (change < 10) {
                     //Don't write it
-                }else {
+                } else {
                     editor.putInt(size, change);
                 }
                 editor.putInt(style, selectedstyle);
+                editor.putInt(notify, notifvalue);
                 editor.commit();
 
             }

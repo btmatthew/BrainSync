@@ -155,7 +155,9 @@ public class DisplaySelectedItem extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_display_selected_item, menu);
         MenuItem item = menu.findItem(R.id.menu_item_share);
+        MenuItem item1 = menu.findItem(R.id.set_reminder);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
 
         shareItem = new Intent(Intent.ACTION_SEND);
@@ -173,7 +175,7 @@ public class DisplaySelectedItem extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //If the selected menu item is search launch the search bar at the top of the screen. See this section in MainActivity for more explanation
+
         switch (id) {
             case R.id.edit_menu_button:
                 callEditActivity();

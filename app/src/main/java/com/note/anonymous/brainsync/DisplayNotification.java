@@ -3,7 +3,9 @@ package com.note.anonymous.brainsync;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -38,8 +40,16 @@ public class DisplayNotification extends IntentService {
                 .setContentTitle(title)
                 .setContentText("Tap to view entry")
                 .setAutoCancel(true)
-                .setVibrate(new long[]{100, 250, 100, 500})
-                .setSound(nSound);
+                .setVibrate(new long[]{100, 250, 100, 500});
+
+        String notify = "notificationKey";
+        final String AppPrefs = "AppPrefs";
+        SharedPreferences sharedpreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);;
+        int notificationsound = sharedpreferences.getInt(notify, 1);
+
+        if(notificationsound == 1){
+            mBuilder.setSound(nSound);
+        }
 
 
         mBuilder.setContentIntent(detailsIntent);

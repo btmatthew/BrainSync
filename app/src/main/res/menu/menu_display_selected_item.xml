@@ -9,12 +9,13 @@
     <item
         android:id="@+id/set_reminder"
         android:title="@string/setreminder"
+        android:icon="@drawable/ic_action_add_alarm"
         />
 
     <item android:id="@+id/edit_menu_button"
         android:title="@string/edit_button"
         android:icon="@drawable/ic_action_edit"
-        brainsync:showAsAction="always"/>
+        brainsync:showAsAction="never"/>
 
     <item android:id="@+id/action_settings"
         android:title="@string/title_activity_settings"/>

@@ -19,11 +19,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.note.anonymous.brainsync.Sorting.*;
+import com.note.anonymous.brainsync.Sorting.CustomComparatorByDateCreatedYoungestToOldest;
+import com.note.anonymous.brainsync.Sorting.CustomComparatorByDateEditedYoungestToOldest;
+import com.note.anonymous.brainsync.Sorting.CustomComparatorByTitle;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,16 +71,16 @@ public class ListEntriesActivity extends Activity {
                 .withMargins(0, 0, 16, 16)
                 .create();
 
-          fabButton.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                  Intent intent = new Intent(ListEntriesActivity.this, AddEntryActivity.class);
-                  startActivity(intent);
-              }
-          });
+        fabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ListEntriesActivity.this, AddEntryActivity.class);
+                startActivity(intent);
+            }
+        });
         createList();
 
-         }
+    }
 
     protected void onRestart(){
         super.onRestart();
@@ -189,7 +190,7 @@ public class ListEntriesActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        //If the selected menu item is search launch the search bar at the top of the screen. See this section in MainActivity for more explanation
+
         switch(item.getItemId()){
             case R.id.search:
                 onSearchRequested();
@@ -275,7 +276,7 @@ public class ListEntriesActivity extends Activity {
                             openItem(holder.name.getText().toString());
                         }else{
                             selectItem(v);
-                            }
+                        }
 
                     }
                 });
@@ -376,4 +377,5 @@ public class ListEntriesActivity extends Activity {
         intent.putExtra("EXTRA_MESSAGE", title);
         startActivity(intent);
     }
+
 }
