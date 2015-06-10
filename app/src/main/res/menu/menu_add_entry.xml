@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.note.anonymous.brainsync.AddEntryActivity">
 
-
     <item
         android:id="@+id/add_reminder"
         android:title="@string/setreminder"

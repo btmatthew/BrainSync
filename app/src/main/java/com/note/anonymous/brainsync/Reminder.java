@@ -41,7 +41,6 @@ public class Reminder extends Activity {
         timePicker = (TimePicker) findViewById(R.id.timepicker);
         datePicker = (DatePicker) findViewById(R.id.datepicker);
 
-        //Button view
         Button set = (Button) findViewById(R.id.setreminder);
         set.setOnClickListener(new View.OnClickListener() {
 
@@ -75,7 +74,6 @@ public class Reminder extends Activity {
 
                     PendingIntent alarmOff = PendingIntent.getService(getBaseContext(), alarmid, launch, 0);
 
-
                     //sets the alarm to trigger
                     alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmOff);
 
@@ -86,7 +84,7 @@ public class Reminder extends Activity {
                     editor.putInt(alarm, alarmid);
                     editor.putInt(notification, notifid);
                     editor.putInt(pendingnotification, pendingcode);
-                    editor.commit();
+                editor.apply();
 
                     Toast.makeText(Reminder.this, "Reminder Set Successfully :)", Toast.LENGTH_SHORT).show();
                     //Go back to the entry

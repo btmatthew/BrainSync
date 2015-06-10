@@ -182,6 +182,14 @@
             android:name=".DisplayNotification"
             android:exported="false" >
         </service>
+
+        <activity
+            android:name=".FragmentParentActivity"
+            android:label="@string/title_activity_fragment_parent"
+            android:theme="@style/NoActionBarTheme">
+
+
+        </activity>
     </application>
 
 </manifest>

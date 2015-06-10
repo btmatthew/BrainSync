@@ -64,47 +64,6 @@ public class AddEntryActivity extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Add New Entry");
 
-//        Button reminder = (Button) findViewById(R.id.setaddreminder);
-
-//        reminder.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                final AlertDialog.Builder dialog = new AlertDialog.Builder(AddEntryActivity.this);
-//                final DatePicker datePicker = new DatePicker(AddEntryActivity.this);
-//                final TimePicker timePicker = new TimePicker(AddEntryActivity.this);
-//
-//                LinearLayout linearlayout = new LinearLayout(AddEntryActivity.this);
-//                linearlayout.setOrientation(LinearLayout.VERTICAL);
-//                linearlayout.addView(datePicker);
-//                linearlayout.addView(timePicker);
-//                dialog.setView(linearlayout);
-//                dialog.setPositiveButton("Set", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int arg1) {
-//                        dayOfMonth = datePicker.getDayOfMonth();
-//                        month = datePicker.getMonth();
-//                        year = datePicker.getYear();
-//                        currentMinute = timePicker.getCurrentMinute();
-//                        currentHour = timePicker.getCurrentHour();
-//
-//                        if (alarmset == 0) {
-//                            Toast.makeText(AddEntryActivity.this, "Reminder has been set. :)", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            Toast.makeText(AddEntryActivity.this, "Reminder date/time has been updated. :)", Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                        alarmset = 1;
-//
-//                    }
-//                });
-//
-//                dialog.setNegativeButton("Cancel", null);
-//
-//                dialog.show();
-//
-//            }
-//        });
-
     }
 
     private void setTextFromShare(Intent intent){

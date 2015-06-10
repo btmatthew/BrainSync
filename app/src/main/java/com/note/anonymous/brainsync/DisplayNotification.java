@@ -23,6 +23,7 @@ public class DisplayNotification extends IntentService {
     @Override
     public void onHandleIntent(Intent intent) {
 
+        //Log.d("TAG", "DisplayNotification Service Started");
         int notifID = intent.getExtras().getInt("NotifID");
         String title = intent.getExtras().getString("Title");
         int requestCode = intent.getExtras().getInt("Pending");
@@ -42,7 +43,7 @@ public class DisplayNotification extends IntentService {
                 .setAutoCancel(true)
                 .setVibrate(new long[]{100, 250, 100, 500});
 
-        String notify = "notificationKey";
+        String notify = "notifyKey";
         final String AppPrefs = "AppPrefs";
         SharedPreferences sharedpreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);;
         int notificationsound = sharedpreferences.getInt(notify, 1);

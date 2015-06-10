@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -27,7 +29,7 @@ public class Settings extends Activity {
     final String AppPrefs = "AppPrefs";
     String size = "sizeKey";
     String style = "styleKey";
-    String notify = "notificationKey";
+    String notify = "notifyKey";
     int notifvalue;
     SharedPreferences sharedpreferences;
     int change;
@@ -111,7 +113,7 @@ public class Settings extends Activity {
 
         final TextView soundtext = new TextView(this);
         soundtext.setText("Play Notification Sound");
-       // soundtext.setTextSize(10);
+        // soundtext.setTextSize(10);
 
         final CheckBox soundcheck = new CheckBox(this);
 
@@ -132,7 +134,7 @@ public class Settings extends Activity {
         LinearLayout linearlayout1 = new LinearLayout(this);
         LinearLayout seekbarlayout = new LinearLayout(this);
         LinearLayout notificationlayout = new LinearLayout(this);
-        notificationlayout.setPadding(0,0,0,30);
+        notificationlayout.setPadding(0, 0, 0, 30);
 
         notificationlayout.setOrientation(LinearLayout.HORIZONTAL);
         notificationlayout.addView(soundtext);
@@ -211,6 +213,28 @@ public class Settings extends Activity {
                 break;
         }
 
+        int check = sharedpreferences.getInt(notify, 1);
+
+        if (check == 0) {
+            soundcheck.setChecked(false);
+            Log.d("TAG", "Num 1");
+        } else {
+            soundcheck.setChecked(true);
+            Log.d("TAG", "Num 2");
+        }
+
+        Log.d("TAG", "Check = " + String.valueOf(check));
+
+//        switch (notifvalue) {
+//            case 0:
+//                soundcheck.setChecked(false);
+//                Log.d("TAG", "Num 1");
+//                break;
+//            case 1:
+//                soundcheck.setChecked(true);
+//                Log.d("TAG", "Num 2");
+//                break;
+//        }
 
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -268,22 +292,15 @@ public class Settings extends Activity {
             }
         });
 
-        notifvalue = sharedpreferences.getInt(notify, 1);
-        switch (notifvalue){
-            case 0:
-                soundcheck.setChecked(false);
-                break;
-            case 1:
-                soundcheck.setChecked(true);
-        }
-
-        soundcheck.setOnClickListener(new View.OnClickListener() {
+        soundcheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (soundcheck.isChecked()) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
                     notifvalue = 1;
+                    Log.d("TAG", "Listener Num 1");
                 } else {
                     notifvalue = 0;
+                    Log.d("TAG", "Listener Num 2");
                 }
             }
         });
@@ -301,7 +318,7 @@ public class Settings extends Activity {
                 }
                 editor.putInt(style, selectedstyle);
                 editor.putInt(notify, notifvalue);
-                editor.commit();
+                editor.apply();
 
             }
         });
