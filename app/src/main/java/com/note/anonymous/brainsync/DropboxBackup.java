@@ -50,7 +50,6 @@ public class DropboxBackup extends Activity {
         setContentView(R.layout.activity_dropbox_backup);
         db = new DatabaseAdapter(this);
         fileDirectory = getString(R.string.directoryLocation);
-        File file = new File(fileDirectory);
 
         if(db.getNumberOfRows()<0){
             runOnUiThread(new Toasting("Your digital brain is empty! :O , please add some entries to stay in sync."));

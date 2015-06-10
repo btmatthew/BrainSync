@@ -130,26 +130,6 @@ public class EditActivity extends Activity {
 
     public void cancelUpdateMethod (View view) {
 
-//        String title = titlefield.getText().toString().trim();
-//        String information = datafield.getText().toString().trim();
-//
-//        if(title.equals("") && information.equals("")) {
-//
-//            EditActivity.super.onBackPressed();
-//
-//        } else {
-//
-//            new AlertDialog.Builder(this)
-//                    .setTitle("Cancel Edit?")
-//                    .setMessage("New information will not be saved. Are you sure you want to cancel?")
-//                    .setNegativeButton("No, Go Back!", null)
-//                    .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface arg0, int arg1) {
-//                            EditActivity.super.onBackPressed();
-//                        }
-//                    }).create().show();
-//        }
-
         if (MonitorChange == 1){
             new AlertDialog.Builder(this)
                     .setTitle("Cancel Edit?")
@@ -195,27 +175,6 @@ public class EditActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-
-//        String title = titlefield.getText().toString().trim();
-//        String information = datafield.getText().toString();
-//
-//        if(originalTitle.equals(title) || originalBody.equals(information)){
-//
-//            EditActivity.super.onBackPressed();
-//
-//        } else {
-//
-//            new AlertDialog.Builder(this)
-//                    .setTitle("Cancel Edit?")
-//                    .setMessage("New information will not be saved. Are you sure you want to cancel?")
-//                    .setNegativeButton("No, Go Back!", null)
-//                    .setPositiveButton("Yes, Please!", new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface arg0, int arg1) {
-//                            EditActivity.super.onBackPressed();
-//                        }
-//                    }).create().show();
-//
-//            }
 
         if (MonitorChange == 1){
             new AlertDialog.Builder(this)

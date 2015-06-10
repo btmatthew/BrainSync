@@ -1,8 +1,5 @@
 package com.note.anonymous.brainsync;
 
-import android.util.Log;
-
-import java.io.File;
 import java.util.Comparator;
 
 /**

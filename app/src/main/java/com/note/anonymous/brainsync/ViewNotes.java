@@ -22,17 +22,6 @@ public class ViewNotes extends AppWidgetProvider {
             updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
         }
     }
-    /*@Override
-    public void onReceive(Context context,Intent intent){
-        super.onReceive(context, intent);
-        AppWidgetManager manager = AppWidgetManager.getInstance(context.getApplicationContext());
-        ComponentName widget = new ComponentName(context.getApplicationContext(),ViewNotes.class);
-        int[] appWidget =manager.getAppWidgetIds(widget);
-        if(appWidget!=null&&appWidget.length>0){
-            Log.i("update", "update");
-            onUpdate(context,manager,appWidget);
-        }
-    }*/
     @Override
     public void onEnabled(Context context) {
         super.onEnabled(context);

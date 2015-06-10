@@ -2,7 +2,6 @@ package com.note.anonymous.brainsync;
 
 
 import java.io.File;
-import java.util.GregorianCalendar;
 
 /**
  * Created by Matthew Bulat on 14/04/2015.
@@ -15,10 +14,8 @@ public class Filenames {
     private Long editedDate;
     private String fileType;
 
-    protected Filenames(/*String filename, boolean selected*/){
+    protected Filenames(){
         super();
-        //this.filename=filename;
-        //this.selected=selected;
     }
     protected String getFilename(){
         return filename;

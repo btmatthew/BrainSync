@@ -210,15 +210,12 @@ public class ListEntriesActivity extends Activity {
                 callEditActivity();
                 break;
             case SUBMENU1:
-                Log.d("test",""+SUBMENU1);
                 setSorting(0);
                 break;
             case SUBMENU2:
-                Log.d("test",""+SUBMENU2);
                 setSorting(1);
                 break;
             case SUBMENU3:
-                Log.d("test",""+SUBMENU3);
                 setSorting(2);
                 break;
 
@@ -306,7 +303,6 @@ public class ListEntriesActivity extends Activity {
             item = menu.findItem(R.id.deleteMenuButton);
             item1 = menu.findItem(R.id.search);
             //--Playing around :P
-            // MenuItem item2 = menu.findItem(R.id.editMenuButton);
             android.app.ActionBar actionBar = getActionBar();
 
             TextView tx = (TextView) v;

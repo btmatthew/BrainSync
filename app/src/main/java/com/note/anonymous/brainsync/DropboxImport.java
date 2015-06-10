@@ -228,7 +228,7 @@ public class DropboxImport extends Activity {
                         }
                         File file = new File(fileDirectory+"/"+fileName);
                         FileOutputStream outputStream = new FileOutputStream(file);
-                        DropboxAPI.DropboxFileInfo info = mDBApi.getFile("/"+fileList.get(i).getFilename(), null, outputStream, null);
+                        mDBApi.getFile("/"+fileList.get(i).getFilename(), null, outputStream, null);
                     }
                     runOnUiThread(new Toasting("All done! Your Brain is downloaded from Dropbox!"));
                     finish();
@@ -249,7 +249,6 @@ public class DropboxImport extends Activity {
                 filenames.setFilename(title);
                 filenames.setCreationDate(time);
                 filenames.setFileTypeText();
-                //DatabaseAdapter db = new DatabaseAdapter(context);
                 db.addEntry(filenames);
             }
         }).start();
