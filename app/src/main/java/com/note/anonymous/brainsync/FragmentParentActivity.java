@@ -5,12 +5,9 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 
 
 public class FragmentParentActivity extends ActionBarActivity {
@@ -29,7 +26,6 @@ public class FragmentParentActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_parent);
-
 
 
 
@@ -82,6 +78,9 @@ public class FragmentParentActivity extends ActionBarActivity {
         int[] ids=AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ViewNotes.class));
         intentWidget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intentWidget);
+    }
+    public void onSearch(){
+        onSearchRequested();
     }
 
 }

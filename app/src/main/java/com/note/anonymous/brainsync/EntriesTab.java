@@ -36,16 +36,11 @@ import java.util.Collections;
 public class EntriesTab extends Fragment {
 
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
-    public final static String EXTRA_MESSAGE1 = "com.example.anonymous.brainsync.MESSAGE1";
-    final static private String SORT_NAME="sortMethod";
-    final static private String SORT_METHOD = null;
     private static final int SUBMENU1 = 3;
     private static final int SUBMENU2 = 4;
     private static final int SUBMENU3 = 5;
     private static final int GROUP1 = 6;
     private int sortingMethod;
-    private String title;
-    private String body="";
     private String fileDirectory;
     //These are all created here so I could use them in multiple methods in this activity
     int itemSelectedCount = 0;
@@ -81,92 +76,6 @@ public class EntriesTab extends Fragment {
         setHasOptionsMenu(true);
         return v;
     }
-    @Override
-    public void onCreateOptionsMenu(
-            Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.menu_list_entries, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.search);
-
-
-        SubMenu subMenu = menu.addSubMenu(0,Menu.NONE,1,"Sort by").setIcon(R.drawable.ic_action_sort_by_size);
-
-        subMenu.add(GROUP1,SUBMENU1,1,"A-Z");
-        subMenu.add(GROUP1,SUBMENU2,2,"Edit date");
-        subMenu.add(GROUP1, SUBMENU3, 3, "Creation date");
-
-
-        searchItem.setVisible(true);
-        searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        this.menu=menu;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-
-        switch(item.getItemId()){
-            case R.id.search:
-                //TODO implement searching
-                //onSearchRequested();
-                break;
-            case R.id.action_settings:
-                Intent intent = new Intent(getActivity(), Settings.class);
-                startActivity(intent);
-                break;
-            case R.id.about:
-                Intent intent1 = new Intent(getActivity(), About.class);
-                startActivity(intent1);
-                break;
-            case R.id.deleteMenuButton:
-                deleteMethod();
-                break;
-            case R.id.editMenuButton:
-                //TODO implement editing
-                //callEditActivity();
-                break;
-            case SUBMENU1:
-                setSorting(0);
-                break;
-            case SUBMENU2:
-                setSorting(1);
-                break;
-            case SUBMENU3:
-                setSorting(2);
-                break;
-
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-    public void deleteMethod() {
-        //Carries out the delete action based on the size of the arraylist held by the variable itemSelectedCount
-        for (int i = 0; i < itemSelectedCount; i++) {
-            String fileName = selectedMenuItems.get(i);
-            //Removes the file from Database
-            db.deleteEntry(fileName);
-            //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
-            File dir = new File(fileDirectory + fileName);
-            dir.delete();
-        }
-
-
-        Toast.makeText(getActivity(), itemSelectedCount + " Item(s) Deleted", Toast.LENGTH_LONG).show();
-        //Cleaning up action bar
-
-        //Sends broadcast to widget to update the viewList
-        ((FragmentParentActivity)getActivity()).sendBroadcastToWidget();
-        onRestart();
-    }
-    //Method used for purpose of setting sorting preference
-    private void setSorting(int sort){
-        ((FragmentParentActivity)getActivity()).setSorting(sort);
-        onRestart();
-    }
     protected void onRestart(){
         dataAdapter.notifyDataSetChanged();
         itemSelectedCount=0;
@@ -180,7 +89,6 @@ public class EntriesTab extends Fragment {
     }
     //method used for purpose of creating view list
     private void createList(){
-        //TODO implement listfragment
 
         sortingMethod = ((FragmentParentActivity)getActivity()).getSorting();;
         db = new DatabaseAdapter(getActivity());
@@ -329,5 +237,87 @@ public class EntriesTab extends Fragment {
     private void setTitle(String title){
         ((FragmentParentActivity)getActivity()).setActionBarTitle(title);
     }
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+
+        inflater.inflate(R.menu.menu_list_entries, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+
+
+        SubMenu subMenu = menu.addSubMenu(0,Menu.NONE,1,"Sort by").setIcon(R.drawable.ic_action_sort_by_size);
+
+        subMenu.add(GROUP1,SUBMENU1,1,"A-Z");
+        subMenu.add(GROUP1,SUBMENU2,2,"Edit date");
+        subMenu.add(GROUP1, SUBMENU3, 3, "Creation date");
+
+
+        searchItem.setVisible(true);
+        searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        this.menu=menu;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+
+        switch(item.getItemId()){
+            case R.id.search:
+                ((FragmentParentActivity)getActivity()).onSearch();
+                break;
+            case R.id.action_settings:
+                Intent intent = new Intent(getActivity(), Settings.class);
+                startActivity(intent);
+                break;
+            case R.id.about:
+                Intent intent1 = new Intent(getActivity(), About.class);
+                startActivity(intent1);
+                break;
+            case R.id.deleteMenuButton:
+                deleteMethod();
+                break;
+            case SUBMENU1:
+                setSorting(0);
+                break;
+            case SUBMENU2:
+                setSorting(1);
+                break;
+            case SUBMENU3:
+                setSorting(2);
+                break;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    public void deleteMethod() {
+        //Carries out the delete action based on the size of the arraylist held by the variable itemSelectedCount
+        for (int i = 0; i < itemSelectedCount; i++) {
+            String fileName = selectedMenuItems.get(i);
+            //Removes the file from Database
+            db.deleteEntry(fileName);
+            //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
+            File dir = new File(fileDirectory + fileName);
+            dir.delete();
+        }
+
+
+        Toast.makeText(getActivity(), itemSelectedCount + " Item(s) Deleted", Toast.LENGTH_LONG).show();
+        //Cleaning up action bar
+
+        //Sends broadcast to widget to update the viewList
+        ((FragmentParentActivity)getActivity()).sendBroadcastToWidget();
+        onRestart();
+    }
+    //Method used for purpose of setting sorting preference
+    private void setSorting(int sort){
+        ((FragmentParentActivity)getActivity()).setSorting(sort);
+        onRestart();
+    }
+
 
 }
