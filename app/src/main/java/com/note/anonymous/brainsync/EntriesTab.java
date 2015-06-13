@@ -1,18 +1,13 @@
 package com.note.anonymous.brainsync;
 
 
-import android.app.ActionBar;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -107,6 +102,7 @@ public class EntriesTab extends Fragment {
             fileNamesList.add(file);
 
         }
+        cursor.close();
         switch(sortingMethod){
             case 0:
                 Collections.sort(fileNamesList, new Sorting.CustomComparatorByTitle());
@@ -300,6 +296,7 @@ public class EntriesTab extends Fragment {
             String fileName = selectedMenuItems.get(i);
             //Removes the file from Database
             db.deleteEntry(fileName);
+            db.close();
             //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
             File dir = new File(fileDirectory + fileName);
             dir.delete();

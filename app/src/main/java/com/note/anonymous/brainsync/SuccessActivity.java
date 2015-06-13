@@ -18,11 +18,12 @@ import com.google.android.gms.ads.AdView;
 public class SuccessActivity extends Activity {
 
     CountDownTimer countDownTimer;
+    AdView mAdView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_success);
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         Intent intentWidget= new Intent(this, ViewNotes.class);
@@ -46,37 +47,64 @@ public class SuccessActivity extends Activity {
 
             @Override
             public void onFinish() {
-                finish();
+
                 Intent intent = new Intent(SuccessActivity.this, MainActivity.class);
                 startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                finish();
             }
         }.start();
 
     }
+    /** Called when leaving the activity */
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
 
+    /** Called when returning to the activity */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    /** Called before the activity is destroyed */
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
+    }
 
     public void returnHomeMethod (View view) {
         countDownTimer.cancel();
-        finish();
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-
+        finish();
 
     }
 
     public void addNewEntryMethod (View view) {
         countDownTimer.cancel();
-        finish();
+
         Intent intent = new Intent(this, AddEntryActivity.class);
         startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-
+        finish();
     }
 
     public void listAllEntries(View view) {
         countDownTimer.cancel();
-        finish();
+
         Intent intent = new Intent(this, ListEntriesActivity.class);
         startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        finish();
     }
 
     //Adds the search menu so user can search still carry out search without going back
@@ -108,10 +136,10 @@ public class SuccessActivity extends Activity {
     public void onBackPressed() {
 
         countDownTimer.cancel();
-        finish();
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-
+        finish();
 
     }
 }

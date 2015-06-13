@@ -48,6 +48,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         contentValues.put(COLUMN3,0L);
         contentValues.put(COLUMN5, filenames.getFileType());
         db.insert(TABLE_NAME, null, contentValues);
+        db.close();
     }
     //Access the cursor with cursor.moveToFirst();
     public Cursor getData(String noteTitle){
@@ -59,12 +60,14 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from "+TABLE_NAME,null);
         return cursor;
+
     }
     public void updateEditDate(Filenames filenames){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN3,filenames.getEditedDate());
         db.update(TABLE_NAME,contentValues,COLUMN1+"=?",new String[]{filenames.getFilename()});
+        db.close();
     }
     public int getNumberOfRows(){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -82,6 +85,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
     public void deleteEntry(String title){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME,"noteTitle = ? ",new String[]{title});
+        db.close();
     }
     public Cursor searchByPartOfTitle(String noteTitle){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -94,6 +98,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper{
         contentValues.put(COLUMN1,newTitle.getFilename());
         contentValues.put(COLUMN3,newTitle.getEditedDate());
         db.update(TABLE_NAME, contentValues, COLUMN1 + "=?", new String[]{oldTitle});
+        db.close();
     }
 
 }

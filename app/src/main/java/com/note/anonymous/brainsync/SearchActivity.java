@@ -106,6 +106,7 @@ public class SearchActivity extends ListActivity{
                     file.setSelected(false);
                     fileNamesList.add(file);
                 }
+                cursor.close();
                 switch(sortingMethod){
                     case 0:
                         Collections.sort(fileNamesList, new Sorting.CustomComparatorByTitle());

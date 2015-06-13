@@ -10,11 +10,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -92,7 +90,6 @@ public class AddEntryActivity extends Activity {
         } else {
 
                 File dir = new File("data/data/com.example.anonymous.brainsync/files");
-               // File[] filelist = dir.listFiles();
 
                 if (new DatabaseAdapter(this).getNumberOfRows() == 0) {
 
@@ -108,10 +105,10 @@ public class AddEntryActivity extends Activity {
 
 
                         //Start the success activity after file creation and writing has been done
-                        finish();
+
                         Intent intent = new Intent(this, SuccessActivity.class);
                         startActivity(intent);
-
+                        finish();
                     } catch (IOException e) {
 
                         e.printStackTrace();
@@ -148,10 +145,10 @@ public class AddEntryActivity extends Activity {
 
 
                             //Start the success activity after file creation and writing has been done
-                            finish();
+
                             Intent intent = new Intent(this, SuccessActivity.class);
                             startActivity(intent);
-
+                            finish();
                         } catch (IOException e) {
 
                             e.printStackTrace();
@@ -209,7 +206,6 @@ public class AddEntryActivity extends Activity {
                 editor.putInt(notification, notifid);
                 editor.putInt(pendingnotification, pendingcode);
                 editor.commit();
-                Log.d("TAG", "Alarm Set");
             }
 
         }
@@ -226,10 +222,10 @@ public class AddEntryActivity extends Activity {
 
 
             //Start the success activity after file creation and writing has been done
-            finish();
+
             Intent intent = new Intent(AddEntryActivity.this, SuccessActivity.class);
             startActivity(intent);
-
+            finish();
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -313,6 +309,7 @@ public class AddEntryActivity extends Activity {
                 filenames.setFileTypeText();
                 DatabaseAdapter db = new DatabaseAdapter(context);
                 db.addEntry(filenames);
+                db.close();
             }
         }).start();
     }

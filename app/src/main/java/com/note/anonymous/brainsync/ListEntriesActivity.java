@@ -114,6 +114,7 @@ public class ListEntriesActivity extends Activity {
             fileNamesList.add(file);
 
         }
+        cursor.close();
         switch(sortingMethod){
             case 0:
                 Collections.sort(fileNamesList, new CustomComparatorByTitle());
