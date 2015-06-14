@@ -28,9 +28,7 @@ import java.util.Collections;
  */
 public class RemindersTab extends Fragment {
 
-    ListView reminderView;
     private DatabaseAdapter db;
-    private String[] theNamesOfFiles;
     int itemSelectedCount = 0;
     ArrayList<String> selectedMenuItems = new ArrayList<>();
     private Menu menu;
@@ -244,6 +242,7 @@ public class RemindersTab extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
+    //TODO please ensure that the buttons and menu are working
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
