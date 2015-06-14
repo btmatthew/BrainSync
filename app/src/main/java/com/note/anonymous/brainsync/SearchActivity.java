@@ -8,10 +8,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -87,6 +85,7 @@ public class SearchActivity extends ListActivity{
     public void carryOutSearch(String requestedEntry) {
         SharedPreferences getSorting = getSharedPreferences(SORT_NAME_SEARCH, 0);
         sortingMethod = getSorting.getInt(SORT_METHOD_SEARCH, 0);
+
         db = new DatabaseAdapter(this);
 
         if(db.getNumberOfRows()==0){

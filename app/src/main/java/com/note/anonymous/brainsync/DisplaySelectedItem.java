@@ -123,7 +123,6 @@ public class DisplaySelectedItem extends Activity {
         SharedPreferences sharedPreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
 
 
-
             int sel = sharedPreferences.getInt(style, 1);
 
             switch (sel) {

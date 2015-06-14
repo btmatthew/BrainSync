@@ -205,7 +205,7 @@ public class EditActivity extends Activity {
                 filenames.setCreationDate(time);
                 filenames.setFileTypeText();
                 DatabaseAdapter db = new DatabaseAdapter(context);
-                db.addEntry(filenames);
+                db.addEntry(filenames, context);
             }
         }).start();
     }

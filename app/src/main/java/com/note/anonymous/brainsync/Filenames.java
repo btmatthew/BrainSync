@@ -13,6 +13,9 @@ public class Filenames {
     private Long creationDate;
     private Long editedDate;
     private String fileType;
+    private int reminderIndicator;
+    private String setCreation;
+    private String setScheduled;
 
     protected Filenames(){
         super();
@@ -59,6 +62,12 @@ public class Filenames {
     protected void setFileTypeVoice(){
         this.fileType="VOICE";
     }
+    protected void setReminderIndicatorValue(int alarm){ this.reminderIndicator=alarm; }
+    protected int getReminderIndicatorValue(){ return reminderIndicator; }
+    protected void setReminderCreationTime(String setCreation) { this.setCreation = setCreation; };
+    protected String getReminderCreationTime(){ return setCreation; }
+    protected void setReminderScheduledTime(String setScheduled) { this.setScheduled = setScheduled; };
+    protected String getReminderScheduledTime(){ return setScheduled; }
 
 
 }

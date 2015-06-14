@@ -201,7 +201,7 @@ public class DropboxImport extends Activity {
         });
     }
 
-    public void importFiles(View v){
+    public void importFiles(View v, Context context){
         ArrayList<Filenames> fileListToPass= new ArrayList<>();
         ArrayList<Filenames> fileList = dataAdapter.fileList;
         for(int i=0; i<fileList.size();i++){
@@ -210,10 +210,10 @@ public class DropboxImport extends Activity {
                 fileListToPass.add(file);
             }
         }
-        download(fileListToPass);
+        download(fileListToPass, context);
     }
 
-    protected void download(final ArrayList<Filenames> fileList){
+    protected void download(final ArrayList<Filenames> fileList, final Context context){
         findViewById(R.id.progressBarDropboxImport).setVisibility(View.VISIBLE);
         new Thread(new Runnable(){
             public void run() {
@@ -224,7 +224,7 @@ public class DropboxImport extends Activity {
                         if(db.searchByTitle(fileName)){
                             updateEditDate(fileName);
                         }else{
-                            newEntryThread(fileName);
+                            newEntryThread(fileName, context);
                         }
                         File file = new File(fileDirectory+"/"+fileName);
                         FileOutputStream outputStream = new FileOutputStream(file);
@@ -238,7 +238,7 @@ public class DropboxImport extends Activity {
             }
         }).start();
     }
-    private void newEntryThread(final String title){
+    private void newEntryThread(final String title, final Context context){
         new Thread(new Runnable() {
             public void run() {
                 Time now = new Time();
@@ -249,7 +249,7 @@ public class DropboxImport extends Activity {
                 filenames.setFilename(title);
                 filenames.setCreationDate(time);
                 filenames.setFileTypeText();
-                db.addEntry(filenames);
+                db.addEntry(filenames,context);
             }
         }).start();
     }

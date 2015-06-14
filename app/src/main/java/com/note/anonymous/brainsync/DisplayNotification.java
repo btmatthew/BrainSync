@@ -32,7 +32,7 @@ public class DisplayNotification extends IntentService {
         Intent intent1 = new Intent(this, DisplaySelectedItem.class);
         intent1.putExtra("EXTRA_MESSAGE", title);
 
-        PendingIntent detailsIntent = PendingIntent.getActivity(this, requestCode, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent notificationIntent = PendingIntent.getActivity(this, requestCode, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         Uri nSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -53,7 +53,7 @@ public class DisplayNotification extends IntentService {
         }
 
 
-        mBuilder.setContentIntent(detailsIntent);
+        mBuilder.setContentIntent(notificationIntent);
 
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
