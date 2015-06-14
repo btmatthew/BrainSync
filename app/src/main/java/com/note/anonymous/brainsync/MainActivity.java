@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -88,10 +89,9 @@ public class MainActivity extends Activity {
     }
     public void openRandomNote(View view){
         if (checkFiles()) {
-            Cursor cursor = new DatabaseAdapter(this).getAllData();
+            ArrayList<Filenames> fileNamesList = new DatabaseAdapter(this).getAllData();
             Random r = new Random();
-            cursor.moveToPosition(r.nextInt(new DatabaseAdapter(this).getNumberOfRows()));
-            String selectedFile = cursor.getString(0);
+            String selectedFile = fileNamesList.get(r.nextInt(new DatabaseAdapter(this).getNumberOfRows())).getFilename();
             Intent intent = new Intent(this, DisplaySelectedItem.class);
             intent.putExtra("EXTRA_MESSAGE", selectedFile);
             startActivity(intent);

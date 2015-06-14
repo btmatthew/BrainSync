@@ -7,98 +7,121 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-public class DatabaseAdapter extends SQLiteOpenHelper{
-    public static final String DATABASE_NAME = "notes.db";
+import java.io.File;
+import java.util.ArrayList;
+
+public class DatabaseAdapter{
     public static final String TABLE_NAME = "notesList";
     public static final String COLUMN1="noteTitle";
     public static final String COLUMN2="creationDate";
     public static final String COLUMN3="editDate";
     public static final String COLUMN4="fileName";
     public static final String COLUMN5="fileType";
-    public static final String TEXT="TEXT";
-    public static final String INTEGER="INTEGER";
-    public static final String COM=",";
+    private DBHelper dbHelper;
 
-    public DatabaseAdapter(Context context) {
-        super(context, DATABASE_NAME, null, 1);
-    }
+    private SQLiteDatabase db;
+    public DatabaseAdapter(Context context){
+        dbHelper = DBHelper.getInstance(context);
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(
-                "CREATE TABLE " + TABLE_NAME + " (" +
-                        COLUMN1 + " " + TEXT + " PRIMARY KEY " + COM +
-                        COLUMN2 + " " + INTEGER + COM +
-                        COLUMN3 + " " + INTEGER + COM +
-                        COLUMN5 + " " + TEXT + ")"
-        );
     }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS"+TABLE_NAME);
-        onCreate(db);
-    }
-    public void addEntry(Filenames filenames){
-        SQLiteDatabase db = this.getWritableDatabase();
+        public void addEntry(Filenames filenames){
+        db = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN1,filenames.getFilename());
         contentValues.put(COLUMN2,filenames.getCreationDate());
         contentValues.put(COLUMN3,0L);
         contentValues.put(COLUMN5, filenames.getFileType());
         db.insert(TABLE_NAME, null, contentValues);
-        db.close();
     }
-    //Access the cursor with cursor.moveToFirst();
-    public Cursor getData(String noteTitle){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from "+TABLE_NAME+" where noteTitle='"+noteTitle+"'",null);
-        return cursor;
+    public ArrayList<Filenames> getAllData(){
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME, null);
+        ArrayList<Filenames> fileNamesList = new ArrayList<>();
+        for (int i = 0; i < getNumberOfRows(); i++) {
+            Filenames file = new Filenames();
+            cursor.moveToNext();
+            String fileName = cursor.getString(0);
+            file.setFilename(fileName);
+            file.setCreationDate(Long.parseLong(cursor.getString(1)));
+            file.setEditedDate(Long.parseLong(cursor.getString(2)));
+            file.setSelected(false);
+            file.setFile(new File(fileName));
+            fileNamesList.add(file);
+        }
+        cursor.close();
+            return fileNamesList;
     }
-    public Cursor getAllData(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from "+TABLE_NAME,null);
-        return cursor;
+    public ArrayList<Filenames> getAllDataWithFile(){
+        db = dbHelper.getReadableDatabase();
+        String fileDirectory = "data/data/com.example.anonymous.brainsync/files/";
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME, null);
+        ArrayList<Filenames> fileNamesList = new ArrayList<>();
 
+        for (int i = 0; i < getNumberOfRows(); i++) {
+            Filenames file = new Filenames();
+            cursor.moveToNext();
+            String fileName =cursor.getString(0);
+            file.setFilename(fileName);
+            file.setSelected(false);
+            file.setFile(new File(fileDirectory+fileName));
+            fileNamesList.add(file);
+        }
+        cursor.close();
+        return fileNamesList;
     }
     public void updateEditDate(Filenames filenames){
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN3,filenames.getEditedDate());
-        db.update(TABLE_NAME,contentValues,COLUMN1+"=?",new String[]{filenames.getFilename()});
-        db.close();
+        contentValues.put(COLUMN3, filenames.getEditedDate());
+        db.update(TABLE_NAME, contentValues, COLUMN1 + "=?", new String[]{filenames.getFilename()});
     }
     public int getNumberOfRows(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        return (int) DatabaseUtils.queryNumEntries(db,TABLE_NAME);
+        db = dbHelper.getReadableDatabase();
+        int size = (int) DatabaseUtils.queryNumEntries(db,TABLE_NAME);
+        return size;
     }
     public boolean searchByTitle(String noteTitle){
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from "+TABLE_NAME+" where noteTitle='"+noteTitle+"'",null);
         if(cursor.getCount()>0){
+            cursor.close();
             return true;
         }else{
+            cursor.close();
             return false;
         }
     }
     public void deleteEntry(String title){
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NAME,"noteTitle = ? ",new String[]{title});
-        db.close();
+        db = dbHelper.getWritableDatabase();
+        db.delete(TABLE_NAME, "noteTitle = ? ", new String[]{title});
     }
-    public Cursor searchByPartOfTitle(String noteTitle){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from "+TABLE_NAME+" where noteTitle like "+"'%"+noteTitle+"%'",null);
-        return cursor;
+    public ArrayList<Filenames> searchByPartOfTitle(String noteTitle){
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME + " where noteTitle like " + "'%" + noteTitle + "%'", null);
+        ArrayList<Filenames> fileNamesList = new ArrayList<>();
+        int cursorSize=cursor.getCount();
+        if(cursorSize!=0) {
+            for (int i = 0; i < cursorSize; i++) {
+                cursor.moveToNext();
+                Filenames file = new Filenames();
+                file.setFilename(cursor.getString(0));
+                file.setCreationDate(Long.parseLong(cursor.getString(1)));
+                file.setEditedDate(Long.parseLong(cursor.getString(2)));
+                file.setSelected(false);
+                fileNamesList.add(file);
+            }
+        }
+        cursor.close();
+        return fileNamesList;
     }
     public void updateTitle(Filenames newTitle, String oldTitle){
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN1,newTitle.getFilename());
-        contentValues.put(COLUMN3,newTitle.getEditedDate());
+        contentValues.put(COLUMN3, newTitle.getEditedDate());
         db.update(TABLE_NAME, contentValues, COLUMN1 + "=?", new String[]{oldTitle});
-        db.close();
     }
 
 }

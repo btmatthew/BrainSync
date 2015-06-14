@@ -93,18 +93,7 @@ public class DropboxBackup extends Activity {
 
     }
     protected void display(){
-        Cursor cursor = db.getAllData();
-        fileNamesList = new ArrayList<>();
-
-        for (int i = 0; i < cursor.getCount(); i++) {
-            Filenames file = new Filenames();
-            cursor.moveToNext();
-            String fileName =cursor.getString(0);
-            file.setFilename(fileName);
-            file.setSelected(false);
-            file.setFile(new File(fileDirectory+fileName));
-            fileNamesList.add(file);
-        }
+        fileNamesList = db.getAllDataWithFile();
         Collections.sort(fileNamesList, new CustomComparator());
         dataAdapter= new CustomAdapter(this,R.layout.row,fileNamesList);
         ListView listView = (ListView) findViewById(R.id.dropboxSyncList);

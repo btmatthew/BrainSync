@@ -87,22 +87,7 @@ public class EntriesTab extends Fragment {
 
         sortingMethod = ((FragmentParentActivity)getActivity()).getSorting();;
         db = new DatabaseAdapter(getActivity());
-        Cursor cursor = db.getAllData();
-        fileNamesList = new ArrayList<>();
-        for (int i = 0; i < db.getNumberOfRows(); i++) {
-
-            cursor.moveToNext();
-            String fileName = cursor.getString(0);
-            Filenames file = new Filenames();
-            file.setFilename(fileName);
-            file.setCreationDate(Long.parseLong(cursor.getString(1)));
-            file.setEditedDate(Long.parseLong(cursor.getString(2)));
-            file.setSelected(false);
-            file.setFile(new File(fileName));
-            fileNamesList.add(file);
-
-        }
-        cursor.close();
+        fileNamesList = db.getAllData();
         switch(sortingMethod){
             case 0:
                 Collections.sort(fileNamesList, new Sorting.CustomComparatorByTitle());
@@ -296,7 +281,6 @@ public class EntriesTab extends Fragment {
             String fileName = selectedMenuItems.get(i);
             //Removes the file from Database
             db.deleteEntry(fileName);
-            db.close();
             //Gets the name of the file at position i in the array list, concatenates it with the directory assigned to the File object
             File dir = new File(fileDirectory + fileName);
             dir.delete();

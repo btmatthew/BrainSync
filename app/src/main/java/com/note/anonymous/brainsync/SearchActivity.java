@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -93,20 +94,8 @@ public class SearchActivity extends ListActivity{
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }else{
-            Cursor cursor = db.searchByPartOfTitle(requestedEntry);
-            int cursorSize=cursor.getCount();
-            if(cursorSize!=0){
-                fileNamesList = new ArrayList<>();
-                for(int i = 0;i<cursorSize;i++){
-                    cursor.moveToNext();
-                    Filenames file = new Filenames();
-                    file.setFilename(cursor.getString(0));
-                    file.setCreationDate(Long.parseLong(cursor.getString(1)));
-                    file.setEditedDate(Long.parseLong(cursor.getString(2)));
-                    file.setSelected(false);
-                    fileNamesList.add(file);
-                }
-                cursor.close();
+            fileNamesList = db.searchByPartOfTitle(requestedEntry);
+            if(!fileNamesList.isEmpty()){
                 switch(sortingMethod){
                     case 0:
                         Collections.sort(fileNamesList, new Sorting.CustomComparatorByTitle());

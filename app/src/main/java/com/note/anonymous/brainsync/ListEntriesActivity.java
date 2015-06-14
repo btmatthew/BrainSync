@@ -6,10 +6,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -99,22 +97,7 @@ public class ListEntriesActivity extends Activity {
         SharedPreferences getSorting = getSharedPreferences(SORT_NAME, 0);
         sortingMethod = getSorting.getInt(SORT_METHOD, 0);
         db = new DatabaseAdapter(this);
-        Cursor cursor = db.getAllData();
-        fileNamesList = new ArrayList<>();
-        for (int i = 0; i < db.getNumberOfRows(); i++) {
-
-            cursor.moveToNext();
-            String fileName = cursor.getString(0);
-            Filenames file = new Filenames();
-            file.setFilename(fileName);
-            file.setCreationDate(Long.parseLong(cursor.getString(1)));
-            file.setEditedDate(Long.parseLong(cursor.getString(2)));
-            file.setSelected(false);
-            file.setFile(new File(fileName));
-            fileNamesList.add(file);
-
-        }
-        cursor.close();
+        fileNamesList = db.getAllData();
         switch(sortingMethod){
             case 0:
                 Collections.sort(fileNamesList, new CustomComparatorByTitle());

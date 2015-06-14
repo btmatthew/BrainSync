@@ -309,7 +309,6 @@ public class AddEntryActivity extends Activity {
                 filenames.setFileTypeText();
                 DatabaseAdapter db = new DatabaseAdapter(context);
                 db.addEntry(filenames);
-                db.close();
             }
         }).start();
     }
