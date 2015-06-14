@@ -52,6 +52,7 @@ public class EntriesTab extends Fragment {
         View v = inflater.inflate(R.layout.entries_tab, container, false);
         listView = (ListView) v.findViewById(R.id.listEntriesViewOnTab);
         fileDirectory = getString(R.string.directoryLocation);
+
         FloatingActionButton fabButton = new FloatingActionButton.Builder(getActivity())
                 .withDrawable(getResources().getDrawable(R.drawable.ic_action_add))
                 .withButtonColor(Color.GRAY)

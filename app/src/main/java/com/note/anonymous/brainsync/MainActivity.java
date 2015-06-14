@@ -77,7 +77,7 @@ public class MainActivity extends Activity {
         }
     }
     public boolean checkFiles(){
-        if(new DatabaseAdapter(this).getNumberOfRows()>0){
+        if(new DatabaseAdapter(this).getNumberOfRowsNotesTable()>0){
             return true;
         }else{
             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
         if (checkFiles()) {
             ArrayList<Filenames> fileNamesList = new DatabaseAdapter(this).getAllData();
             Random r = new Random();
-            String selectedFile = fileNamesList.get(r.nextInt(new DatabaseAdapter(this).getNumberOfRows())).getFilename();
+            String selectedFile = fileNamesList.get(r.nextInt(new DatabaseAdapter(this).getNumberOfRowsNotesTable())).getFilename();
             Intent intent = new Intent(this, DisplaySelectedItem.class);
             intent.putExtra("EXTRA_MESSAGE", selectedFile);
             startActivity(intent);

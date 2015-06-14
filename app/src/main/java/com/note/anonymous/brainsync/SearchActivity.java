@@ -88,7 +88,7 @@ public class SearchActivity extends ListActivity{
 
         db = new DatabaseAdapter(this);
 
-        if(db.getNumberOfRows()==0){
+        if(db.getNumberOfRowsNotesTable()==0){
             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));

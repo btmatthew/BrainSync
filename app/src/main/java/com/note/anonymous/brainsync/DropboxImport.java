@@ -201,7 +201,7 @@ public class DropboxImport extends Activity {
         });
     }
 
-    public void importFiles(View v, Context context){
+    public void importFiles(View v){
         ArrayList<Filenames> fileListToPass= new ArrayList<>();
         ArrayList<Filenames> fileList = dataAdapter.fileList;
         for(int i=0; i<fileList.size();i++){
@@ -210,7 +210,7 @@ public class DropboxImport extends Activity {
                 fileListToPass.add(file);
             }
         }
-        download(fileListToPass, context);
+        download(fileListToPass, this);
     }
 
     protected void download(final ArrayList<Filenames> fileList, final Context context){

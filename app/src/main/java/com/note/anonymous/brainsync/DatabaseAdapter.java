@@ -23,9 +23,6 @@ public class DatabaseAdapter {
     public static final String REMINDER_TABLE = "reminderList";
     public static final String ENTRY_TITLE = "entryTitle";
     public static final String REMINDER_ALL_CODES = "alarmCode";
-    public static final String LONG = "LONG";
-    public static final String REMINDER_PENDING_CODE = "pendingCode";
-    public static final String REMINDER_NOTIFICATION_ID = "notificationID";
     public static final String REMINDER_SET_TIME = "setDate";
     public static final String REMINDER_SCHEDULED_TIME = "scheduledDate";
 
@@ -35,7 +32,6 @@ public class DatabaseAdapter {
 
     public DatabaseAdapter(Context context) {
         dbHelper = DBHelper.getInstance(context);
-
     }
 
     public void addEntry(Filenames filenames, Context context) {
@@ -46,8 +42,7 @@ public class DatabaseAdapter {
         contentValues.put(COLUMN3, 0L);
         contentValues.put(COLUMN5, filenames.getFileType());
         db.insert(TABLE_NAME, null, contentValues);
-        int a = filenames.getReminderIndicatorValue();
-        if (a == 1) {
+        if (filenames.getReminderIndicatorValue() == 1) {
             Log.d("TAG", "Got here!");
             final String AppPrefs = "AppPrefs";
             String alarm = "alarmKey";
@@ -82,7 +77,7 @@ public class DatabaseAdapter {
         db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from " + TABLE_NAME, null);
         ArrayList<Filenames> fileNamesList = new ArrayList<>();
-        for (int i = 0; i < getNumberOfRows(); i++) {
+        for (int i = 0; i < getNumberOfRowsNotesTable(); i++) {
             Filenames file = new Filenames();
             cursor.moveToNext();
             String fileName = cursor.getString(0);
@@ -96,18 +91,23 @@ public class DatabaseAdapter {
         cursor.close();
         return fileNamesList;
     }
-
-    public String[] getAllReminders() {
+    //ToDO get the creation and edit dates from main table for purpose of sorting the values.
+    //TODO allow user to sort the values by the date or time on which the values are set to be reminded
+    public ArrayList<Filenames> getAllReminders() {
         db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from " + REMINDER_TABLE, null);
-        final String[] theNamesOfFiles = new String[getNumberOfRows1()];
-        for (int i = 0; i < getNumberOfRows1(); i++) {
-
+        //TODO this can be used to collect data from main table
+        //Cursor cursor1 = db.rawQuery("select * from " + TABLE_NAME, null);
+        ArrayList<Filenames> fileNamesList = new ArrayList<>();
+        for (int i = 0; i < getNumberOfRowsReminderTable(); i++) {
             cursor.moveToNext();
-            theNamesOfFiles[i] = cursor.getString(1);
+            String fileName = cursor.getString(1);
+            Filenames file = new Filenames();
+            file.setFilename(fileName);
+            fileNamesList.add(file);
         }
         cursor.close();
-        return theNamesOfFiles;
+        return fileNamesList;
     }
 
     public ArrayList<Filenames> getAllDataWithFile() {
@@ -116,7 +116,7 @@ public class DatabaseAdapter {
         Cursor cursor = db.rawQuery("select * from " + TABLE_NAME, null);
         ArrayList<Filenames> fileNamesList = new ArrayList<>();
 
-        for (int i = 0; i < getNumberOfRows(); i++) {
+        for (int i = 0; i < getNumberOfRowsNotesTable(); i++) {
             Filenames file = new Filenames();
             cursor.moveToNext();
             String fileName = cursor.getString(0);
@@ -136,13 +136,13 @@ public class DatabaseAdapter {
         db.update(TABLE_NAME, contentValues, COLUMN1 + "=?", new String[]{filenames.getFilename()});
     }
 
-    public int getNumberOfRows() {
+    public int getNumberOfRowsNotesTable() {
         db = dbHelper.getReadableDatabase();
         int size = (int) DatabaseUtils.queryNumEntries(db, TABLE_NAME);
         return size;
     }
 
-    public int getNumberOfRows1() {
+    public int getNumberOfRowsReminderTable() {
         db = dbHelper.getReadableDatabase();
         return (int) DatabaseUtils.queryNumEntries(db, REMINDER_TABLE);
     }

@@ -92,7 +92,7 @@ public class AddEntryActivity extends Activity {
 
                 File dir = new File("data/data/com.example.anonymous.brainsync/files");
 
-            if (new DatabaseAdapter(this).getNumberOfRows() == 0) {
+            if (new DatabaseAdapter(this).getNumberOfRowsReminderTable() == 0) {
 
                     try {
                         //Add entry to the database on a seperate thread
