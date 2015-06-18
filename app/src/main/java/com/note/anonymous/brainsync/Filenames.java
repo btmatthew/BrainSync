@@ -16,6 +16,7 @@ public class Filenames {
     private int reminderIndicator;
     private String setCreation;
     private String setScheduled;
+    private long alarmCode;
 
     protected Filenames(){
         super();
@@ -68,6 +69,8 @@ public class Filenames {
     protected String getReminderCreationTime(){ return setCreation; }
     protected void setReminderScheduledTime(String setScheduled) { this.setScheduled = setScheduled; };
     protected String getReminderScheduledTime(){ return setScheduled; }
+    protected void setAlarmCode(long alarmCode){ this.alarmCode = alarmCode; }
+    protected long getAlarmCode(){ return alarmCode; }
 
 
 }

@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 /**
@@ -55,7 +54,7 @@ public class RemindersTab extends Fragment {
     //method used for purpose of creating view list
     private void createList() {
 
-        sortingMethod = ((FragmentParentActivity) getActivity()).getSorting();
+        //sortingMethod = ((FragmentParentActivity) getActivity()).getSorting();
 
         db = new DatabaseAdapter(getActivity());
         fileNamesList = db.getAllReminders();
@@ -110,7 +109,9 @@ public class RemindersTab extends Fragment {
                 holder.name.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         if (itemSelectedCount == 0) {
-                            openItem(holder.name.getText().toString());
+                           /*ToDo Either pass the selected item as filenames object so we can get it's code in the openItem method or
+                           get selected item's code here so we can pass that to the openItem method*/
+
                         } else {
                             selectItem(v);
                         }
@@ -118,13 +119,13 @@ public class RemindersTab extends Fragment {
                     }
                 });
 
-                holder.name.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        selectItem(v);
-                        return true;
-                    }
-                });
+//                holder.name.setOnLongClickListener(new View.OnLongClickListener() {
+//                    @Override
+//                    public boolean onLongClick(View v) {
+//                        selectItem(v);
+//                        return true;
+//                    }
+//                });
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
@@ -198,9 +199,7 @@ public class RemindersTab extends Fragment {
     }
         //Method User for purpose of opening selected item
         private void openItem(String title) {
-            Intent intent = new Intent(getActivity(), DisplaySelectedItem.class);
-            intent.putExtra("EXTRA_MESSAGE", title);
-            startActivity(intent);
+
         }
         //Method used for purpose of setting up a title of Fragment parent activity
         private void setTitle(String title) {
@@ -243,6 +242,7 @@ public class RemindersTab extends Fragment {
         return super.onOptionsItemSelected(item);
     }
     //TODO please ensure that the buttons and menu are working
+
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {

@@ -104,6 +104,8 @@ public class DatabaseAdapter {
             String fileName = cursor.getString(1);
             Filenames file = new Filenames();
             file.setFilename(fileName);
+            long code = cursor.getLong(0);
+            file.setAlarmCode(code);
             fileNamesList.add(file);
         }
         cursor.close();
