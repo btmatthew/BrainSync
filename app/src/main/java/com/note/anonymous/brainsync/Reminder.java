@@ -6,9 +6,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -27,11 +29,12 @@ public class Reminder extends Activity {
     String alarm = "alarmKey";
     String notification = "notificationKey";
     String pendingnotification = "pendingKey";
-
+    Calendar calendar;
     int alarmid;
     int notifid;
     int pendingcode;
     int chosenDayOfMonth, chosenMonth, chosenYear, chosenMinute, chosenHour;
+    int currentDayOfMonth, currentMonth, currentYear, currentMinute, currentHour;
     Context context = this;
 
 
@@ -43,10 +46,16 @@ public class Reminder extends Activity {
         Intent intent = getIntent();
         entry = intent.getStringExtra("EntryTitle");
         timePicker = (TimePicker) findViewById(R.id.timepicker);
+        timePicker.setIs24HourView(true);
         datePicker = (DatePicker) findViewById(R.id.datepicker);
-
-        Button set = (Button) findViewById(R.id.setreminder);
-        set.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fabButton = new FloatingActionButton.Builder(this)
+                .withDrawable(getResources().getDrawable(R.drawable.ic_action_add))
+                .withButtonColor(Color.GRAY)
+                .withGravity(Gravity.BOTTOM | Gravity.RIGHT)
+                .withMargins(0, 0, 16, 16)
+                .create();
+        //Button set = (Button) findViewById(R.id.setreminder);
+        fabButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
 
@@ -56,13 +65,12 @@ public class Reminder extends Activity {
                 pendingcode = sharedpreferences.getInt(pendingnotification, 0);
 
 
-                //use the AlarmManager to trigger an alarm
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
 
                 //get current date and time
-                Calendar calendar = Calendar.getInstance();
-
+                calendar = Calendar.getInstance();
                 //sets the time for the alarm to trigger
+
                 calendar.set(Calendar.YEAR, datePicker.getYear());
                 calendar.set(Calendar.MONTH, datePicker.getMonth());
                 calendar.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
@@ -70,48 +78,80 @@ public class Reminder extends Activity {
                 calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
                 calendar.set(Calendar.SECOND, 0);
 
+                currentYear=calendar.get(Calendar.YEAR);
+                currentMonth=calendar.get(Calendar.MONTH)+1;
+                currentDayOfMonth=calendar.get(Calendar.DAY_OF_MONTH);
+                currentHour=calendar.get(Calendar.HOUR_OF_DAY);
+                currentMinute=calendar.get(Calendar.MINUTE);
+
                 chosenDayOfMonth = datePicker.getDayOfMonth();
                 chosenMonth = datePicker.getMonth() + 1;
                 chosenYear = datePicker.getYear();
                 chosenMinute = timePicker.getCurrentMinute();
                 chosenHour = timePicker.getCurrentHour();
+                Log.d("currentTime","Y "+currentYear+"  M "+currentMonth+" D "+ currentDayOfMonth+" H "+currentHour+" M "+currentMinute);
+                Log.d("currentTime","Y "+chosenYear+"  M "+chosenMonth+" D "+ chosenDayOfMonth+" H "+chosenHour+" M "+chosenMinute);
+                if(chosenYear<=currentYear){
+                    if(chosenMonth<currentMonth){
+                        if(chosenDayOfMonth<currentDayOfMonth){
+                            if(chosenHour<currentHour){
+                                if(chosenMinute<currentMinute){
+                                    Toast.makeText(Reminder.this, "Great Scott!, We haven't hit 88MPH yet!, Please set reminder in future.", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    setReminder();
+                                }
+                            }else{
+                                setReminder();
+                            }
+                        }else{
+                            setReminder();
+                        }
+                    }else{
+                        setReminder();
+                    }
+                }else{
+                    setReminder();
+                }
 
-                //PendingIntent to launch activity when the alarm triggers
-                Intent launch = new Intent(Reminder.this, DisplayNotification.class);
-                launch.putExtra("NotifID", notifid);
-                launch.putExtra("Title", entry);
-                launch.putExtra("Pending", pendingcode);
-
-                // Log.d("TAG", "Setting: notifID-"+String.valueOf(notifid)+" title-"+entry+" pending-"+pendingcode+" alarmid-"+alarmid);
-
-                PendingIntent alarmOff = PendingIntent.getService(getBaseContext(), alarmid, launch, 0);
-
-                //sets the alarm to trigger
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmOff);
-
-
-                alarmid = alarmid + 1;
-                notifid = notifid + 1;
-                pendingcode = pendingcode + 1;
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putInt(alarm, alarmid);
-                editor.putInt(notification, notifid);
-                editor.putInt(pendingnotification, pendingcode);
-                editor.apply();
-
-                newEntryThread(entry, Reminder.this);
-//
-                Toast.makeText(Reminder.this, "Reminder Set Successfully :)", Toast.LENGTH_SHORT).show();
-                //Go back to the entry
-//                    Intent intent = new Intent(Reminder.this, DisplaySelectedItem.class);
-//                    intent.putExtra("EXTRA_MESSAGE", entry);
-//                    startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                Reminder.super.onBackPressed();
             }
 
         });
     }
+    public void setReminder(){
+        //use the AlarmManager to trigger an alarm
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        //PendingIntent to launch activity when the alarm triggers
+        Intent launch = new Intent(Reminder.this, DisplayNotification.class);
+        launch.putExtra("NotifID", notifid);
+        launch.putExtra("Title", entry);
+        launch.putExtra("Pending", pendingcode);
 
+        // Log.d("TAG", "Setting: notifID-"+String.valueOf(notifid)+" title-"+entry+" pending-"+pendingcode+" alarmid-"+alarmid);
+
+        PendingIntent alarmOff = PendingIntent.getService(getBaseContext(), alarmid, launch, 0);
+
+        //sets the alarm to trigger
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmOff);
+
+
+        alarmid = alarmid + 1;
+        notifid = notifid + 1;
+        pendingcode = pendingcode + 1;
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putInt(alarm, alarmid);
+        editor.putInt(notification, notifid);
+        editor.putInt(pendingnotification, pendingcode);
+        editor.apply();
+
+        newEntryThread(entry, Reminder.this);
+//
+        Toast.makeText(Reminder.this, "Reminder Set Successfully :)", Toast.LENGTH_SHORT).show();
+        //Go back to the entry
+//                    Intent intent = new Intent(Reminder.this, DisplaySelectedItem.class);
+//                    intent.putExtra("EXTRA_MESSAGE", entry);
+//                    startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        Reminder.super.onBackPressed();
+    }
     public void cancelReminder(Context context, String title, long alarmCode) {
 
         Log.d("TAG", title + " " + String.valueOf(alarmCode));

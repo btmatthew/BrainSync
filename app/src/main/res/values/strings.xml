@@ -59,7 +59,7 @@
     <string name="menuDeleteButton">Delete note</string>
     <string name="title_activity_reminder">Reminder</string>
 
-    <string name="alarmText">Remind Me About This Entry On:</string>
+    <string name="alarmText">Remind Me About This Entry On</string>
     <string name="setreminder">Set Reminder</string>
     <string name="preferences">Preferences</string>
     <string name="preftext">Set Some Cool Stuff</string>

@@ -172,7 +172,7 @@
 
         <activity
             android:name=".Reminder"
-            android:label="@string/title_activity_reminder"
+            android:label="@string/alarmText"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="com.note.anonymous.Reminder" />
