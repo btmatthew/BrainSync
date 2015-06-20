@@ -44,6 +44,7 @@ public class DropboxImport extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_dropbox_import);
         fileDirectory = getString(R.string.directoryLocation);
         AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
@@ -103,7 +104,7 @@ public class DropboxImport extends Activity {
         }
         findViewById(R.id.progressBarDropboxImport).setVisibility(View.INVISIBLE);
         if(files.isEmpty()){
-            runOnUiThread(new Toasting("Your Dropbox is empty! We cannot upload anything to your Brain."));
+            runOnUiThread(new Toasting("Your Dropbox is empty! We cannot upload anything into your Brain."));
             finish();
         }else{
             display();
@@ -226,9 +227,10 @@ public class DropboxImport extends Activity {
                         }else{
                             newEntryThread(fileName, context);
                         }
-                        File file = new File(fileDirectory+"/"+fileName);
+                        File file = new File(context.getFilesDir()+"/"+fileName);
+                        file.createNewFile();
                         FileOutputStream outputStream = new FileOutputStream(file);
-                        mDBApi.getFile("/"+fileList.get(i).getFilename(), null, outputStream, null);
+                        DropboxAPI.DropboxFileInfo info = mDBApi.getFile("/"+fileList.get(i).getFilename(), null, outputStream, null);
                     }
                     runOnUiThread(new Toasting("All done! Your Brain is downloaded from Dropbox!"));
                     finish();

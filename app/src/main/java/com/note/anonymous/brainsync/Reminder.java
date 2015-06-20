@@ -30,6 +30,7 @@ public class Reminder extends Activity {
     String notification = "notificationKey";
     String pendingnotification = "pendingKey";
     Calendar calendar;
+    Calendar calendar1;
     int alarmid;
     int notifid;
     int pendingcode;
@@ -49,12 +50,11 @@ public class Reminder extends Activity {
         timePicker.setIs24HourView(true);
         datePicker = (DatePicker) findViewById(R.id.datepicker);
         FloatingActionButton fabButton = new FloatingActionButton.Builder(this)
-                .withDrawable(getResources().getDrawable(R.drawable.ic_action_add))
+                .withDrawable(getResources().getDrawable(R.drawable.ic_action_accept))
                 .withButtonColor(Color.GRAY)
                 .withGravity(Gravity.BOTTOM | Gravity.RIGHT)
                 .withMargins(0, 0, 16, 16)
                 .create();
-        //Button set = (Button) findViewById(R.id.setreminder);
         fabButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -69,6 +69,7 @@ public class Reminder extends Activity {
 
                 //get current date and time
                 calendar = Calendar.getInstance();
+                calendar1 = Calendar.getInstance();
                 //sets the time for the alarm to trigger
 
                 calendar.set(Calendar.YEAR, datePicker.getYear());
@@ -78,24 +79,27 @@ public class Reminder extends Activity {
                 calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
                 calendar.set(Calendar.SECOND, 0);
 
-                currentYear=calendar.get(Calendar.YEAR);
-                currentMonth=calendar.get(Calendar.MONTH)+1;
-                currentDayOfMonth=calendar.get(Calendar.DAY_OF_MONTH);
-                currentHour=calendar.get(Calendar.HOUR_OF_DAY);
-                currentMinute=calendar.get(Calendar.MINUTE);
+
 
                 chosenDayOfMonth = datePicker.getDayOfMonth();
                 chosenMonth = datePicker.getMonth() + 1;
                 chosenYear = datePicker.getYear();
                 chosenMinute = timePicker.getCurrentMinute();
-                chosenHour = timePicker.getCurrentHour();
+                chosenHour=timePicker.getCurrentHour();
+
+                currentYear = calendar1.get(Calendar.YEAR);
+                currentMonth = calendar1.get(Calendar.MONTH)+1;
+                currentDayOfMonth = calendar1.get(Calendar.DAY_OF_MONTH);
+                currentHour = calendar1.get(Calendar.HOUR_OF_DAY);
+                currentMinute = calendar1.get(Calendar.MINUTE);
+
                 Log.d("currentTime","Y "+currentYear+"  M "+currentMonth+" D "+ currentDayOfMonth+" H "+currentHour+" M "+currentMinute);
-                Log.d("currentTime","Y "+chosenYear+"  M "+chosenMonth+" D "+ chosenDayOfMonth+" H "+chosenHour+" M "+chosenMinute);
+                Log.d("chosenTime","Y "+chosenYear+"  M "+chosenMonth+" D "+ chosenDayOfMonth+" H "+chosenHour+" M "+chosenMinute);
                 if(chosenYear<=currentYear){
-                    if(chosenMonth<currentMonth){
-                        if(chosenDayOfMonth<currentDayOfMonth){
-                            if(chosenHour<currentHour){
-                                if(chosenMinute<currentMinute){
+                    if(chosenMonth<=currentMonth){
+                        if(chosenDayOfMonth<=currentDayOfMonth){
+                            if(chosenHour<=currentHour){
+                                if(chosenMinute<=currentMinute){
                                     Toast.makeText(Reminder.this, "Great Scott!, We haven't hit 88MPH yet!, Please set reminder in future.", Toast.LENGTH_SHORT).show();
                                 }else{
                                     setReminder();

@@ -12,7 +12,7 @@
         android:calendarViewShown="false"
         android:layout_weight="1"
         android:layout_gravity="center"
-        android:datePickerMode="spinner" />
+        android:datePickerMode="spinner"/>
     <TimePicker
         android:id="@+id/timepicker"
         android:layout_width="wrap_content"
