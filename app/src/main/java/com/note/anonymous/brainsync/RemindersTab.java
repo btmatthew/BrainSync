@@ -60,6 +60,13 @@ public class RemindersTab extends Fragment {
         setHasOptionsMenu(true);
         return v;
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        dataAdapter.notifyDataSetChanged();
+        createList();
+
+    }
 
     //method used for purpose of creating view list
     public void createList() {
@@ -208,7 +215,7 @@ public class RemindersTab extends Fragment {
         createList();
     }
 
-    //Method User for purpose of opening selected item
+    //Method Useed for purpose of opening selected item
     private void openItem(final String name, int position) {
         final long code = fileNamesList.get(position).getAlarmCode();
         DatabaseAdapter getDetails = new DatabaseAdapter(getActivity());
