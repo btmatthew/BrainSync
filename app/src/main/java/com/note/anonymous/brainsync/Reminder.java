@@ -71,7 +71,7 @@ public class Reminder extends Activity {
                 calendar.set(Calendar.SECOND, 0);
 
                 chosenDayOfMonth = datePicker.getDayOfMonth();
-                chosenMonth = datePicker.getMonth();
+                chosenMonth = datePicker.getMonth() + 1;
                 chosenYear = datePicker.getYear();
                 chosenMinute = timePicker.getCurrentMinute();
                 chosenHour = timePicker.getCurrentHour();
@@ -81,6 +81,8 @@ public class Reminder extends Activity {
                 launch.putExtra("NotifID", notifid);
                 launch.putExtra("Title", entry);
                 launch.putExtra("Pending", pendingcode);
+
+                // Log.d("TAG", "Setting: notifID-"+String.valueOf(notifid)+" title-"+entry+" pending-"+pendingcode+" alarmid-"+alarmid);
 
                 PendingIntent alarmOff = PendingIntent.getService(getBaseContext(), alarmid, launch, 0);
 
@@ -98,43 +100,57 @@ public class Reminder extends Activity {
                 editor.apply();
 
                 newEntryThread(entry, Reminder.this);
-
 //
                 Toast.makeText(Reminder.this, "Reminder Set Successfully :)", Toast.LENGTH_SHORT).show();
                 //Go back to the entry
 //                    Intent intent = new Intent(Reminder.this, DisplaySelectedItem.class);
 //                    intent.putExtra("EXTRA_MESSAGE", entry);
 //                    startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-
                 Reminder.super.onBackPressed();
             }
 
         });
     }
 
+    public void cancelReminder(Context context, String title, long alarmCode) {
 
+        Log.d("TAG", title + " " + String.valueOf(alarmCode));
+        if (Reminder.this == null) {
+            Log.d("TAG", "Null");
+        }
+        int uniqueNumber = (int) alarmCode;
+        Intent launch = new Intent(Reminder.this, DisplayNotification.class);
+        launch.putExtra("NotifID", uniqueNumber);
+        launch.putExtra("Title", title);
+        launch.putExtra("Pending", uniqueNumber);
 
-            private void newEntryThread(final String title, final Context context){
-                new Thread(new Runnable() {
-                    public void run() {
-                        Log.d("TAG", "THREAD STARTED");
-                        Time now = new Time();
-                        now.setToNow();
-                        Long time = now.toMillis(false);
-                        Filenames filenames = new Filenames();
-                        filenames.setFilename(title);
-                            filenames.setReminderIndicatorValue(1);
-                            filenames.setReminderCreationTime(time.toString());
-                            String scheduledTime = chosenMinute+":"+chosenHour+" "+chosenDayOfMonth+"/"+chosenMonth+"/"+chosenYear;
-                            filenames.setReminderScheduledTime(scheduledTime);
-                        DatabaseAdapter db = new DatabaseAdapter(context);
-                        db.addReminderEntry(filenames, context);
-                    }
-                }).start();
+        PendingIntent alarmOff = PendingIntent.getService(context, uniqueNumber, launch, 0);
 
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        alarmManager.cancel(alarmOff);
     }
 
 
+    private void newEntryThread(final String title, final Context context) {
+        new Thread(new Runnable() {
+            public void run() {
+                //  Log.d("TAG", "THREAD STARTED");
+                Time now = new Time();
+                now.setToNow();
+                Long time = now.toMillis(false);
+                Filenames filenames = new Filenames();
+                filenames.setFilename(title);
+                filenames.setReminderIndicatorValue(1);
+                filenames.setReminderCreationTime(time.toString());
+                String scheduledTime = chosenHour + ":" + chosenMinute + ", " + chosenDayOfMonth + "/" + chosenMonth + "/" + chosenYear;
+                filenames.setReminderScheduledTime(scheduledTime);
+                DatabaseAdapter db = new DatabaseAdapter(context);
+                db.addReminderEntry(filenames, context);
+            }
+        }).start();
+
+    }
 
 
 }

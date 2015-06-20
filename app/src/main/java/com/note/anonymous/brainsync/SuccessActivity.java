@@ -19,6 +19,7 @@ public class SuccessActivity extends Activity {
 
     CountDownTimer countDownTimer;
     AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,10 +27,10 @@ public class SuccessActivity extends Activity {
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
-        Intent intentWidget= new Intent(this, ViewNotes.class);
+        Intent intentWidget = new Intent(this, ViewNotes.class);
         intentWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int[] ids=AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ViewNotes.class));
-        intentWidget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ViewNotes.class));
+        intentWidget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intentWidget);
 
         TextView timerText = (TextView) findViewById(R.id.timertext);
@@ -41,7 +42,7 @@ public class SuccessActivity extends Activity {
         countDownTimer = new CountDownTimer(15000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                timer.setText(""+millisUntilFinished/1000);
+                timer.setText("" + millisUntilFinished / 1000);
                 timer.setTextSize(40);
             }
 
@@ -55,7 +56,10 @@ public class SuccessActivity extends Activity {
         }.start();
 
     }
-    /** Called when leaving the activity */
+
+    /**
+     * Called when leaving the activity
+     */
     @Override
     public void onPause() {
         if (mAdView != null) {
@@ -64,7 +68,9 @@ public class SuccessActivity extends Activity {
         super.onPause();
     }
 
-    /** Called when returning to the activity */
+    /**
+     * Called when returning to the activity
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -73,7 +79,9 @@ public class SuccessActivity extends Activity {
         }
     }
 
-    /** Called before the activity is destroyed */
+    /**
+     * Called before the activity is destroyed
+     */
     @Override
     public void onDestroy() {
         if (mAdView != null) {
@@ -82,7 +90,7 @@ public class SuccessActivity extends Activity {
         super.onDestroy();
     }
 
-    public void returnHomeMethod (View view) {
+    public void returnHomeMethod(View view) {
         countDownTimer.cancel();
 
         Intent intent = new Intent(this, MainActivity.class);
@@ -91,7 +99,7 @@ public class SuccessActivity extends Activity {
 
     }
 
-    public void addNewEntryMethod (View view) {
+    public void addNewEntryMethod(View view) {
         countDownTimer.cancel();
 
         Intent intent = new Intent(this, AddEntryActivity.class);
@@ -102,7 +110,7 @@ public class SuccessActivity extends Activity {
     public void listAllEntries(View view) {
         countDownTimer.cancel();
 
-        Intent intent = new Intent(this, ListEntriesActivity.class);
+        Intent intent = new Intent(this, FragmentParentActivity.class);
         startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         finish();
     }

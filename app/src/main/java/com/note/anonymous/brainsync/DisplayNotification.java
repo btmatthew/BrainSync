@@ -16,7 +16,7 @@ import android.support.v4.app.NotificationCompat;
 public class DisplayNotification extends IntentService {
 
 
-    public DisplayNotification(){
+    public DisplayNotification() {
         super("DisplayNotification");
     }
 
@@ -28,12 +28,14 @@ public class DisplayNotification extends IntentService {
         String title = intent.getExtras().getString("Title");
         int requestCode = intent.getExtras().getInt("Pending");
 
+        DatabaseAdapter delete = new DatabaseAdapter(this);
+        delete.deleteReminder(requestCode);
+
         //PendingIntent to launch activity if the user selects the notification
         Intent intent1 = new Intent(this, DisplaySelectedItem.class);
         intent1.putExtra("EXTRA_MESSAGE", title);
 
-        PendingIntent notificationIntent = PendingIntent.getActivity(this, requestCode, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-
+        PendingIntent notificationIntent = PendingIntent.getActivity(this, requestCode, intent1, PendingIntent.FLAG_CANCEL_CURRENT);
 
         Uri nSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
@@ -45,10 +47,11 @@ public class DisplayNotification extends IntentService {
 
         String notify = "notifyKey";
         final String AppPrefs = "AppPrefs";
-        SharedPreferences sharedpreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);;
+        SharedPreferences sharedpreferences = getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
+        ;
         int notificationsound = sharedpreferences.getInt(notify, 1);
 
-        if(notificationsound == 1){
+        if (notificationsound == 1) {
             mBuilder.setSound(nSound);
         }
 

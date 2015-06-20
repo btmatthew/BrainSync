@@ -78,16 +78,11 @@
             android:onClick="goSettings"
             />
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_add"
-            android:onClick="slidingTabsMethod" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/list_all_entry"
-            android:onClick="listEntriesMethod"
+            android:onClick="slidingTabsMethod"
             />
 
 
@@ -109,3 +104,11 @@
 
 
 </LinearLayout>
+
+<!--Code to recreate test button-->
+
+<!--<ImageButton-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:src="@drawable/ic_action_add"-->
+<!--android:onClick="callTest" />-->

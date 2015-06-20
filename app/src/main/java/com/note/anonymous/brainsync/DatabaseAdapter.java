@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,13 +42,14 @@ public class DatabaseAdapter {
         contentValues.put(COLUMN5, filenames.getFileType());
         db.insert(TABLE_NAME, null, contentValues);
         if (filenames.getReminderIndicatorValue() == 1) {
-            Log.d("TAG", "Got here!");
+            //Log.d("TAG", "Got here!");
             final String AppPrefs = "AppPrefs";
             String alarm = "alarmKey";
             SharedPreferences sharedPreferences = context.getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
             ContentValues contentValues1 = new ContentValues();
             int alarmCode = sharedPreferences.getInt(alarm, 0);
-            contentValues1.put(REMINDER_ALL_CODES, (alarmCode-1));
+            //Log.d("TAG", "Adapter "+String.valueOf(alarmCode-1));
+            contentValues1.put(REMINDER_ALL_CODES, (alarmCode - 1));
             contentValues1.put(ENTRY_TITLE, filenames.getFilename());
             contentValues1.put(REMINDER_SET_TIME, filenames.getReminderCreationTime());
             contentValues1.put(REMINDER_SCHEDULED_TIME, filenames.getReminderScheduledTime());
@@ -58,14 +58,14 @@ public class DatabaseAdapter {
 
     }
 
-    public void addReminderEntry(Filenames filenames, Context context){
+    public void addReminderEntry(Filenames filenames, Context context) {
         db = dbHelper.getWritableDatabase();
         final String AppPrefs = "AppPrefs";
         String alarm = "alarmKey";
         SharedPreferences sharedPreferences = context.getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
         ContentValues contentValues1 = new ContentValues();
         int alarmCode = sharedPreferences.getInt(alarm, 0);
-        contentValues1.put(REMINDER_ALL_CODES, (alarmCode-1));
+        contentValues1.put(REMINDER_ALL_CODES, (alarmCode - 1));
         contentValues1.put(ENTRY_TITLE, filenames.getFilename());
         contentValues1.put(REMINDER_SET_TIME, filenames.getReminderCreationTime());
         contentValues1.put(REMINDER_SCHEDULED_TIME, filenames.getReminderScheduledTime());
@@ -91,6 +91,49 @@ public class DatabaseAdapter {
         cursor.close();
         return fileNamesList;
     }
+
+    //This method was used to monitor the reminder table in the db by invoking it from the small button on MainActivity
+    //Let's just leave it here..We might need it again...makes life easier
+    public String testMethod() {
+        db = dbHelper.getReadableDatabase();
+        String[] columns = {REMINDER_ALL_CODES, ENTRY_TITLE};
+        Cursor cursor = db.query(REMINDER_TABLE, columns, null, null, null, null, null);
+        StringBuffer stringBuffer = new StringBuffer();
+        while (cursor.moveToNext()) {
+            long code = cursor.getLong(0);
+            String name = cursor.getString(1);
+            stringBuffer.append(code + " " + name + "\n");
+        }
+        cursor.close();
+        return stringBuffer.toString();
+    }
+
+    public String getReminderDetails(long code) {
+        db = dbHelper.getReadableDatabase();
+        String[] columns = {ENTRY_TITLE, REMINDER_SET_TIME, REMINDER_SCHEDULED_TIME};
+        Cursor cursor = db.query(REMINDER_TABLE, columns, REMINDER_ALL_CODES + " = '" + code + "' ", null, null, null, null);
+        StringBuffer stringBuffer = new StringBuffer();
+        while (cursor.moveToNext()) {
+            //int index1 = cursor.getColumnIndex(ENTRY_TITLE);
+            //int index2 = cursor.getColumnIndex(REMINDER_SET_TIME);
+            int index3 = cursor.getColumnIndex(REMINDER_SCHEDULED_TIME);
+            //String name = cursor.getString(index1);
+            //String settime = cursor.getString(index2);
+            String scheduledtime = cursor.getString(index3);
+            stringBuffer.append(scheduledtime);
+        }
+        cursor.close();
+        return stringBuffer.toString();
+    }
+
+    public int deleteReminder(long code) {
+        db = dbHelper.getWritableDatabase();
+        String[] remindercode = {String.valueOf(code)};
+        int count = db.delete(REMINDER_TABLE, REMINDER_ALL_CODES + "=?", remindercode);
+        return count;
+    }
+
+
     //ToDO get the creation and edit dates from main table for purpose of sorting the values.
     //TODO allow user to sort the values by the date or time on which the values are set to be reminded
     public ArrayList<Filenames> getAllReminders() {

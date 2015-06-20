@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
 
     public final static String EXTRA_MESSAGE = "com.example.anonymous.brainsync.MESSAGE";
     AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +29,10 @@ public class MainActivity extends Activity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
-    /** Called when leaving the activity */
+
+    /**
+     * Called when leaving the activity
+     */
     @Override
     public void onPause() {
         if (mAdView != null) {
@@ -37,7 +41,9 @@ public class MainActivity extends Activity {
         super.onPause();
     }
 
-    /** Called when returning to the activity */
+    /**
+     * Called when returning to the activity
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -46,7 +52,9 @@ public class MainActivity extends Activity {
         }
     }
 
-    /** Called before the activity is destroyed */
+    /**
+     * Called before the activity is destroyed
+     */
     @Override
     public void onDestroy() {
         if (mAdView != null) {
@@ -56,17 +64,17 @@ public class MainActivity extends Activity {
     }
 
     //Called when the 'Add An Entry' button is clicked as configured in the XML
-    public void addEntry (View entry) {
+    public void addEntry(View entry) {
         Intent intent = new Intent(this, AddEntryActivity.class);
         startActivity(intent);
     }
 
     //Called when the 'List All Entries' button is clicked as configured in the XML
-    public void listEntriesMethod(View view){
-         if (checkFiles()) {
-             Intent intent = new Intent(this, ListEntriesActivity.class);
-             startActivity(intent);
-         }
+    public void listEntriesMethod(View view) {
+        if (checkFiles()) {
+            Intent intent = new Intent(this, ListEntriesActivity.class);
+            startActivity(intent);
+        }
 
     }
 
@@ -76,17 +84,19 @@ public class MainActivity extends Activity {
             onSearchRequested();
         }
     }
-    public boolean checkFiles(){
-        if(new DatabaseAdapter(this).getNumberOfRowsNotesTable()>0){
+
+    public boolean checkFiles() {
+        if (new DatabaseAdapter(this).getNumberOfRowsNotesTable() > 0) {
             return true;
-        }else{
+        } else {
             Toast.makeText(this, "No Entries Yet", Toast.LENGTH_SHORT).show();
             return false;
         }
 
 
     }
-    public void openRandomNote(View view){
+
+    public void openRandomNote(View view) {
         if (checkFiles()) {
             ArrayList<Filenames> fileNamesList = new DatabaseAdapter(this).getAllData();
             Random r = new Random();
@@ -98,9 +108,15 @@ public class MainActivity extends Activity {
 
     }
 
+    public void callTest(View view) {
+        DatabaseAdapter call = new DatabaseAdapter(this);
+        String a = call.testMethod();
+        Toast.makeText(this, a, Toast.LENGTH_SHORT).show();
+    }
+
 
     //Calls settings activity
-    public void goSettings(View view){
+    public void goSettings(View view) {
 
         Intent intent = new Intent(this, Settings.class);
         startActivity(intent);
@@ -128,7 +144,7 @@ public class MainActivity extends Activity {
 
         //Each time the user searches for something anywhere in the app, the android system automatically creates an intent and passes it to the
         //SearchActivity. Coding for this is in the IntentFilter and MetaData tag contained in the Manifest File under the SearchActivity tag
-        switch(id){
+        switch (id) {
             case R.id.search:
                 goSearch(null);
                 break;
