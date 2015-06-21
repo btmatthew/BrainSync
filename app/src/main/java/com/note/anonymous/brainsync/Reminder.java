@@ -18,6 +18,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class Reminder extends Activity {
 
@@ -35,8 +36,7 @@ public class Reminder extends Activity {
     int notifid;
     int pendingcode;
     int[] chosenDate;
-    int chosenDayOfMonth, chosenMonth, chosenYear, chosenMinute, chosenHour;
-    int currentDayOfMonth, currentMonth, currentYear, currentMinute, currentHour;
+    long timeremaining ;
     Context context = this;
 
 
@@ -81,29 +81,10 @@ public class Reminder extends Activity {
                 calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
                 calendar.set(Calendar.SECOND, 0);
 
-                int[] currentDate = new int[6];
-                chosenDate = new int[6];
+                timeremaining = calendar.getTimeInMillis()-calendar1.getTimeInMillis();
 
-                chosenDate[0]=datePicker.getYear();
-                chosenDate[1]=datePicker.getMonth() + 1;
-                chosenDate[2]=datePicker.getDayOfMonth();
-                chosenDate[3]=timePicker.getCurrentHour();
-                chosenDate[4]=timePicker.getCurrentMinute();
-
-                currentDate[0]= calendar1.get(Calendar.YEAR);
-                currentDate[1]=calendar1.get(Calendar.MONTH)+1;
-                currentDate[2]=calendar1.get(Calendar.DAY_OF_MONTH);
-                currentDate[3]=calendar1.get(Calendar.HOUR_OF_DAY);
-                currentDate[4]=calendar1.get(Calendar.MINUTE);
-
-                if(chosenDate[3]<currentDate[3]){
+                if(calendar.before(calendar1)){
                     Toast.makeText(Reminder.this, "Great Scott!, We haven't hit 88MPH yet!, Please set reminder in future.", Toast.LENGTH_SHORT).show();
-                }else if(chosenDate[3]==currentDate[3]){
-                    if(chosenDate[4]<currentDate[4]){
-                        Toast.makeText(Reminder.this, "Great Scott!, We haven't hit 88MPH yet!, Please set reminder in future.", Toast.LENGTH_SHORT).show();
-                    }else{
-                        setReminder();
-                    }
                 }else{
                     setReminder();
                 }
@@ -112,6 +93,7 @@ public class Reminder extends Activity {
 
         });
     }
+
     public void setReminder(){
         //use the AlarmManager to trigger an alarm
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -120,8 +102,6 @@ public class Reminder extends Activity {
         launch.putExtra("NotifID", notifid);
         launch.putExtra("Title", entry);
         launch.putExtra("Pending", pendingcode);
-
-        // Log.d("TAG", "Setting: notifID-"+String.valueOf(notifid)+" title-"+entry+" pending-"+pendingcode+" alarmid-"+alarmid);
 
         PendingIntent alarmOff = PendingIntent.getService(getBaseContext(), alarmid, launch, 0);
 
@@ -139,12 +119,40 @@ public class Reminder extends Activity {
         editor.apply();
 
         newEntryThread(entry, Reminder.this);
-//
-        Toast.makeText(Reminder.this, "Reminder Set Successfully :)", Toast.LENGTH_SHORT).show();
-        //Go back to the entry
-//                    Intent intent = new Intent(Reminder.this, DisplaySelectedItem.class);
-//                    intent.putExtra("EXTRA_MESSAGE", entry);
-//                    startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
+        long seconds = timeremaining/1000;
+        long minutes = seconds/60;
+        long hours = minutes/60;
+        long days = hours/24;
+
+
+        if(hours==0){
+            Toast.makeText(Reminder.this,"Reminder Set Successfully, time remaining: "+String.format("%d min, %d sec",
+                    TimeUnit.MILLISECONDS.toMinutes(timeremaining),
+                    TimeUnit.MILLISECONDS.toSeconds(timeremaining)-
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeremaining))
+            ), Toast.LENGTH_LONG).show();
+        }else if(days==0){
+            Toast.makeText(Reminder.this,"Reminder Set Successfully, time remaining: "+String.format("%d h,%d min, %d sec",
+                    TimeUnit.MILLISECONDS.toHours(timeremaining),
+                    TimeUnit.MILLISECONDS.toMinutes(timeremaining)-
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeremaining)),
+                    TimeUnit.MILLISECONDS.toSeconds(timeremaining)-
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeremaining))
+            ), Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(Reminder.this,"Reminder Set Successfully, time remaining: "+String.format("%d d,%d h,%d min, %d sec",
+                    TimeUnit.MILLISECONDS.toDays(timeremaining),
+                    TimeUnit.MILLISECONDS.toHours(timeremaining)-
+                            TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(timeremaining)),
+                    TimeUnit.MILLISECONDS.toMinutes(timeremaining)-
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeremaining)),
+                    TimeUnit.MILLISECONDS.toSeconds(timeremaining)-
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeremaining))
+            ), Toast.LENGTH_LONG).show();
+        }
+
+
         Reminder.super.onBackPressed();
     }
     public void cancelReminder(Context context, String title, long alarmCode) {
@@ -178,7 +186,8 @@ public class Reminder extends Activity {
                 filenames.setFilename(title);
                 filenames.setReminderIndicatorValue(1);
                 filenames.setReminderCreationTime(time.toString());
-                String scheduledTime = chosenDate[3] + ":" + chosenDate[4] + ", " + chosenDate[2] + "/" + chosenDate[1] + "/" + chosenDate[0];
+                String scheduledTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+", "+calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR);
+
                 filenames.setReminderScheduledTime(scheduledTime);
                 DatabaseAdapter db = new DatabaseAdapter(context);
                 db.addReminderEntry(filenames, context);
