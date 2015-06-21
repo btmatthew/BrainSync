@@ -185,7 +185,16 @@ public class Reminder extends Activity {
                 filenames.setFilename(title);
                 filenames.setReminderIndicatorValue(1);
                 filenames.setReminderCreationTime(time.toString());
-                String scheduledTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+", "+calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR);
+                //user string format
+                //http://stackoverflow.com/questions/11599947/calendar-minute-giving-minutes-without-leading-zero
+                int min = calendar.get(Calendar.MINUTE);
+                String minConv;
+                if(min>=0 && min<=9){
+                    minConv="0"+min;
+                }else{
+                    minConv=""+min;
+                }
+                String scheduledTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+minConv+", "+calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR);
 
                 filenames.setReminderScheduledTime(scheduledTime);
                 DatabaseAdapter db = new DatabaseAdapter(context);
