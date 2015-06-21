@@ -35,7 +35,6 @@ public class Reminder extends Activity {
     int alarmid;
     int notifid;
     int pendingcode;
-    int[] chosenDate;
     long timeremaining ;
     Context context = this;
 

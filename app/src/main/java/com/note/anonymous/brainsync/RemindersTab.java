@@ -45,6 +45,7 @@ public class RemindersTab extends Fragment {
     private static final int SUBMENU1 = 3;
     private static final int SUBMENU2 = 4;
     private static final int SUBMENU3 = 5;
+    private static final int SUBMENU4 = 6;
     private static final int GROUP1 = 6;
     CustomAdapter dataAdapter = null;
     private ArrayList<Filenames> fileNamesList;
@@ -88,6 +89,9 @@ public class RemindersTab extends Fragment {
                 break;
             case 2:
                 Collections.sort(fileNamesList, new Sorting.CustomComparatorByDateCreatedYoungestToOldest());
+                break;
+            case 3:
+                Collections.sort(fileNamesList, new Sorting.CustomComparatorByReminderDateYoungestToOldest());
                 break;
         }
         dataAdapter = new CustomAdapter(getActivity(), R.layout.row_for_reminder_tab, fileNamesList);
@@ -336,6 +340,9 @@ public class RemindersTab extends Fragment {
             case SUBMENU3:
                 setSorting(2);
                 break;
+            case SUBMENU4:
+                setSorting(3);
+                break;
 
         }
 
@@ -355,6 +362,7 @@ public class RemindersTab extends Fragment {
         subMenu.add(GROUP1, SUBMENU1, 1, "A-Z");
         subMenu.add(GROUP1, SUBMENU2, 2, "Edit date");
         subMenu.add(GROUP1, SUBMENU3, 3, "Creation date");
+        subMenu.add(GROUP1, SUBMENU4, 3, "Reminder date");
 
 
         searchItem.setVisible(true);

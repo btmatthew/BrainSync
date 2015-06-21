@@ -32,7 +32,7 @@ public class Sorting {
 
         @Override
         public int compare(Filenames lhs, Filenames rhs) {
-            return (rhs).getEditedDate().compareTo(lhs.getEditedDate());
+            return (lhs).getReminderScheduledTime().compareTo(rhs.getReminderScheduledTime());
         }
     }
 }

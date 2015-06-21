@@ -134,8 +134,7 @@ public class DatabaseAdapter {
     }
 
 
-    //ToDO get the creation and edit dates from main table for purpose of sorting the values.
-    //TODO allow user to sort the values by the date or time on which the values are set to be reminded
+
     public ArrayList<Filenames> getAllReminders() {
         db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from " + REMINDER_TABLE, null);
@@ -145,6 +144,7 @@ public class DatabaseAdapter {
             String fileName = cursor.getString(1);
             Filenames file = getSingleRow(fileName);
             file.setFilename(fileName);
+            file.setReminderScheduledTime(cursor.getString(3));
             file.setAlarmCode(cursor.getLong(0));
             fileNamesList.add(file);
         }
