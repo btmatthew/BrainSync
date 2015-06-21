@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 /**
@@ -71,12 +73,12 @@ public class RemindersTab extends Fragment {
     //method used for purpose of creating view list
     public void createList() {
 
-        //sortingMethod = ((FragmentParentActivity) getActivity()).getSorting();
+        sortingMethod = ((FragmentParentActivity) getActivity()).getSorting();
 
         db = new DatabaseAdapter(getActivity());
         fileNamesList = db.getAllReminders();
         //TODO please ensure that the sorting values are collected from main table before sorting feature is enabled.
-        /*
+
         switch (sortingMethod) {
             case 0:
                 Collections.sort(fileNamesList, new Sorting.CustomComparatorByTitle());
@@ -87,7 +89,7 @@ public class RemindersTab extends Fragment {
             case 2:
                 Collections.sort(fileNamesList, new Sorting.CustomComparatorByDateCreatedYoungestToOldest());
                 break;
-        }*/
+        }
         dataAdapter = new CustomAdapter(getActivity(), R.layout.row_for_reminder_tab, fileNamesList);
 
         listView.setAdapter(dataAdapter);
@@ -207,9 +209,7 @@ public class RemindersTab extends Fragment {
         dataAdapter.notifyDataSetChanged();
         itemSelectedCount = 0;
         selectedMenuItems.clear();
-        item = menu.findItem(R.id.deleteMenuButton);
         item1 = menu.findItem(R.id.search);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         item1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         setTitle("Entries");
         createList();
@@ -324,18 +324,18 @@ public class RemindersTab extends Fragment {
                 Intent intent1 = new Intent(getActivity(), About.class);
                 startActivity(intent1);
                 break;
-//            case R.id.deleteMenuButton:
-//                deleteMethod();
-//                break;
-//            case SUBMENU1:
-//                setSorting(0);
-//                break;
-//            case SUBMENU2:
-//                setSorting(1);
-//                break;
-//            case SUBMENU3:
-//                setSorting(2);
-//                break;
+            case R.id.deleteMenuButton:
+                deleteMethod();
+                break;
+            case SUBMENU1:
+                setSorting(0);
+                break;
+            case SUBMENU2:
+                setSorting(1);
+                break;
+            case SUBMENU3:
+                setSorting(2);
+                break;
 
         }
 
@@ -345,24 +345,22 @@ public class RemindersTab extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        menu.clear();
         inflater.inflate(R.menu.menu_reminder, menu);
 
-//        MenuItem searchItem = menu.findItem(R.id.search);
-//
-//
-//        SubMenu subMenu = menu.addSubMenu(0, Menu.NONE, 1, "Sort by").setIcon(R.drawable.ic_action_sort_by_size);
-//
-//        subMenu.add(GROUP1, SUBMENU1, 1, "A-Z");
-//        subMenu.add(GROUP1, SUBMENU2, 2, "Edit date");
-//        subMenu.add(GROUP1, SUBMENU3, 3, "Creation date");
-//
-//
-//        searchItem.setVisible(true);
-//        searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        MenuItem searchItem = menu.findItem(R.id.search);
 
-//        this.menu = menu;
+
+        SubMenu subMenu = menu.addSubMenu(0, Menu.NONE, 1, "Sort by").setIcon(R.drawable.ic_action_sort_by_size);
+
+        subMenu.add(GROUP1, SUBMENU1, 1, "A-Z");
+        subMenu.add(GROUP1, SUBMENU2, 2, "Edit date");
+        subMenu.add(GROUP1, SUBMENU3, 3, "Creation date");
+
+
+        searchItem.setVisible(true);
+        searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        this.menu = menu;
     }
 
     //Method used for purpose of setting sorting preference

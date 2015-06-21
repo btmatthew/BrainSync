@@ -139,15 +139,12 @@ public class DatabaseAdapter {
     public ArrayList<Filenames> getAllReminders() {
         db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from " + REMINDER_TABLE, null);
-        //TODO this can be used to collect data from main table
-        //Cursor cursor1 = db.rawQuery("select * from " + TABLE_NAME, null);
         ArrayList<Filenames> fileNamesList = new ArrayList<>();
         for (int i = 0; i < getNumberOfRowsReminderTable(); i++) {
             cursor.moveToNext();
             String fileName = cursor.getString(1);
-            Filenames file = new Filenames();
+            Filenames file = getSingleRow(fileName);
             file.setFilename(fileName);
-            //long code = cursor.getLong(0);
             file.setAlarmCode(cursor.getLong(0));
             fileNamesList.add(file);
         }
@@ -191,7 +188,16 @@ public class DatabaseAdapter {
         db = dbHelper.getReadableDatabase();
         return (int) DatabaseUtils.queryNumEntries(db, REMINDER_TABLE);
     }
-
+    public Filenames getSingleRow(String noteTitle){
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME + " where noteTitle='" + noteTitle + "'", null);
+        Filenames singleFile = new Filenames();
+        cursor.moveToFirst();
+        singleFile.setCreationDate(Long.parseLong(cursor.getString(1)));
+        singleFile.setEditedDate(Long.parseLong(cursor.getString(2)));
+        cursor.close();
+        return singleFile;
+    }
     public boolean searchByTitle(String noteTitle) {
         db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from " + TABLE_NAME + " where noteTitle='" + noteTitle + "'", null);

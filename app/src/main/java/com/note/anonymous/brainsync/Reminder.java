@@ -34,6 +34,7 @@ public class Reminder extends Activity {
     int alarmid;
     int notifid;
     int pendingcode;
+    int[] chosenDate;
     int chosenDayOfMonth, chosenMonth, chosenYear, chosenMinute, chosenHour;
     int currentDayOfMonth, currentMonth, currentYear, currentMinute, currentHour;
     Context context = this;
@@ -49,6 +50,7 @@ public class Reminder extends Activity {
         timePicker = (TimePicker) findViewById(R.id.timepicker);
         timePicker.setIs24HourView(true);
         datePicker = (DatePicker) findViewById(R.id.datepicker);
+        datePicker.setMinDate(System.currentTimeMillis() - 1000);
         FloatingActionButton fabButton = new FloatingActionButton.Builder(this)
                 .withDrawable(getResources().getDrawable(R.drawable.ic_action_accept))
                 .withButtonColor(Color.GRAY)
@@ -79,37 +81,26 @@ public class Reminder extends Activity {
                 calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
                 calendar.set(Calendar.SECOND, 0);
 
+                int[] currentDate = new int[6];
+                chosenDate = new int[6];
 
+                chosenDate[0]=datePicker.getYear();
+                chosenDate[1]=datePicker.getMonth() + 1;
+                chosenDate[2]=datePicker.getDayOfMonth();
+                chosenDate[3]=timePicker.getCurrentHour();
+                chosenDate[4]=timePicker.getCurrentMinute();
 
-                chosenDayOfMonth = datePicker.getDayOfMonth();
-                chosenMonth = datePicker.getMonth() + 1;
-                chosenYear = datePicker.getYear();
-                chosenMinute = timePicker.getCurrentMinute();
-                chosenHour=timePicker.getCurrentHour();
+                currentDate[0]= calendar1.get(Calendar.YEAR);
+                currentDate[1]=calendar1.get(Calendar.MONTH)+1;
+                currentDate[2]=calendar1.get(Calendar.DAY_OF_MONTH);
+                currentDate[3]=calendar1.get(Calendar.HOUR_OF_DAY);
+                currentDate[4]=calendar1.get(Calendar.MINUTE);
 
-                currentYear = calendar1.get(Calendar.YEAR);
-                currentMonth = calendar1.get(Calendar.MONTH)+1;
-                currentDayOfMonth = calendar1.get(Calendar.DAY_OF_MONTH);
-                currentHour = calendar1.get(Calendar.HOUR_OF_DAY);
-                currentMinute = calendar1.get(Calendar.MINUTE);
-
-                Log.d("currentTime","Y "+currentYear+"  M "+currentMonth+" D "+ currentDayOfMonth+" H "+currentHour+" M "+currentMinute);
-                Log.d("chosenTime","Y "+chosenYear+"  M "+chosenMonth+" D "+ chosenDayOfMonth+" H "+chosenHour+" M "+chosenMinute);
-                if(chosenYear<=currentYear){
-                    if(chosenMonth<=currentMonth){
-                        if(chosenDayOfMonth<=currentDayOfMonth){
-                            if(chosenHour<=currentHour){
-                                if(chosenMinute<=currentMinute){
-                                    Toast.makeText(Reminder.this, "Great Scott!, We haven't hit 88MPH yet!, Please set reminder in future.", Toast.LENGTH_SHORT).show();
-                                }else{
-                                    setReminder();
-                                }
-                            }else{
-                                setReminder();
-                            }
-                        }else{
-                            setReminder();
-                        }
+                if(chosenDate[3]<currentDate[3]){
+                    Toast.makeText(Reminder.this, "Great Scott!, We haven't hit 88MPH yet!, Please set reminder in future.", Toast.LENGTH_SHORT).show();
+                }else if(chosenDate[3]==currentDate[3]){
+                    if(chosenDate[4]<currentDate[4]){
+                        Toast.makeText(Reminder.this, "Great Scott!, We haven't hit 88MPH yet!, Please set reminder in future.", Toast.LENGTH_SHORT).show();
                     }else{
                         setReminder();
                     }
@@ -187,7 +178,7 @@ public class Reminder extends Activity {
                 filenames.setFilename(title);
                 filenames.setReminderIndicatorValue(1);
                 filenames.setReminderCreationTime(time.toString());
-                String scheduledTime = chosenHour + ":" + chosenMinute + ", " + chosenDayOfMonth + "/" + chosenMonth + "/" + chosenYear;
+                String scheduledTime = chosenDate[3] + ":" + chosenDate[4] + ", " + chosenDate[2] + "/" + chosenDate[1] + "/" + chosenDate[0];
                 filenames.setReminderScheduledTime(scheduledTime);
                 DatabaseAdapter db = new DatabaseAdapter(context);
                 db.addReminderEntry(filenames, context);
