@@ -189,6 +189,8 @@ public class DisplaySelectedItem extends Activity {
             case R.id.set_reminder:
                 Intent intent = new Intent(this, Reminder.class);
                 intent.putExtra("EntryTitle", title);
+                int source = 0;
+                intent.putExtra("Source", source);
                 startActivity(intent);
                 break;
             }

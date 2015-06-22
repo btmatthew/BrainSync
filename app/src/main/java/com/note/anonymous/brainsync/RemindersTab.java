@@ -221,6 +221,7 @@ public class RemindersTab extends Fragment {
 
     //Method Useed for purpose of opening selected item
     private void openItem(final String name, int position) {
+
         final long code = fileNamesList.get(position).getAlarmCode();
         DatabaseAdapter getDetails = new DatabaseAdapter(getActivity());
         String details = getDetails.getReminderDetails(code);
@@ -254,14 +255,24 @@ public class RemindersTab extends Fragment {
         dialog.setView(linearlayout);
         dialog.setPositiveButton("Dismiss", null);
 
-        dialog.setNeutralButton("Edit", null);
+        dialog.setNeutralButton("Edit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getActivity(), Reminder.class);
+                intent.putExtra("EntryTitle", name);
+                int source = 1;
+                intent.putExtra("Source", source);
+                intent.putExtra("Code", code);
+                startActivity(intent);
+            }
+        });
 
         dialog.setNegativeButton("Cancel Reminder", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 final AlertDialog.Builder dialog1 = new AlertDialog.Builder(getActivity());
-                final long tempCode = code;
-                final String tempName = name;
+//                final long tempCode = code;
+//                final String tempName = name;
                 dialog1.setTitle("Cancel Reminder?");
                 dialog1.setMessage("You selection was quite clear but just so we're on the same page, are you sure you want" +
                         " to cancel this reminder?");
@@ -272,7 +283,7 @@ public class RemindersTab extends Fragment {
                         DatabaseAdapter delete = new DatabaseAdapter(getActivity());
                         int count = delete.deleteReminder(code);
                         if (count > 0) {
-                            cancelSystemReminder(tempName, tempCode);
+                            cancelSystemReminder(name, code);
                             Toast.makeText(getActivity(), "Reminder Has Been Cancelled", Toast.LENGTH_SHORT).show();
                             createList();
                         } else {

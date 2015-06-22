@@ -133,6 +133,16 @@ public class DatabaseAdapter {
         return count;
     }
 
+    public int editReminderScheduleTime(String newSchedule, long code){
+        db = dbHelper.getWritableDatabase();
+        String[] remindercode = {String.valueOf(code)};
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(REMINDER_SCHEDULED_TIME, newSchedule);
+        int count = db.update(REMINDER_TABLE, contentValues, REMINDER_ALL_CODES + "=?", remindercode);
+        return count;
+    }
+
+
 
 
     public ArrayList<Filenames> getAllReminders() {
@@ -151,6 +161,7 @@ public class DatabaseAdapter {
         cursor.close();
         return fileNamesList;
     }
+
 
     public ArrayList<Filenames> getAllDataWithFile() {
         db = dbHelper.getReadableDatabase();
