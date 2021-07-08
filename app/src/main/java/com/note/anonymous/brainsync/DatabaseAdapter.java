@@ -1,0 +1,257 @@
+package com.note.anonymous.brainsync;
+
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
+
+import java.io.File;
+import java.util.ArrayList;
+
+public class DatabaseAdapter {
+    public static final String TABLE_NAME = "notesList";
+    public static final String COLUMN1 = "noteTitle";
+    public static final String COLUMN2 = "creationDate";
+    public static final String COLUMN3 = "editDate";
+    public static final String COLUMN4 = "fileName";
+    public static final String COLUMN5 = "fileType";
+
+    public static final String REMINDER_TABLE = "reminderList";
+    public static final String ENTRY_TITLE = "entryTitle";
+    public static final String REMINDER_ALL_CODES = "alarmCode";
+    public static final String REMINDER_SET_TIME = "setDate";
+    public static final String REMINDER_SCHEDULED_TIME = "scheduledDate";
+
+    private DBHelper dbHelper;
+
+    private SQLiteDatabase db;
+
+    public DatabaseAdapter(Context context) {
+        dbHelper = DBHelper.getInstance(context);
+    }
+
+    public void addEntry(Filenames filenames, Context context) {
+        db = dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN1, filenames.getFilename());
+        contentValues.put(COLUMN2, filenames.getCreationDate());
+        contentValues.put(COLUMN3, 0L);
+        contentValues.put(COLUMN5, filenames.getFileType());
+        db.insert(TABLE_NAME, null, contentValues);
+        if (filenames.getReminderIndicatorValue() == 1) {
+            //Log.d("TAG", "Got here!");
+            final String AppPrefs = "AppPrefs";
+            String alarm = "alarmKey";
+            SharedPreferences sharedPreferences = context.getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
+            ContentValues contentValues1 = new ContentValues();
+            int alarmCode = sharedPreferences.getInt(alarm, 0);
+            //Log.d("TAG", "Adapter "+String.valueOf(alarmCode-1));
+            contentValues1.put(REMINDER_ALL_CODES, (alarmCode - 1));
+            contentValues1.put(ENTRY_TITLE, filenames.getFilename());
+            contentValues1.put(REMINDER_SET_TIME, filenames.getReminderCreationTime());
+            contentValues1.put(REMINDER_SCHEDULED_TIME, filenames.getReminderScheduledTime());
+            db.insert(REMINDER_TABLE, null, contentValues1);
+        }
+
+    }
+
+    public void addReminderEntry(Filenames filenames, Context context) {
+        db = dbHelper.getWritableDatabase();
+        final String AppPrefs = "AppPrefs";
+        String alarm = "alarmKey";
+        SharedPreferences sharedPreferences = context.getSharedPreferences(AppPrefs, Context.MODE_PRIVATE);
+        ContentValues contentValues1 = new ContentValues();
+        int alarmCode = sharedPreferences.getInt(alarm, 0);
+        contentValues1.put(REMINDER_ALL_CODES, (alarmCode - 1));
+        contentValues1.put(ENTRY_TITLE, filenames.getFilename());
+        contentValues1.put(REMINDER_SET_TIME, filenames.getReminderCreationTime());
+        contentValues1.put(REMINDER_SCHEDULED_TIME, filenames.getReminderScheduledTime());
+        db.insert(REMINDER_TABLE, null, contentValues1);
+
+    }
+
+    public ArrayList<Filenames> getAllData() {
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME, null);
+        ArrayList<Filenames> fileNamesList = new ArrayList<>();
+        for (int i = 0; i < getNumberOfRowsNotesTable(); i++) {
+            Filenames file = new Filenames();
+            cursor.moveToNext();
+            String fileName = cursor.getString(0);
+            file.setFilename(fileName);
+            file.setCreationDate(Long.parseLong(cursor.getString(1)));
+            file.setEditedDate(Long.parseLong(cursor.getString(2)));
+            file.setSelected(false);
+            file.setFile(new File(fileName));
+            fileNamesList.add(file);
+        }
+        cursor.close();
+        return fileNamesList;
+    }
+
+    //This method was used to monitor the reminder table in the db by invoking it from the small button on MainActivity
+    //Let's just leave it here..We might need it again...makes life easier
+    public String testMethod() {
+        db = dbHelper.getReadableDatabase();
+        String[] columns = {REMINDER_ALL_CODES, ENTRY_TITLE};
+        Cursor cursor = db.query(REMINDER_TABLE, columns, null, null, null, null, null);
+        StringBuffer stringBuffer = new StringBuffer();
+        while (cursor.moveToNext()) {
+            long code = cursor.getLong(0);
+            String name = cursor.getString(1);
+            stringBuffer.append(code + " " + name + "\n");
+        }
+        cursor.close();
+        return stringBuffer.toString();
+    }
+
+    public String getReminderDetails(long code) {
+        db = dbHelper.getReadableDatabase();
+        String[] columns = {ENTRY_TITLE, REMINDER_SET_TIME, REMINDER_SCHEDULED_TIME};
+        Cursor cursor = db.query(REMINDER_TABLE, columns, REMINDER_ALL_CODES + " = '" + code + "' ", null, null, null, null);
+        StringBuffer stringBuffer = new StringBuffer();
+        while (cursor.moveToNext()) {
+            //int index1 = cursor.getColumnIndex(ENTRY_TITLE);
+            //int index2 = cursor.getColumnIndex(REMINDER_SET_TIME);
+            int index3 = cursor.getColumnIndex(REMINDER_SCHEDULED_TIME);
+            //String name = cursor.getString(index1);
+            //String settime = cursor.getString(index2);
+            String scheduledtime = cursor.getString(index3);
+            stringBuffer.append(scheduledtime);
+        }
+        cursor.close();
+        return stringBuffer.toString();
+    }
+
+    public int deleteReminder(long code) {
+        db = dbHelper.getWritableDatabase();
+        String[] remindercode = {String.valueOf(code)};
+        int count = db.delete(REMINDER_TABLE, REMINDER_ALL_CODES + "=?", remindercode);
+        return count;
+    }
+
+    public int editReminderScheduleTime(String newSchedule, long code){
+        db = dbHelper.getWritableDatabase();
+        String[] remindercode = {String.valueOf(code)};
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(REMINDER_SCHEDULED_TIME, newSchedule);
+        int count = db.update(REMINDER_TABLE, contentValues, REMINDER_ALL_CODES + "=?", remindercode);
+        return count;
+    }
+
+
+
+
+    public ArrayList<Filenames> getAllReminders() {
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + REMINDER_TABLE, null);
+        ArrayList<Filenames> fileNamesList = new ArrayList<>();
+        for (int i = 0; i < getNumberOfRowsReminderTable(); i++) {
+            cursor.moveToNext();
+            String fileName = cursor.getString(1);
+            Filenames file = getSingleRow(fileName);
+            file.setFilename(fileName);
+            file.setReminderScheduledTime(cursor.getString(3));
+            file.setAlarmCode(cursor.getLong(0));
+            fileNamesList.add(file);
+        }
+        cursor.close();
+        return fileNamesList;
+    }
+
+
+    public ArrayList<Filenames> getAllDataWithFile() {
+        db = dbHelper.getReadableDatabase();
+        String fileDirectory = "data/data/com.example.anonymous.brainsync/files/";
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME, null);
+        ArrayList<Filenames> fileNamesList = new ArrayList<>();
+
+        for (int i = 0; i < getNumberOfRowsNotesTable(); i++) {
+            Filenames file = new Filenames();
+            cursor.moveToNext();
+            String fileName = cursor.getString(0);
+            file.setFilename(fileName);
+            file.setSelected(false);
+            file.setFile(new File(fileDirectory + fileName));
+            fileNamesList.add(file);
+        }
+        cursor.close();
+        return fileNamesList;
+    }
+
+    public void updateEditDate(Filenames filenames) {
+        db = dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN3, filenames.getEditedDate());
+        db.update(TABLE_NAME, contentValues, COLUMN1 + "=?", new String[]{filenames.getFilename()});
+    }
+
+    public int getNumberOfRowsNotesTable() {
+        db = dbHelper.getReadableDatabase();
+        int size = (int) DatabaseUtils.queryNumEntries(db, TABLE_NAME);
+        return size;
+    }
+
+    public int getNumberOfRowsReminderTable() {
+        db = dbHelper.getReadableDatabase();
+        return (int) DatabaseUtils.queryNumEntries(db, REMINDER_TABLE);
+    }
+    public Filenames getSingleRow(String noteTitle){
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME + " where noteTitle='" + noteTitle + "'", null);
+        Filenames singleFile = new Filenames();
+        cursor.moveToFirst();
+        singleFile.setCreationDate(Long.parseLong(cursor.getString(1)));
+        singleFile.setEditedDate(Long.parseLong(cursor.getString(2)));
+        cursor.close();
+        return singleFile;
+    }
+    public boolean searchByTitle(String noteTitle) {
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME + " where noteTitle='" + noteTitle + "'", null);
+        if (cursor.getCount() > 0) {
+            cursor.close();
+            return true;
+        } else {
+            cursor.close();
+            return false;
+        }
+    }
+
+    public void deleteEntry(String title) {
+        db = dbHelper.getWritableDatabase();
+        db.delete(TABLE_NAME, "noteTitle = ? ", new String[]{title});
+    }
+
+    public ArrayList<Filenames> searchByPartOfTitle(String noteTitle) {
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME + " where noteTitle like " + "'%" + noteTitle + "%'", null);
+        ArrayList<Filenames> fileNamesList = new ArrayList<>();
+        int cursorSize = cursor.getCount();
+        if (cursorSize != 0) {
+            for (int i = 0; i < cursorSize; i++) {
+                cursor.moveToNext();
+                Filenames file = new Filenames();
+                file.setFilename(cursor.getString(0));
+                file.setCreationDate(Long.parseLong(cursor.getString(1)));
+                file.setEditedDate(Long.parseLong(cursor.getString(2)));
+                file.setSelected(false);
+                fileNamesList.add(file);
+            }
+        }
+        cursor.close();
+        return fileNamesList;
+    }
+
+    public void updateTitle(Filenames newTitle, String oldTitle) {
+        db = dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN1, newTitle.getFilename());
+        contentValues.put(COLUMN3, newTitle.getEditedDate());
+        db.update(TABLE_NAME, contentValues, COLUMN1 + "=?", new String[]{oldTitle});
+    }
+
+}

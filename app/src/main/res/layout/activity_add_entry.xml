@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.anonymous.brainsync.AddEntryActivity"
+    tools:context="com.note.anonymous.brainsync.AddEntryActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,15 +9,11 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:hint="Enter Title"
         android:id="@+id/titleBar"
-
-
-
-
-        />
+        android:layout_weight="0.5"
+        android:inputType="textShortMessage" />
 
     <EditText
         android:layout_width="match_parent"
@@ -26,34 +22,38 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:gravity="top"
         android:layout_weight="8"
-        android:id="@+id/information"
+        android:id="@+id/information" />
 
 
-        />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="1"
+        android:layout_weight="0"
 
         >
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/ic_action_save"
+            android:drawableStart="@drawable/ic_action_save"
+            android:text="@string/save_entry"
+            android:layout_weight="1"
+            android:onClick="saveEntryMethod"
+            android:background="@color/green"
+            />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/red"
-            android:layout_weight="1"
-            android:text="@string/save_entry"
-            android:onClick="saveEntryMethod"
-            />
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@color/yellow"
+            android:drawableLeft="@drawable/ic_action_cancel"
+            android:drawableStart="@drawable/ic_action_cancel"
             android:layout_weight="1"
             android:text="@string/cancel_entry"
             android:onClick="cancelEntryMethod"
+            android:background="@color/red"
+
             />
         </LinearLayout>
 

@@ -1,24 +1,74 @@
 <resources>
     <string name="app_name">BrainSync</string>
     <string name="action_settings">Settings</string>
+    <string name="action_about">About</string>
+    <string name="about_brainsync">About BrainSync</string>
     <string name="add_entry">Add An Entry</string>
     <string name="what_do_i_know">What Do I Know?</string>
     <string name="search_my_brain">Search My Brain</string>
     <string name="list_all_entry">List All Entries</string>
-    <string name="title_activity_add_entry">New Entry</string>
+    <string name="title_activity_add_entry">Brain Sync</string>
     <string name="save_entry">Save Entry</string>
     <string name="cancel_entry">Cancel Entry</string>
+    <string name="save_update">Save Update</string>
+    <string name="cancel_update">Cancel Update</string>
     <string name="return_home">Return Home</string>
     <color name="red">#FF0000</color>
     <color name="yellow">#FFFF00</color>
+    <color name="blue">#1c649b</color>
+    <color name="green">#1c9b51</color>
+    <color name="grey">#bfbfbf</color>
     <string name="app_label">BrainSync</string>
     <string name="search_hint">Search Your Brain</string>
     <string name="search_title">Search</string>
-    <string name="success">Entry Added Successfully :)</string>
+    <string name="success">Entry Added Successfully</string>
     <string name="title_activity_success">SuccessActivity</string>
-    <string name="title_activity_list_entries">ListEntriesActivity</string>
+    <string name="title_activity_list_entries">Entries</string>
     <string name="delete_button">Delete</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_display_selected_item">DisplaySelectedItem</string>
-    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_search">Search Result</string>
+    <string name="edit_button">Edit Entry</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="backupButtonTextDropbox">Backup Entries to Dropbox</string>
+    <string name="importButtonTextDropbox">Import Entries from Dropbox</string>
+    <string name="drive_backup_button">Backup Entries to Drive</string>
+    <string name="title_activity_google_drive">GoogleDrive</string>
+    <string name="directoryLocation">data/data/com.example.anonymous.brainsync/files/</string>
+    <string name="selectAllButtonLableDropboxActivity">Select All</string>
+    <string name="backupButtonLableDropboxActivity">Back Up</string>
+    <string name="textLable">Select Items to Back Up</string>
+    <string name="dialog_yes">Yes, Please</string>
+    <string name="dialog_no">No</string>
+    <string name="title_activity_dropbox_import">Dropbox Import</string>
+    <string name="dropboxImportButton">Import</string>
+    <string name="textImportLable">Select Items to Import</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="contactus">Contact Us</string>
+    <string name="reporttext">Please describe the issue</string>
+    <string name="sendreport">Next</string>
+    <string name="title_activity_feedback">Feedback</string>
+    <string name="feedback">Contact Us/Report a Problem</string>
+    <string name="addnewnote">Add New Entry</string>
+    <string name="widgetTitle">Brain Sync</string>
+    <string name="subTitleSettingsDropbox">Dropbox</string>
+    <string name="subTitleSettingsGoogle">Google Drive</string>
+    <string name="subTitleSettingsFeedback">Feedback</string>
+    <string name="processBarTextSettings">Importing Stand by</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="menuDeleteButton">Delete note</string>
+    <string name="title_activity_reminder">Reminder</string>
+
+    <string name="alarmText">Remind Me About This Entry On</string>
+    <string name="setreminder">Set Reminder</string>
+    <string name="preferences">Preferences</string>
+    <string name="preftext">Set Some Cool Stuff</string>
+    <string name="sort">Sort By</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_fragment_parent">Entries</string>
+
+
+
 </resources>

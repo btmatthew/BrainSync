@@ -1,0 +1,65 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.note.anonymous.brainsync.EditActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:id="@+id/editTextTitle"
+        android:inputType="textShortMessage"
+
+        />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/scrollView2"
+        android:layout_weight="8" >
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:gravity="top"
+            android:id="@+id/editTextBody"
+
+            />
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="0"
+
+        >
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/green"
+            android:drawableLeft="@drawable/ic_action_save"
+            android:drawableStart="@drawable/ic_action_save"
+            android:layout_weight="1"
+            android:text="@string/save_update"
+            android:onClick="updateEntryMethod"
+            />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/ic_action_cancel"
+            android:drawableStart="@drawable/ic_action_cancel"
+            android:background="@color/red"
+            android:layout_weight="1"
+            android:text="@string/cancel_update"
+            android:onClick="cancelUpdateMethod"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

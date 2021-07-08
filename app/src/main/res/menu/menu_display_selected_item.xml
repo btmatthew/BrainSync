@@ -1,16 +1,32 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:brainsync="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.anonymous.brainsync.DisplaySelectedItem">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    tools:context="com.note.anonymous.brainsync.DisplaySelectedItem">
 
-    <item android:id="@+id/search"
-        android:title="@string/search_title"
-        android:icon="@drawable/ic_action_search"
-        app:showAsAction="always"
-        android:actionViewClass="android.widget.SearchView"
+    <item android:id="@+id/delete_menu_buttonSelectedItem"
+        android:title="@string/menuDeleteButton"/>
 
+    <item
+        android:id="@+id/set_reminder"
+        android:title="@string/setreminder"
+        android:icon="@drawable/ic_action_add_alarm"
         />
+
+    <item android:id="@+id/edit_menu_button"
+        android:title="@string/edit_button"
+        android:icon="@drawable/ic_action_edit"
+        brainsync:showAsAction="never"/>
+
+    <item android:id="@+id/action_settings"
+        android:title="@string/title_activity_settings"/>
+
+    <item
+        android:id="@+id/menu_item_share"
+        brainsync:showAsAction="ifRoom"
+        android:title="Share"
+        android:actionProviderClass=
+            "android.widget.ShareActionProvider"/>
+
+
 
 </menu>
